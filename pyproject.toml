@@ -21,6 +21,7 @@ package = false
 [tool.pytest.ini_options]
 testpaths = [
   "phase1-ml/modul-01-persiapan",
+  "phase1-ml/modul-02-cara-berpikir-ml",
   "phase1-ml/modul-08-proyek-akhir",
 ]
 python_files = ["test_*.py"]
