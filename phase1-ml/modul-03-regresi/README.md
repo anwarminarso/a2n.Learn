@@ -114,7 +114,7 @@ Garis regresi linear disusun hanya dari data latih. Pembandingnya rata-rata seli
 
 Pada keluaran yang sama, rata-rata selisih mutlak garis di data latih sedikit lebih besar daripada di data uji. Itu boleh terjadi pada kumpulan baris ini. Angka yang kecil di data latih tidak otomatis angka yang kecil di data uji.
 
-Bagian overfitting memakai `make_regression`: pembuat angka di komputer, bukan unduhan. Ada 24 baris dan 20 petunjuk. Hanya satu petunjuk yang benar-benar dipakai membuat jawaban. Petunjuk lain kebetulan, dan jawaban digeser. Petunjuk lebih banyak daripada baris data latih, jadi garis lurus bisa menempel di data latih. Jarak pada data uji lebih buruk daripada baseline. Garis satu petunjuk pada diabetes tidak diperlakukan seperti itu.
+Bagian overfitting memakai `make_regression`: pembuat angka di komputer, bukan unduhan. Ada 24 baris dan 20 petunjuk. Hanya satu petunjuk yang benar-benar dipakai membuat jawaban. Petunjuk lain kebetulan. `noise`: gangguan acak pada jawaban (derau). Geseran tetap adalah parameter `bias`. Petunjuk lebih banyak daripada baris data latih, jadi garis lurus bisa menempel di data latih. Jarak pada data uji lebih buruk daripada baseline. Garis satu petunjuk pada diabetes tidak diperlakukan seperti itu.
 
 Indeks adalah nomor baris pada tabel, mulai dari 0.
 
@@ -241,7 +241,7 @@ Berkasnya: `ujian.ipynb` untuk dikerjakan, `ujian-kunci.ipynb` untuk kunci yang 
 
 ### Proyek mini
 
-Angka dibuat dengan `make_regression`: 80 baris, satu petunjuk, geseran jawaban 15, `random_state=SEED`. Bukan unduhan. Bukan data asli perusahaan. Seperempat baris menjadi data uji dengan `test_size=0.25` dan `random_state=SEED`. Baseline adalah rata-rata jawaban data latih. Garis regresi linear disusun hanya dari data latih. Pembandingnya rata-rata selisih mutlak pada data uji.
+Angka dibuat dengan `make_regression`: 80 baris, satu petunjuk, `noise` 15: gangguan acak pada jawaban (derau), `random_state=SEED`. Bukan unduhan. Bukan data asli perusahaan. Seperempat baris menjadi data uji dengan `test_size=0.25` dan `random_state=SEED`. Baseline adalah rata-rata jawaban data latih. Garis regresi linear disusun hanya dari data latih. Pembandingnya rata-rata selisih mutlak pada data uji.
 
 ### Pertanyaan
 
