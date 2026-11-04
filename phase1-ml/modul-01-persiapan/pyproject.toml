@@ -1,0 +1,21 @@
+[project]
+name = "modul-01-persiapan"
+version = "0.1.0"
+description = "Modul 1: persiapan lingkungan kerja, array, dan DataFrame"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+  "ipykernel",
+  "jupyterlab",
+  "nbmake",
+  "numpy",
+  "pandas",
+  "pytest",
+  "scikit-learn",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_*.py"]
