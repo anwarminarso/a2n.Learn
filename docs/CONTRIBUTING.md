@@ -25,7 +25,7 @@ Larangan: tidak menghapus `main`/`develop`, tidak force-push. Modul berikutnya d
 ## Definition of Done per modul
 - [ ] (a) Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), sesuai `.python-version`; lingkungan baru dari `pyproject.toml` + `uv.lock` (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit per modul); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
 - [ ] (b) seed seragam: konstanta `SEED = 42` di sel pertama setiap notebook dan dipakai di setiap `random_state`/pemanggilan acak; setiap angka yang dikutip di teks berasal dari output notebook, bukan ditulis tangan
-- [ ] (c) data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data ANTAM.
+- [ ] (c) data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data asli perusahaan.
 - [ ] (d) latihan punya kunci (`latihan-kunci.ipynb`) yang dijalankan Ursa; cek pemahaman punya jawaban benar yang bisa diverifikasi
 - [ ] (e) sumber dikutip (buku atau dokumentasi resmi), tanpa kutipan karangan
 - [ ] (f) bisa dibaca dan dikerjakan dalam SATU kali duduk: teori maksimal 1 halaman, notebook pendek
@@ -44,13 +44,15 @@ Larangan: tidak menghapus `main`/`develop`, tidak force-push. Modul berikutnya d
 
 Aturan tulis: cerita dulu baru istilah; gambar dulu baru rumus.
 
+Modul yang butuh lebih dari tiga istilah baru dipecah menjadi dua modul pendek. Pyra menentukan pemecahannya saat menulis, dan Iris memperbarui penomoran, issue, dan tabel roadmap.
+
 ## Aturan audit dan QA
 - Analogi boleh menyederhanakan, tetapi tidak boleh membuat penjelasan salah; modul menyebut di mana analogi berhenti berlaku.
 - Setiap istilah punya satu arti yang konsisten di semua modul dan tercatat di `docs/kamus-istilah.md` (Squal mengaudit dokumentasi saja, bukan keamanan).
 - Ursa menjalankan ujian akhir tiap tingkat (ujian level) sebagai bagian dari PASS.
 
 ## Aturan data
-Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data ANTAM.
+Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data asli perusahaan.
 
 ## Tempo
 Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.

@@ -2,7 +2,7 @@
 
 Versi Python: Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10); detail dan aturan fallback di [CONTRIBUTING.md](CONTRIBUTING.md#versi-python).
 
-Aturan data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data ANTAM.
+Aturan data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data asli perusahaan.
 
 Istilah yang dipakai di semua modul dicatat di [kamus-istilah.md](kamus-istilah.md).
 
@@ -21,6 +21,8 @@ Urutan wajib: modul berikutnya baru dimulai setelah modul sebelumnya lolos Ursa 
 | 8 | Proyek akhir | Modul 7 | Pyra | Ursa | Squal | Frieren | pro | #8 |
 
 Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas. Iris mengatur urutan dan merge.
+
+Modul yang butuh lebih dari tiga istilah baru dipecah menjadi dua modul pendek. Pyra menentukan pemecahannya saat menulis, dan Iris memperbarui penomoran, issue, dan tabel roadmap.
 
 ## Kriteria tingkat
 Label: `level:beginner`, `level:intermediate`, `level:advanced`, `level:pro`.
