@@ -36,7 +36,7 @@ Setiap tingkat ditutup dengan **ujian level** (proyek mini plus beberapa pertany
 
 _Kriteria dari Frieren._
 
-Modul 8: Toleransi ditulis di dokumen, bukan "sama persis": probabilitas `atol=1e-5` (dibuktikan lewat uji), label kelas harus identik; versi skl2onnx, onnxruntime, dan opset dikunci dan ditulis.
+Modul 8: Toleransi ditulis di dokumen, bukan "sama persis": probabilitas `atol=1e-5` (dibuktikan lewat uji), label kelas harus identik; versi skl2onnx, onnxruntime, dan opset dikunci dan ditulis. Menurut cek cepat Pyra (Python 3.14, Linux, opset 22): label kelas identik dan selisih probabilitas maksimum sekitar 1.2e-07. Ini belum diverifikasi tim; `target_opset` dipin secara eksplisit, dan Ursa tetap memverifikasi dari `uv sync` pada lock yang di-commit.
 
 ## Fase 2 – Model AI (garis besar, belum ada issue)
 1. Dasar jaringan saraf dan PyTorch

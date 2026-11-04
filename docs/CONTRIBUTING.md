@@ -56,11 +56,15 @@ Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generat
 Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
 
 ## Versi Python
-- Versi: **Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10)**, dikunci ke patch terbaru lewat `.python-version` di root repo (saat ini `3.14.10`, rilis 2026-10-25). `uv.lock` tiap modul di-commit.
-- Sebelum Pyra mengunci `uv.lock`: pastikan scikit-learn, onnxruntime, dan skl2onnx punya wheel untuk 3.14. Bila salah satu tidak ada, turun ke 3.13 (jangan pernah 3.12 atau lebih lama; untuk sekarang jangan 3.15). Python 3.10 sudah EOL (2026-10-01), jangan dipakai.
+- **Python 3.14** (versi stabil terbaru yang masih bugfix; EOL 2030-10). Wheel dicek Pyra pada 2026-11-04 untuk Linux x86_64 dan Windows (macOS dan ARM belum dicek). Tidak perlu fallback saat ini.
+- `.python-version` dipin ke patch 3.14.x terbaru yang dipakai Pyra saat mengunci `uv.lock` (nomor patch dicatat di file itu). Sampai Pyra mengunci, file ini berisi `3.14`.
+- Versi paket tidak ditulis di dokumen ini; Pyra menguncinya di `uv.lock` tiap modul (di-commit).
+- Python 3.15 belum dipakai. Python 3.10 sudah EOL (2026-10-01), jangan dipakai.
+- Aturan untuk kerusakan di masa depan: bila salah satu dependensi tidak punya wheel untuk 3.14, turun ke 3.13; jangan pernah 3.12 atau lebih lama. Catat keputusan dan tanggalnya di tabel di bawah.
+- Ursa menjalankan notebook dan ujian level dengan versi Python yang persis sama dengan `.python-version`.
 - Sumber status versi: https://devguide.python.org/versions/
 
 ### Catatan keputusan
-| Tanggal | Keputusan | Bukti |
+| Tanggal | Keputusan | Dasar |
 |---|---|---|
-| 2026-11-04 | Python 3.14 (3.14.10) | Cek PyPI 2026-11-04: scikit-learn 1.9.1 dan onnxruntime 1.31.1 punya wheel cp314; skl2onnx 1.20.0 berupa wheel `py3-none-any` (murni Python). Pyra wajib mengecek ulang sebelum mengunci `uv.lock`. |
+| 2026-11-04 | Python 3.14, tanpa fallback | Pengecekan wheel oleh Pyra (Linux x86_64, Windows) |
