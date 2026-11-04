@@ -12,6 +12,8 @@ env/
 # Data mentah (kecuali README)
 data/*
 !data/README.md
+# Salinan kecil data publik (hanya dengan persetujuan Frieren atau mas Anwar)
+!data/public/
 # Model artefak & OS/IDE
 *.onnx
 .DS_Store

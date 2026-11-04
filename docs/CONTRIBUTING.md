@@ -57,7 +57,7 @@ Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
 
 ## Versi Python
 - **Python 3.14** (versi stabil terbaru yang masih bugfix; EOL 2030-10). Wheel dicek Pyra pada 2026-11-04 untuk Linux x86_64 dan Windows (macOS dan ARM belum dicek). Tidak perlu fallback saat ini.
-- `.python-version` dipin ke patch 3.14.x terbaru yang dipakai Pyra saat mengunci `uv.lock` (nomor patch dicatat di file itu). Sampai Pyra mengunci, file ini berisi `3.14`.
+- `.python-version` cukup berisi `3.14`. Nomor patch 3.14.x hanya hidup di `uv.lock`, yang dikunci Pyra (patch terbaru pada hari itu) dan di-commit.
 - Versi paket tidak ditulis di dokumen ini; Pyra menguncinya di `uv.lock` tiap modul (di-commit).
 - Python 3.15 belum dipakai. Python 3.10 sudah EOL (2026-10-01), jangan dipakai.
 - Aturan untuk kerusakan di masa depan: bila salah satu dependensi tidak punya wheel untuk 3.14, turun ke 3.13; jangan pernah 3.12 atau lebih lama. Catat keputusan dan tanggalnya di tabel di bawah.
