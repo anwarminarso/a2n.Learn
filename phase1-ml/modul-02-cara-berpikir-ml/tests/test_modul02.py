@@ -4,6 +4,7 @@ Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -16,8 +17,16 @@ from sklearn.model_selection import train_test_split
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parents[1]
 NOTEBOOKS = ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb")
-# Dua potong, supaya berkas ini tidak memuat penanda patch sebagai teks utuh.
-PENANDA_PATCH = "3" + ".14."
+PATCH_ANGKA = re.compile(r"3\.14\.\d")
+# Disambung supaya berkas tes tidak memuat angka versi sebagai teks utuh.
+ANGKA_VERSI = "3" + ".14"
+LEWATI = {".venv", "__pycache__", ".pytest_cache", ".ipynb_checkpoints"}
+KALIMAT_TEKNIS = {
+    "indeks": "Indeks adalah nomor baris dari pandas, mulai dari 0.",
+    "paket": "Paket adalah kumpulan berkas yang dipasang supaya kode bisa memanggil fungsi pustaka.",
+    "pustaka": "Pustaka adalah kumpulan fungsi siap pakai yang dipanggil dari kode.",
+    "uv": "uv adalah alat yang memasang paket sesuai daftar terkunci, lalu menjalankan perintah di lingkungan itu.",
+}
 # Istilah modul lain, disambung di sini supaya tidak berdiri sebagai bahan ajar.
 ISTILAH_NANTI = (
     "over" + "fitting",
@@ -230,8 +239,17 @@ def test_linnerud_bawaan_dan_baseline_mengabaikan_petunjuk():
 
 def test_keluaran_notebook_sama_dengan_hitung_ulang():
     assert _baris_stream("notebook.ipynb") == _garis_notebook()
-    assert _baris_stream("latihan.ipynb") == _garis_latihan()
+    assert _baris_stream("latihan.ipynb") == []
     assert _baris_stream("latihan-kunci.ipynb") == _garis_kunci()
+
+
+def test_latihan_tanpa_output_tersimpan():
+    nb = _baca_notebook("latihan.ipynb")
+    for cell in nb["cells"]:
+        if cell["cell_type"] != "code":
+            continue
+        assert cell.get("outputs") == []
+        assert cell.get("execution_count") is None
 
 
 def test_readme_punya_bagian_wajib_dan_batas_analogi():
@@ -248,30 +266,47 @@ def test_readme_punya_bagian_wajib_dan_batas_analogi():
     for istilah in ("data latih dan data uji", "baseline", "rata-rata selisih mutlak"):
         assert istilah in teks
     assert teks.count("Batas analogi") >= 3
-    assert PENANDA_PATCH not in teks
+    assert PATCH_ANGKA.search(teks) is None
+    assert ANGKA_VERSI not in teks
+    assert "uv sync --frozen" in teks
+    assert "uv run pytest --nbmake" in teks
+    assert "uv sync" not in teks.replace("uv sync --frozen", "")
+    assert "folder modul" not in teks.split("bukan dari folder modul")[0]
+    for awal in ("Artinya: Data", "Artinya: Cara", "Artinya: Rata-rata"):
+        assert awal not in teks
 
 
-def test_pyproject_python_tanpa_nomor_patch():
-    teks = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert 'requires-python = ">=3.14,<3.15"' in teks
-    assert PENANDA_PATCH not in teks
+def test_pyproject_dan_lock_di_root():
+    teks = (REPO / "pyproject.toml").read_text(encoding="utf-8")
+    syarat = 'requires-python = "==' + ANGKA_VERSI + '.*"'
+    assert syarat in teks
+    assert PATCH_ANGKA.search(teks) is None
+    assert "phase1-ml/modul-02-cara-berpikir-ml" in teks
+    assert (REPO / ".python-version").read_text(encoding="utf-8").strip() == ANGKA_VERSI
+    kunci = (REPO / "uv.lock").read_text(encoding="utf-8")
+    assert syarat in kunci
+    assert PATCH_ANGKA.search(kunci) is None
+    assert not (ROOT / "pyproject.toml").exists()
+    assert not (ROOT / "uv.lock").exists()
+    assert not (ROOT / "requirements.txt").exists()
 
 
-def test_berkas_modul_tanpa_nomor_patch_python():
+def test_berkas_modul_tanpa_angka_versi():
     for path in ROOT.rglob("*"):
         if not path.is_file():
             continue
-        if path.name == "uv.lock" or ".venv" in path.parts or "__pycache__" in path.parts:
+        if LEWATI.intersection(path.parts):
             continue
         teks = path.read_text(encoding="utf-8")
-        assert PENANDA_PATCH not in teks, path
+        assert PATCH_ANGKA.search(teks) is None, path
+        assert ANGKA_VERSI not in teks, path
 
 
 def test_modul_tidak_mengajarkan_istilah_nanti():
     for path in ROOT.rglob("*"):
         if not path.is_file():
             continue
-        if path.name == "uv.lock" or ".venv" in path.parts or "__pycache__" in path.parts:
+        if LEWATI.intersection(path.parts):
             continue
         teks = path.read_text(encoding="utf-8").lower()
         for istilah in ISTILAH_NANTI:
@@ -280,9 +315,22 @@ def test_modul_tidak_mengajarkan_istilah_nanti():
 
 def test_readme_menyalin_keluaran_notebook():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    for nama in NOTEBOOKS:
+    for nama in ("notebook.ipynb", "latihan-kunci.ipynb"):
         for baris in _baris_stream(nama):
             assert baris.strip() in readme, baris
+
+
+def test_kata_teknis_dijelaskan_sebelum_dipakai():
+    berkas = [(ROOT / "README.md").read_text(encoding="utf-8")]
+    berkas.extend(_seluruh_sumber(nama) for nama in NOTEBOOKS)
+    for teks in berkas:
+        rendah = teks.lower()
+        for kata, kalimat in KALIMAT_TEKNIS.items():
+            posisi = rendah.find(kata)
+            if posisi < 0:
+                continue
+            awal = rendah.find(kalimat.lower())
+            assert awal != -1 and awal <= posisi, kata
 
 
 def _kolom_kamus(kamus, istilah):
@@ -301,7 +349,8 @@ def test_kamus_tiga_istilah_modul_2():
         assert perumpamaan
         assert modul == "2"
         assert batas
-        assert arti in (ROOT / "README.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        assert f"Artinya: {arti[0].lower()}{arti[1:]}" in readme
     assert "| ukuran kesalahan |" not in kamus
     for istilah, modul in (("venv", "1"), ("array", "1"), ("DataFrame", "1")):
         assert _kolom_kamus(kamus, istilah)[3] == modul
