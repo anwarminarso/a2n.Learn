@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+# venv
+.venv/
+venv/
+env/
+# Jupyter
+.ipynb_checkpoints/
+# Data mentah (kecuali README)
+data/*
+!data/README.md
+# Salinan kecil data publik (hanya dengan persetujuan Frieren atau mas Anwar)
+!data/public/
+# Model artefak & OS/IDE
+*.onnx
+.DS_Store
+.vscode/
+.idea/
+bin/
+obj/
