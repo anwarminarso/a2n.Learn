@@ -1,0 +1,21 @@
+[project]
+name = "a2n-learn"
+version = "0.1.0"
+description = "Lingkungan belajar a2n.Learn. Modul 1 memakai numpy, pandas, dan scikit-learn."
+requires-python = "==3.14.*"
+dependencies = [
+  "ipykernel",
+  "jupyterlab",
+  "nbmake",
+  "numpy",
+  "pandas",
+  "pytest",
+  "scikit-learn",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["phase1-ml/modul-01-persiapan"]
+python_files = ["test_*.py"]
