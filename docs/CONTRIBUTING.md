@@ -1,7 +1,7 @@
 # Kontribusi
 
 ## Gaya penulisan
-Pembaca sasaran: anak SMP.
+Pembaca sasaran: pemula tanpa latar belakang ML.
 - Istilah baru dijelaskan dulu dengan contoh sehari-hari, baru kemudian nama teknisnya.
 - Satu sel kode = satu ide, dengan komentar singkat berbahasa Indonesia.
 - Rumus hanya bila perlu, selalu disertai contoh angka kecil.
@@ -33,7 +33,7 @@ Larangan: tidak menghapus `main`/`develop`, tidak force-push. Modul berikutnya d
 - [ ] (h) analogi tidak membuat penjelasan salah, dan batas berlakunya disebut
 - [ ] (i) maksimal tiga istilah baru, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
 - [ ] (j) bila modul menutup satu tingkat: ujian level dijalankan Ursa dan termasuk dalam PASS
-- [ ] (k) gaya bahasa SMP: istilah baru dijelaskan dengan contoh sehari-hari dulu, satu sel kode = satu ide dengan komentar Indonesia, rumus hanya bila perlu dan selalu dengan contoh angka kecil
+- [ ] (k) gaya bahasa ramah pemula: istilah baru dijelaskan dengan contoh sehari-hari dulu, satu sel kode = satu ide dengan komentar Indonesia, rumus hanya bila perlu dan selalu dengan contoh angka kecil
 
 ## Format wajib modul
 1. Cerita sehari-hari pembuka, maksimal satu layar.
