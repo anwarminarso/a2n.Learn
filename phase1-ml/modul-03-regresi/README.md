@@ -254,17 +254,22 @@ Angka dibuat dengan `make_regression`: 80 baris, satu petunjuk, `noise` 15: gang
 
 Lulus bila semua butir ini terpenuhi sekaligus.
 
-- Proyek mini: `ujian_lulus True`. Artinya rata-rata selisih mutlak garis pada data uji lebih kecil daripada baseline. `ujian-kunci.ipynb` memeriksanya, dan tes modul menghitung ulang syarat yang sama.
 - Pemisahan memakai `test_size=0.25` dan `random_state=SEED`. Data uji tidak ikut menyusun garis maupun baseline.
-- Soal 2 salah. Soal 3 salah.
-- Soal 1 lulus bila jawaban memuat kedua gagasan ini, dengan kata apa pun: data uji tidak ikut menyusun garis maupun baseline; angka pada data latih, termasuk yang sangat kecil karena garis menempel, tidak mengukur data baru. Tes otomatis tidak menilai kata-kata bebas. Ursa membaca butir ini.
-- Soal 4 sama dengan angka yang disalin di bawah: 60 baris latih, 20 baris uji, dan garis mengalahkan baseline.
+- Soal 1 lulus bila jawaban memuat kedua gagasan pada kunci, dengan kata apa pun. Tes otomatis tidak menilai kata-kata bebas. Ursa membaca butir ini.
+- `ujian-kunci.ipynb` memeriksa proyek mini, dan tes modul menghitung ulang syarat yang sama.
 
-Tidak lulus bila garis tidak mengalahkan baseline pada data uji, bila data uji ikut menyusun garis, atau bila soal 2 atau 3 dijawab benar.
+Tidak lulus bila data uji ikut menyusun garis.
 
 ### Kunci ujian
 
-1. Dua gagasan pada kriteria lulus. Contoh yang memenuhi: garis dan baseline disusun hanya dari data latih; data uji disisihkan supaya kita melihat melesetnya pada data yang belum dipakai. Angka yang bagus pada data latih, termasuk nol karena menyalin jawaban, tidak memberi tahu hasil pada data baru.
+- Proyek mini: `ujian_lulus True`. Artinya rata-rata selisih mutlak garis pada data uji lebih kecil daripada baseline.
+- Soal 2 salah. Soal 3 salah.
+- Soal 1 lulus bila jawaban memuat kedua gagasan ini, dengan kata apa pun: data uji tidak ikut menyusun garis maupun baseline; angka pada data latih, termasuk yang sangat kecil karena garis menempel, tidak mengukur data baru.
+- Soal 4 sama dengan angka yang disalin di bawah: 60 baris latih, 20 baris uji, dan garis mengalahkan baseline.
+
+Tidak lulus bila garis tidak mengalahkan baseline pada data uji, atau bila soal 2 atau 3 dijawab benar.
+
+1. Dua gagasan pada butir soal 1 di atas. Contoh yang memenuhi: garis dan baseline disusun hanya dari data latih; data uji disisihkan supaya kita melihat melesetnya pada data yang belum dipakai. Angka yang bagus pada data latih, termasuk nol karena menyalin jawaban, tidak memberi tahu hasil pada data baru.
 2. Salah. Fungsi kerugian dihitung pada data latih. Pada bagian overfitting, jarak data latih sangat kecil, tetapi jarak data uji lebih buruk daripada baseline.
 3. Salah. Baseline selalu menebak rata-rata jawaban data latih. Semua tebakan baseline sama.
 4. `ujian_baris_latih 60`, `ujian_baris_uji 20`, dan `ujian_lulus True`.
