@@ -6,7 +6,7 @@ labels: ["module", "ml"]
 ---
 
 ## Tingkat
-<!-- beginner / intermediate / advanced; tambahkan label level:* yang sesuai -->
+<!-- beginner / intermediate / advanced / pro; tambahkan label level:* yang sesuai -->
 
 ## Tujuan belajar
 

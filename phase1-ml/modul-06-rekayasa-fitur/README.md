@@ -2,7 +2,7 @@
 
 **Topik:** feature engineering dan scikit-learn Pipeline
 **Tujuan:** Membuat fitur, encoding, scaling, dan merangkainya dalam `Pipeline`/`ColumnTransformer`.
-**Tingkat:** ditentukan Frieren
+**Tingkat:** advanced
 **Status:** belum dimulai
 **Issue:** #6
 

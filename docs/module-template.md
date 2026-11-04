@@ -13,7 +13,7 @@ phase1-ml/modul-NN-nama/
 Python 3.12, CPU only.
 
 ## Isi `README.md` modul
-1. Judul, tujuan belajar, dan **Tingkat** (`beginner` / `intermediate` / `advanced`)
+1. Judul, tujuan belajar, dan **Tingkat** (`beginner` / `intermediate` / `advanced` / `pro`)
 2. Teori (maksimal 1 halaman)
 3. Kasus nyata: sumber data (bawaan scikit-learn atau sintetis dari kode)
 4. Cara menjalankan
