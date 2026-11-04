@@ -123,6 +123,53 @@ def test_generator_stabil_dan_bukan_unduhan():
     assert np.isfinite(a[list(NAMA_FITUR)].to_numpy()).all()
 
 
+def _jalankan_notebook(nama):
+    """Jalankan notebook dari sumbernya. Keluaran tersimpan tidak dipakai."""
+    import nbformat
+    from nbclient import NotebookClient
+
+    nb = nbformat.read(ROOT / nama, as_version=4)
+    NotebookClient(
+        nb,
+        timeout=180,
+        kernel_name="python3",
+        resources={"metadata": {"path": str(ROOT)}},
+    ).execute()
+    baris = []
+    for cell in nb.cells:
+        for keluar in cell.get("outputs", []):
+            if keluar.get("output_type") != "stream":
+                continue
+            if keluar.get("name") not in (None, "stdout"):
+                continue
+            raw = keluar.get("text", "")
+            if isinstance(raw, list):
+                raw = "".join(raw)
+            baris.extend(raw.splitlines())
+    return baris
+
+
+def test_kunci_dijalankan_dan_cocok_dengan_hitungan():
+    baris = _jalankan_notebook("latihan-kunci.ipynb")
+    teks = "\n".join(baris)
+    pipeline, masukan, _berkas, keluar = _latih_dan_banding(42)
+    nama = [NAMA_KELAS[int(i)] for i in pipeline.predict(masukan)]
+    assert f"nama_uji {nama}" in teks
+    assert f"label_mini_python {nama[:8]}" in teks
+    assert f"label_mini_onnx {nama[:8]}" in teks
+    assert "label_identik True" in teks
+    assert "label_mini_identik True" in teks
+    assert "opset_dikunci 22" in teks
+    assert "opset ai.onnx 22" in teks
+    for satu in baris:
+        if satu.startswith("selisih_maks ") or satu.startswith("selisih_mini "):
+            assert float(satu.split()[1]) <= ATOL
+    selisih = float(
+        np.max(np.abs(pipeline.predict_proba(masukan) - keluar["probabilities"]))
+    )
+    assert selisih <= ATOL
+
+
 def test_ujian_level_pro_label_dan_probabilitas():
     _pipeline, masukan, berkas, keluar = _latih_dan_banding(42)
     domain_kosong = [op.version for op in berkas.opset_import if op.domain == ""]

@@ -90,7 +90,14 @@ Hitung dengan tangan dulu. Jangan gulir ke kunci. Setelah itu buka `notebook.ipy
 
 ## Kasus nyata
 
-Generator `tambang_sintetis.py` di folder ini membangun tabel dengan rumus tetap dan `SEED`. Tidak ada unduhan. Bukan data asli perusahaan.
+Generator `tambang_sintetis.py` di folder ini membangun tabel. Tidak ada unduhan. Bukan data asli perusahaan. Modul ini tidak memanggil `make_regression`.
+
+Di `make_regression`, `noise` adalah simpangan baku derau Gauss pada jawaban, dan `bias` adalah geseran tetap pada jawaban. Generator di repo ini memakai parameter lain, dicocokkan ke dokumentasi NumPy:
+
+- `seed` masuk ke `numpy.random.default_rng`. Seed mengunci keadaan pembangkit supaya undian yang sama berulang. Bukan simpangan derau dan bukan geseran tetap.
+- Gangguan fitur berasal dari `Generator.normal(loc=0, scale=1)`. `loc` adalah rata-rata gangguan. `scale` adalah simpangan bakunya.
+- Hasil gangguan dikali `skala` tiap kolom, jadi rata-rata gangguan tetap 0 dan simpangan bakunya sama dengan `skala` kolom itu.
+- `pusat` adalah nilai tengah fitur untuk tiap kelas, ditambahkan sesudah gangguan. Itu geseran pada fitur, bukan `bias` pada jawaban.
 
 Empat fitur: kadar logam (persen), kadar air (persen), ukuran butir (milimeter), dan kedalaman (meter). Fitur adalah kolom angka yang dipakai untuk menebak. Kelasnya `sisihkan`, `campur`, atau `simpan`.
 
@@ -117,7 +124,7 @@ uv run pytest
 uv run pytest --nbmake
 ```
 
-Buka `notebook.ipynb`, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All. Sel pertama berisi `SEED = 42`. Angka tetap itu dipakai pada setiap undian acak, lewat `random_state=SEED`, supaya hasilnya berulang.
+Buka `notebook.ipynb`, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All. Sel pertama berisi `SEED = 42`. Angka itu dikirim sebagai `seed` ke `buat_batch` (mengunci `default_rng`) dan sebagai `random_state=SEED` pada pembagian data serta model. Keduanya supaya langkah acak berulang. `random_state` bukan parameter generator tabel.
 
 .NET di modul ini adalah program di luar Python yang membaca berkas ONNX yang sama. C# adalah bahasa berkas pemanggil itu; kamu tidak perlu menghafalnya. Alat `dotnet` tidak dipasang oleh `uv sync --frozen`.
 
@@ -146,7 +153,7 @@ CPU only. Versi paket terkunci di `uv.lock` di root repo.
 3. Supaya penulis berkas dan program pembaca memakai edisi yang sama. Edisi yang dikunci: 22. Lihat baris `opset_dikunci` pada keluaran.
 4. Batasnya `atol=1e-5`. Label kelas harus identik. Lihat baris `label_identik` dan `dalam_batas` pada keluaran.
 5. Salah. Tabel dibuat generator di repo. Bukan unduhan. Bukan data asli perusahaan.
-6. Supaya setiap undian acak memakai angka tetap yang sama, dan pembagian data berulang.
+6. Supaya undian yang sama berulang. Pada generator, `seed` mengunci `default_rng`. Pada pembagian data dan model, angka yang sama masuk lewat `random_state`.
 7. Tiga baris itu ada di keluaran yang disalin di bawah.
 
 ### Angka yang disalin dari keluaran notebook
@@ -176,6 +183,7 @@ opset ai.onnx 22
 label_identik True
 selisih_maks 6.787675388419956e-08
 dalam_batas True
+nama_uji ['sisihkan', 'campur', 'campur', 'sisihkan', 'simpan', 'sisihkan', 'sisihkan', 'sisihkan', 'sisihkan', 'campur', 'sisihkan', 'simpan', 'simpan', 'sisihkan', 'sisihkan', 'sisihkan', 'campur', 'campur', 'sisihkan', 'simpan', 'simpan', 'sisihkan', 'sisihkan', 'campur', 'campur', 'simpan', 'simpan', 'simpan', 'simpan', 'sisihkan', 'campur', 'campur', 'campur', 'simpan', 'campur', 'sisihkan', 'simpan', 'simpan', 'campur', 'simpan', 'campur', 'sisihkan', 'sisihkan', 'campur', 'campur', 'sisihkan', 'campur', 'sisihkan', 'simpan', 'simpan', 'campur', 'campur', 'simpan', 'simpan', 'campur', 'campur', 'simpan', 'sisihkan', 'simpan', 'simpan']
 n_mini 8
 label_mini_python ['sisihkan', 'campur', 'campur', 'sisihkan', 'simpan', 'sisihkan', 'sisihkan', 'sisihkan']
 label_mini_onnx ['sisihkan', 'campur', 'campur', 'sisihkan', 'simpan', 'sisihkan', 'sisihkan', 'sisihkan']
@@ -249,5 +257,7 @@ Bagian Python mini-proyek ini juga dijalankan di `latihan-kunci.ipynb` dan di `t
 - scikit-learn developers. *LogisticRegression*. <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html>
 - scikit-learn developers. *Pipeline*. <https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html>
 - scikit-learn developers. *Preprocessing data*. <https://scikit-learn.org/stable/modules/preprocessing.html>
-- NumPy developers. *Random Generator*. <https://numpy.org/doc/stable/reference/random/generator.html>
+- NumPy developers. *Random Generator* (`default_rng`: seed mengunci BitGenerator). <https://numpy.org/doc/stable/reference/random/generator.html>
+- NumPy developers. *numpy.random.Generator.normal* (`loc` rata-rata, `scale` simpangan baku). <https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.normal.html>
+- scikit-learn developers. *make_regression* (`noise` simpangan baku derau pada jawaban, `bias` suku geseran pada model linier). Modul ini tidak memanggil fungsi itu. <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html>
 - Astral. *uv*. <https://docs.astral.sh/uv/>
