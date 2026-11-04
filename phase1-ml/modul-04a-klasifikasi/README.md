@@ -16,15 +16,15 @@ Itu bukan angka. Dua keranjang, dan tiap buah harus masuk salah satu. Modul ini 
 
 Paket adalah bundel kode siap pakai. Pustaka adalah kumpulan fungsi di dalam paket. pandas adalah pustaka untuk tabel. scikit-learn adalah pustaka untuk model di modul ini.
 
-Tiga istilah di bawah ini yang baru. Data latih dan data uji, baseline, serta ukuran kesalahan dipakai sesuai arti di kamus, tidak diubah. Overfitting juga dipakai sesuai kamus modul regresi: model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga bagus di data latih tetapi buruk di data baru.
+Tiga istilah di bawah ini yang baru. Data latih dan data uji serta baseline dipakai sesuai arti di kamus, tidak diubah. Rata-rata selisih mutlak, istilah modul sebelumnya, mengukur jarak tebakan yang jawabannya angka. Di modul ini yang dibandingkan adalah banyak tebakan golongan yang salah. Overfitting juga dipakai sesuai kamus modul regresi: model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga bagus di data latih tetapi buruk di data baru.
 
-Di modul ini ukuran kesalahan adalah banyak tebakan yang salah. Notebook mencetak angka itu untuk data latih dan data uji.
+Notebook mencetak banyak tebakan yang salah pada data latih dan pada data uji.
 
 ### klasifikasi
 
 Memilah ke keranjang yang sudah bernama, bukan menimbang kilogram. Nama teknisnya **klasifikasi**: model yang menebak golongan, bukan angka.
 
-**Batas analogi:** keranjang harus sudah ada di jawaban data latih. Model tidak membuat golongan baru. Kalau kenyataannya suatu spektrum, dua keranjang membuang yang di tengah. Salah keranjang bukan selisih kilogram, jadi ukuran kesalahan regresi tidak pindah begitu saja.
+**Batas analogi:** keranjang harus sudah ada di jawaban data latih. Model tidak membuat golongan baru. Kalau kenyataannya suatu spektrum, dua keranjang membuang yang di tengah. Salah keranjang bukan selisih kilogram, jadi rata-rata selisih mutlak untuk jawaban berupa angka tidak pindah begitu saja.
 
 ### regresi logistik
 

@@ -16,7 +16,7 @@ Paket adalah bundel kode siap pakai. Pustaka adalah kumpulan fungsi di dalam pak
 
 Hanya dua istilah baru di bawah. Klasifikasi, dari bagian sebelumnya, artinya model yang menebak golongan, bukan angka. Pohon keputusan artinya bagan pertanyaan ya atau tidak, satu kolom tiap pertanyaan. Dua kalimat itu mengingat arti yang sudah ada, bukan istilah baru di sini.
 
-Data latih dan data uji, baseline, ukuran kesalahan, serta overfitting dipakai sesuai kamus. Ukuran kesalahan di modul ini tetap banyak tebakan yang salah. Overfitting: bagus di data latih, termasuk kebetulan-kebetulannya, tetapi buruk di data baru.
+Data latih dan data uji, baseline, serta overfitting dipakai sesuai kamus. Rata-rata selisih mutlak mengukur jarak tebakan angka, bukan golongan. Di modul ini yang dibandingkan tetap banyak tebakan golongan yang salah. Overfitting: bagus di data latih, termasuk kebetulan-kebetulannya, tetapi buruk di data baru.
 
 ### hutan acak
 
