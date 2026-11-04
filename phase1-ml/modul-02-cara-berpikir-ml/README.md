@@ -14,11 +14,11 @@ Modul ini tidak memakai data asli perusahaan. Angka 8, 10, 12, dan 16 adalah con
 
 ## Teori
 
-Di modul ini hanya ada tiga istilah baru. Kata model di arti kamus dipakai sebagai bahasa biasa untuk cara menebak, dan belum masuk kamus. Nama fungsi di pustaka juga belum masuk kamus.
+Pustaka adalah kumpulan fungsi siap pakai yang dipanggil dari kode. Di modul ini hanya ada tiga istilah baru. Kata model di arti kamus dipakai sebagai bahasa biasa untuk cara menebak, dan belum masuk kamus. Nama fungsi di pustaka juga belum masuk kamus.
 
 ### data latih dan data uji
 
-Tiga catatan terbuka dipakai untuk menyusun tebakan. Catatan di amplop disisihkan, tidak ikut menyusun tebakan, dan baru dipakai saat mengukur. Nama teknisnya **data latih dan data uji**. Artinya: Data dibagi dua: data latih dipakai model untuk belajar; data uji disisihkan dan tidak dilihat model saat belajar, dipakai untuk mengukur seberapa baik model pada data baru. Satu entri karena satu ide.
+Tiga catatan terbuka dipakai untuk menyusun tebakan. Catatan di amplop disisihkan, tidak ikut menyusun tebakan, dan baru dipakai saat mengukur. Nama teknisnya **data latih dan data uji**. Artinya: data dibagi dua: data latih dipakai model untuk belajar; data uji disisihkan dan tidak dilihat model saat belajar, dipakai untuk mengukur seberapa baik model pada data baru. Satu entri karena satu ide.
 
 Perumpamaan: seperti catatan perjalanan yang terbuka untuk menyusun tebakan, dan satu catatan di amplop tertutup yang baru dibuka saat mengukur melesetnya tebakan.
 
@@ -32,7 +32,7 @@ Gambar dulu. Tiga jawaban yang terbuka:
 8    10    12
 ```
 
-Tebakan untuk setiap baris, termasuk baris di amplop, adalah rata-rata tiga angka itu. Gambar di istilah berikutnya memakai hasil rata-rata itu. Tebakan ini tidak melihat jarak perjalanan. Nama teknisnya **baseline**. Artinya: Cara menebak paling sederhana (misalnya selalu menebak rata-rata atau kelas yang paling banyak) yang dipakai sebagai pembanding; model yang baik harus mengalahkannya.
+Tebakan untuk setiap baris, termasuk baris di amplop, adalah rata-rata tiga angka itu. Gambar di istilah berikutnya memakai hasil rata-rata itu. Tebakan ini tidak melihat jarak perjalanan. Nama teknisnya **baseline**. Artinya: cara menebak paling sederhana (misalnya selalu menebak rata-rata atau kelas yang paling banyak) yang dipakai sebagai pembanding; model yang baik harus mengalahkannya.
 
 Di modul ini jawabannya angka, jadi baseline selalu menebak rata-rata data latih. Contoh "kelas yang paling banyak" ada di arti kamus untuk jawaban berupa pilihan. Modul ini tidak menghitung contoh itu, supaya angka penilaian tetap satu.
 
@@ -61,7 +61,7 @@ Rumus pada gambar di atas:
 
 `rata-rata selisih bertanda = (-2 + 0 + 2) / 3`
 
-Rata-rata selisih bertanda pada gambar itu nol, padahal ada jarak. Karena itu modul ini memakai jarak, lalu merata-ratakannya. Nama teknisnya **rata-rata selisih mutlak**. Artinya: Rata-rata dari jarak antara tebakan dan jawaban. Jarak berarti selisih yang tanda minusnya dibuang. Jumlah jarak dibagi banyak baris yang diukur. Semakin kecil angkanya, semakin dekat. Nilai terbaik adalah nol: tebakan sama dengan jawaban pada baris yang diukur. Di scikit-learn, fungsi untuk hitungan yang sama bernama mean_absolute_error.
+Rata-rata selisih bertanda pada gambar itu nol, padahal ada jarak. Karena itu modul ini memakai jarak, lalu merata-ratakannya. Nama teknisnya **rata-rata selisih mutlak**. Artinya: rata-rata dari jarak antara tebakan dan jawaban. Jarak berarti selisih yang tanda minusnya dibuang. Jumlah jarak dibagi banyak baris yang diukur. Semakin kecil angkanya, semakin dekat. Nilai terbaik adalah nol: tebakan sama dengan jawaban pada baris yang diukur. Di scikit-learn, fungsi untuk hitungan yang sama bernama mean_absolute_error.
 
 Perumpamaan: seperti mencatat berapa menit tebakan meleset, baik terlalu singkat maupun terlalu lama, lalu merata-rata menit meleset itu.
 
@@ -92,7 +92,7 @@ Seperempat baris menjadi data uji, lewat `train_test_split` dengan `test_size=0.
 
 Baseline memakai `DummyRegressor(strategy="mean")`. Dokumentasinya menyatakan strategi `"mean"` selalu menebak rata-rata data latih. Kolom `Situps` tetap diisi karena fungsi itu meminta petunjuk, tetapi tebakannya tidak berubah mengikuti `Situps`. Semua tebakan sama dengan rata-rata kolom `Weight` pada data latih.
 
-Pada keluaran notebook, `kasus_mae_latih` lebih besar daripada `kasus_mae_uji`. Lima baris uji memang bisa menghasilkan angka yang lebih kecil atau lebih besar. Baseline tidak membaca jawaban data uji. Halaman toy dataset scikit-learn mengatakan dataset sekecil ini sering terlalu kecil untuk mewakili tugas sungguhan. Angka pada data uji tetap yang disimpan sebagai penilaian baseline di modul ini.
+Kalau `kasus_mae_uji` lebih kecil daripada `kasus_mae_latih`, itu bukan tanda baseline melihat jawaban data uji: rata-ratanya dihitung dari data latih saja, dan lima baris uji kebetulan jaraknya lebih kecil. Halaman toy dataset scikit-learn mengatakan dataset sekecil ini sering terlalu kecil untuk mewakili tugas sungguhan. Angka pada data uji tetap yang disimpan sebagai penilaian baseline di modul ini.
 
 ## Kesalahan yang paling sering terjadi
 
@@ -106,23 +106,18 @@ Pada keluaran notebook, `kasus_mae_latih` lebih besar daripada `kasus_mae_uji`. 
 
 Sel pertama setiap notebook berisi `SEED = 42`, seperti di modul 1. Angka tetap itu dipakai pada setiap pemisahan acak, lewat `random_state=SEED`, supaya baris yang terpilih sama setiap kali notebook diulang.
 
-Perintah ini dijalankan dari folder `phase1-ml/modul-02-cara-berpikir-ml`:
+Paket adalah kumpulan berkas yang dipasang supaya kode bisa memanggil fungsi pustaka. uv adalah alat yang memasang paket sesuai daftar terkunci, lalu menjalankan perintah di lingkungan itu.
+
+Perintah ini dijalankan dari root repo (folder yang berisi `pyproject.toml` dan `uv.lock`), bukan dari folder modul:
 
 ```bash
-uv sync
-uv run jupyter lab
-```
-
-Buka `notebook.ipynb`, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All.
-
-Tes:
-
-```bash
-uv run pytest
+uv sync --frozen
 uv run pytest --nbmake
 ```
 
-CPU only. Versi paket terkunci di `uv.lock`. Berkas `requirements.txt` dihasilkan dari `uv export` pada kunci itu, untuk yang memasang lewat pip. Jalan yang dipakai modul ini adalah uv. Catatan ini menyebut Python 3.14, tanpa nomor patch. Lingkungan dan perintah uv sama seperti modul 1; yang berbeda hanya folder modulnya.
+Buka `notebook.ipynb` di folder modul ini, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All.
+
+CPU only. Daftar paket yang terkunci ada di `uv.lock` di root repo.
 
 ## Cek pemahaman
 
@@ -152,6 +147,8 @@ Jawaban "coba sendiri": `tangan_rata 10.0`, `tangan_jarak_uji 6`, `tangan_mae 1.
 
 Jawaban di atas dan angka di bawah ini disalin dari keluaran notebook yang sudah dijalankan, bukan dihitung ulang di teks.
 
+Indeks adalah nomor baris dari pandas, mulai dari 0.
+
 Dari `notebook.ipynb`:
 
 ```
@@ -178,7 +175,7 @@ kasus_indeks_uji_lagi [0, 17, 15, 1, 8]
 kasus_sama True
 ```
 
-Dari `latihan.ipynb` dan `latihan-kunci.ipynb`:
+Dari `latihan-kunci.ipynb`:
 
 ```
 kunci_rata 6.0
@@ -196,6 +193,6 @@ latihan_indeks_sama True
 
 - scikit-learn developers. `train_test_split`. <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html> Kalimat pada halaman itu: "Split arrays or matrices into random train and test subsets." Halaman yang sama: bila `train_size` juga `None`, `test_size` menjadi 0.25.
 - scikit-learn developers. `DummyRegressor`. <https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html> Kalimat pada halaman itu untuk strategi `"mean"`: "always predicts the mean of the training set". Kalimat pada halaman yang sama: "Do not use it for real problems."
-- scikit-learn developers. `mean_absolute_error`. <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html> Kalimat pada halaman itu: "The mean absolute error is a non-negative floating point value, where best value is 0.0."
-- scikit-learn developers. *Toy datasets* (Linnerud) dan `load_linnerud`. <https://scikit-learn.org/stable/datasets/toy_dataset.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_linnerud.html> Halaman toy dataset menyatakan dataset ini tidak perlu mengunduh berkas dari situs lain, dan sering terlalu kecil untuk mewakili tugas sungguhan. Kalimat sumber berikut mengikuti halaman itu.
-- Tenenhaus, M. (1998). *La regression PLS: theorie et pratique.* Paris: Editions Technic.
+- scikit-learn developers. `mean_absolute_error`. <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html> Kalimat pada halaman itu: "The mean absolute error is a non-negative floating point value, where best value is 0.0." Nama bahasa Inggris itu nama fungsi untuk hitungan yang sama, bukan istilah kedua.
+- scikit-learn developers. *Toy datasets* (Linnerud) dan `load_linnerud`. <https://scikit-learn.org/stable/datasets/toy_dataset.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_linnerud.html> Halaman toy dataset menyatakan dataset ini tidak perlu mengunduh berkas dari situs lain, dan sering terlalu kecil untuk mewakili tugas sungguhan. Judul bagian di halaman itu tertulis Linnerrud. Nama yang dipakai di sini Linnerud, sama dengan fungsi `load_linnerud`.
+- Tenenhaus, M. (1998). *La régression PLS : théorie et pratique.* Paris: Éditions Technip. Halaman scikit-learn menulis judul itu sebagai "La regression PLS: theorie et pratique" dan penerbitnya "Editions Technic". Ejaan di sini mengikuti katalog perpustakaan Sorbonne, ISBN 978-2-7108-0735-3. Judul buku itu bukan istilah yang diajarkan di modul ini.
