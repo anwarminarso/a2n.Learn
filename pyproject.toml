@@ -17,5 +17,9 @@ dependencies = [
 package = false
 
 [tool.pytest.ini_options]
-testpaths = ["phase1-ml/modul-01-persiapan"]
+testpaths = [
+  "phase1-ml/modul-01-persiapan",
+  "phase1-ml/modul-05a-validasi-overfitting",
+  "phase1-ml/modul-05b-metrik-penilaian",
+]
 python_files = ["test_*.py"]
