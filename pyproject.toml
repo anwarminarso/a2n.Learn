@@ -19,6 +19,7 @@ package = false
 [tool.pytest.ini_options]
 testpaths = [
   "phase1-ml/modul-01-persiapan",
+  "phase1-ml/modul-02-cara-berpikir-ml",
   "phase1-ml/modul-05a-validasi-overfitting",
   "phase1-ml/modul-05b-metrik-penilaian",
 ]

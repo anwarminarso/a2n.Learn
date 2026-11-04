@@ -365,7 +365,7 @@ def test_kamus_istilah_modul():
     akhir = kamus.index("| recall |")
     akhir = kamus.index("\n", akhir)
     assert "\n\n" not in kamus[awal:akhir]
-    for istilah, modul in (("data leakage", "5a"), ("cross-validation", "5a")):
+    for istilah, modul in (("data leakage", "5"), ("cross-validation", "5a")):
         baris = [b for b in kamus.splitlines() if b.startswith(f"| {istilah} |")]
         assert len(baris) == 1, istilah
         kolom = [k.strip() for k in baris[0].strip().strip("|").split("|")]
