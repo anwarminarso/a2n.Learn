@@ -4,6 +4,7 @@ Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -13,8 +14,8 @@ from sklearn.datasets import load_iris
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parents[1]
 NOTEBOOKS = ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb")
-# Dua potong, supaya berkas ini tidak memuat penanda patch sebagai teks utuh.
-PENANDA_PATCH = "3" + ".14."
+# Angka setelah titik ketiga menandai patch. Bentuk dengan bintang tidak kena.
+PATCH_ANGKA = re.compile(r"3\.14\.\d")
 
 
 def _sumber(cell):
@@ -104,23 +105,32 @@ def test_readme_punya_bagian_wajib_dan_batas_analogi():
     for istilah in ("venv", "array", "DataFrame"):
         assert istilah in teks
     assert teks.count("Batas analogi") >= 3
-    assert PENANDA_PATCH not in teks
+    assert PATCH_ANGKA.search(teks) is None
+    assert "uv sync --frozen" in teks
+    assert "uv run pytest --nbmake" in teks
+    assert "folder modul" not in teks.split("bukan dari folder modul")[0]
 
 
-def test_pyproject_python_tanpa_nomor_patch():
-    teks = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert 'requires-python = ">=3.14,<3.15"' in teks
-    assert PENANDA_PATCH not in teks
+def test_pyproject_dan_lock_di_root():
+    teks = (REPO / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'requires-python = "==3.14.*"' in teks
+    assert PATCH_ANGKA.search(teks) is None
+    assert (REPO / ".python-version").read_text(encoding="utf-8").strip() == "3.14"
+    kunci = (REPO / "uv.lock").read_text(encoding="utf-8")
+    assert 'requires-python = "==3.14.*"' in kunci
+    assert PATCH_ANGKA.search(kunci) is None
+    assert not (ROOT / "pyproject.toml").exists()
+    assert not (ROOT / "uv.lock").exists()
 
 
 def test_berkas_modul_tanpa_nomor_patch_python():
     for path in ROOT.rglob("*"):
         if not path.is_file():
             continue
-        if path.name == "uv.lock" or ".venv" in path.parts or "__pycache__" in path.parts:
+        if ".venv" in path.parts or "__pycache__" in path.parts:
             continue
         teks = path.read_text(encoding="utf-8")
-        assert PENANDA_PATCH not in teks, path
+        assert PATCH_ANGKA.search(teks) is None, path
 
 
 def test_readme_menyalin_keluaran_notebook():

@@ -67,7 +67,7 @@ Ada empat ukuran (panjang dan lebar kelopak pelindung, panjang dan lebar mahkota
 
 ## Kesalahan yang paling sering terjadi
 
-1. Paket dipasang di luar venv proyek ini. Gejalanya: `import` gagal, atau versi paketnya bukan yang tertulis di `uv.lock`. Jalankan `uv sync` di folder modul, lalu jalankan perintah lewat `uv run`.
+1. Paket dipasang di luar venv proyek ini. Gejalanya: `import` gagal, atau versi paketnya bukan yang tertulis di `uv.lock`. Jalankan `uv sync --frozen` dari root repo, lalu jalankan perintah lewat `uv run`.
 2. Sel notebook dijalankan dari bawah, atau layar masih menyimpan hasil lama. Pakai Restart & Run All supaya semua sel jalan dari sel pertama, tanpa ada yang dilewati.
 3. Array diisi campuran angka dan teks. Isinya berubah jadi teks, dan rata-rata tidak bisa dihitung.
 4. DataFrame dianggap spreadsheet. Mengisi satu kolom tidak mengubah kolom lain. Kolom baru harus kamu hitung sendiri.
@@ -75,25 +75,18 @@ Ada empat ukuran (panjang dan lebar kelopak pelindung, panjang dan lebar mahkota
 
 ## Cara menjalankan
 
-Notebook adalah berkas catatan: penjelasan, satu potong kode, lalu hasilnya. Aplikasi yang membukanya bernama Jupyter. Git menyimpan riwayat berkas; folder `.venv` tidak ikut disimpan, dan jangan menaruh kata sandi di berkas. Sel pertama setiap notebook berisi `SEED = 42`. Angka tetap itu dipakai pada setiap undian acak, lewat `random_state=SEED`, supaya urutan yang terambil sama setiap kali notebook diulang.
+Notebook adalah berkas catatan: penjelasan, satu potong kode, lalu hasilnya. Aplikasi yang membukanya bernama Jupyter. Git menyimpan riwayat berkas, jadi perubahan kemarin bisa dibuka lagi. Folder `.venv` tidak ikut disimpan, dan jangan menaruh kata sandi di berkas. Sel pertama setiap notebook berisi `SEED = 42`. Angka tetap itu dipakai pada setiap undian acak, lewat `random_state=SEED`, supaya urutan yang terambil sama setiap kali notebook diulang.
 
-Perintah ini dijalankan dari folder `phase1-ml/modul-01-persiapan`:
-
-```bash
-uv sync
-uv run jupyter lab
-```
-
-Buka `notebook.ipynb`, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All.
-
-Tes:
+Perintah ini dijalankan dari root repo (folder yang berisi `pyproject.toml` dan `uv.lock`), bukan dari folder modul:
 
 ```bash
-uv run pytest
+uv sync --frozen
 uv run pytest --nbmake
 ```
 
-CPU only. Versi paket terkunci di `uv.lock`. Berkas `requirements.txt` dihasilkan dari `uv export` pada kunci itu, untuk yang memasang lewat pip. Jalan yang dipakai modul ini adalah uv. Catatan ini menyebut Python 3.14, tanpa nomor patch.
+Buka `notebook.ipynb` di folder modul ini, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All.
+
+CPU only. Versi paket terkunci di `uv.lock` di root repo. Catatan ini menyebut Python 3.14, tanpa nomor patch.
 
 ## Cek pemahaman
 
@@ -118,6 +111,8 @@ CPU only. Versi paket terkunci di `uv.lock`. Berkas `requirements.txt` dihasilka
 ### Angka yang disalin dari keluaran notebook
 
 Jawaban "coba sendiri" dan angka di bawah ini disalin dari keluaran notebook yang sudah dijalankan, bukan dihitung ulang di teks. Angka panjang pada rata-rata kolom mahkota ikut disalin apa adanya; jangan dibulatkan dengan tangan.
+
+Indeks adalah nomor baris dari pandas, mulai dari 0.
 
 Dari `notebook.ipynb`:
 
@@ -155,5 +150,5 @@ sama True
 - NumPy developers. *NumPy: the absolute basics for beginners.* <https://numpy.org/doc/stable/user/absolute_beginners.html>
 - pandas development team. *10 minutes to pandas.* <https://pandas.pydata.org/docs/user_guide/10min.html>
 - scikit-learn developers. *Toy datasets* (Iris plants dataset) dan `load_iris`. <https://scikit-learn.org/stable/datasets/toy_dataset.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>
-- Fisher, R.A. "The use of multiple measurements in taxonomic problems" Annual Eugenics, 7, Part II, 179-188 (1936); juga dalam "Contributions to Mathematical Statistics" (John Wiley, NY, 1950). Kalimat sumber ini mengikuti halaman toy dataset scikit-learn.
+- Fisher, R.A. "The use of multiple measurements in taxonomic problems" Annals of Eugenics, 7, Part II, 179-188 (1936); juga dalam "Contributions to Mathematical Statistics" (John Wiley, NY, 1950). Kalimat sumber ini mengikuti halaman toy dataset scikit-learn, dengan nama jurnal yang sudah dikoreksi.
 - Chacon, S., dan Straub, B. *Pro Git*, bab "What is Git?". <https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F>

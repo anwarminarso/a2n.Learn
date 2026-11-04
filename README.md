@@ -20,15 +20,15 @@ Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk develop
 ## Susunan modul
 Setiap modul punya format sama: teori 1 halaman, notebook, kasus nyata, latihan + kunci, cek pemahaman. Detail di [docs/module-template.md](docs/module-template.md). Istilah dan perumpamaan dicatat di [docs/kamus-istilah.md](docs/kamus-istilah.md).
 
-## Cara menjalankan (per modul)
+## Cara menjalankan
+Perintah dijalankan dari root repo (folder yang berisi `pyproject.toml` dan `uv.lock`):
+
 ```bash
-cd phase1-ml/modul-01-persiapan
-python3.14 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-jupyter lab            # buka notebook.ipynb, lalu Restart & Run All
-pytest --nbmake *.ipynb
+uv sync --frozen
+uv run pytest --nbmake
 ```
-Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), CPU only. Dependensi per modul: `pyproject.toml` + `uv.lock`; `requirements.txt` hasil `uv export` di-commit.
+
+Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), CPU only. Dependensi ada di `pyproject.toml` dan `uv.lock` di root repo. `requirements.txt` adalah hasil `uv export` dari lock itu.
 
 ## Aturan data
 Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data asli perusahaan. Tanpa secret. Lihat [data/README.md](data/README.md).
