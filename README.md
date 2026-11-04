@@ -23,12 +23,12 @@ Setiap modul punya format sama: teori 1 halaman, notebook, kasus nyata, latihan 
 ## Cara menjalankan (per modul)
 ```bash
 cd phase1-ml/modul-01-persiapan
-python3.12 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python3.14 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 jupyter lab            # buka notebook.ipynb, lalu Restart & Run All
 pytest --nbmake *.ipynb
 ```
-Python 3.12, CPU only. Dependensi per modul: `pyproject.toml` + `uv.lock`; `requirements.txt` hasil `uv export` di-commit.
+Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), CPU only. Dependensi per modul: `pyproject.toml` + `uv.lock`; `requirements.txt` hasil `uv export` di-commit.
 
 ## Aturan data
 Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data ANTAM. Tanpa secret. Lihat [data/README.md](data/README.md).

@@ -23,7 +23,7 @@ Pembaca sasaran: anak SMP.
 Larangan: tidak menghapus `main`/`develop`, tidak force-push. Modul berikutnya dimulai hanya setelah modul sebelumnya lolos Ursa dan Squal.
 
 ## Definition of Done per modul
-- [ ] (a) lingkungan baru dari `pyproject.toml` + `uv.lock` (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit per modul); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
+- [ ] (a) Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), sesuai `.python-version`; lingkungan baru dari `pyproject.toml` + `uv.lock` (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit per modul); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
 - [ ] (b) seed seragam: konstanta `SEED = 42` di sel pertama setiap notebook dan dipakai di setiap `random_state`/pemanggilan acak; setiap angka yang dikutip di teks berasal dari output notebook, bukan ditulis tangan
 - [ ] (c) data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data ANTAM.
 - [ ] (d) latihan punya kunci (`latihan-kunci.ipynb`) yang dijalankan Ursa; cek pemahaman punya jawaban benar yang bisa diverifikasi
@@ -54,3 +54,13 @@ Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generat
 
 ## Tempo
 Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
+
+## Versi Python
+- Versi: **Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10)**, dikunci ke patch terbaru lewat `.python-version` di root repo (saat ini `3.14.10`, rilis 2026-10-25). `uv.lock` tiap modul di-commit.
+- Sebelum Pyra mengunci `uv.lock`: pastikan scikit-learn, onnxruntime, dan skl2onnx punya wheel untuk 3.14. Bila salah satu tidak ada, turun ke 3.13 (jangan pernah 3.12 atau lebih lama; untuk sekarang jangan 3.15). Python 3.10 sudah EOL (2026-10-01), jangan dipakai.
+- Sumber status versi: https://devguide.python.org/versions/
+
+### Catatan keputusan
+| Tanggal | Keputusan | Bukti |
+|---|---|---|
+| 2026-11-04 | Python 3.14 (3.14.10) | Cek PyPI 2026-11-04: scikit-learn 1.9.1 dan onnxruntime 1.31.1 punya wheel cp314; skl2onnx 1.20.0 berupa wheel `py3-none-any` (murni Python). Pyra wajib mengecek ulang sebelum mengunci `uv.lock`. |

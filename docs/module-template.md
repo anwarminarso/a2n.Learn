@@ -12,7 +12,7 @@ phase1-ml/modul-NN-nama/
   uv.lock               # versi terkunci (termasuk pytest, nbmake, ipykernel)
   requirements.txt      # hasil `uv export` dari uv.lock, di-commit
 ```
-Python 3.12, CPU only. Setiap notebook mendefinisikan `SEED = 42` di sel pertama dan memakainya di setiap `random_state`.
+Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), CPU only. Setiap notebook mendefinisikan `SEED = 42` di sel pertama dan memakainya di setiap `random_state`.
 
 ## Isi `README.md` modul
 1. Judul, tujuan belajar, dan **Tingkat** (`beginner` / `intermediate` / `advanced` / `pro`)
@@ -26,7 +26,7 @@ Python 3.12, CPU only. Setiap notebook mendefinisikan `SEED = 42` di sel pertama
 9. Sumber (buku atau dokumentasi resmi)
 
 ## Checklist (Definition of Done)
-- [ ] (a) lingkungan baru dari `pyproject.toml` + `uv.lock` (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit per modul); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
+- [ ] (a) Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), sesuai `.python-version`; lingkungan baru dari `pyproject.toml` + `uv.lock` (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit per modul); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
 - [ ] (b) seed seragam: konstanta `SEED = 42` di sel pertama setiap notebook dan dipakai di setiap `random_state`/pemanggilan acak; setiap angka yang dikutip di teks berasal dari output notebook, bukan ditulis tangan
 - [ ] (c) data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data ANTAM.
 - [ ] (d) latihan punya kunci (`latihan-kunci.ipynb`) yang dijalankan Ursa; cek pemahaman punya jawaban benar yang bisa diverifikasi
