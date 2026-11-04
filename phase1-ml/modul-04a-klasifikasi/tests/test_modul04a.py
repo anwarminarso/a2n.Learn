@@ -3,6 +3,8 @@
 Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
+import contextlib
+import io
 import json
 import re
 from pathlib import Path
@@ -55,6 +57,21 @@ def _siapkan():
 
 def _salah(model, ukuran, golongan):
     return int((model.predict(ukuran) != golongan.to_numpy()).sum())
+
+
+def _jalankan_sumber(nama):
+    """Jalankan sumber sel. Keluaran tersimpan tidak dibaca."""
+    nb = _baca_notebook(nama)
+    ruang = {"__name__": "__main__"}
+    potong = []
+    for nomor, cell in enumerate(nb["cells"]):
+        if cell["cell_type"] != "code":
+            continue
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            exec(compile(_sumber(cell), f"{nama}:{nomor}", "exec"), ruang)
+        potong.append(buf.getvalue())
+    return "".join(potong)
 
 
 def test_sel_pertama_adalah_seed():
@@ -131,6 +148,37 @@ def test_iris_dua_spesies_dan_model():
     assert salah_latih_dalam == 0
     assert salah_uji_dalam == 4
     assert salah_uji_dalam > salah_uji_pohon
+
+
+def test_kunci_dijalankan_dari_sumber():
+    """Mutasi di sel kunci menggagalkan tes ini.
+
+    Sumber sel dijalankan, jadi assert di dalam notebook ikut terpicu.
+    Angka pembanding dihitung ulang di tes, bukan diambil dari keluaran tersimpan.
+    """
+    ukuran_latih, ukuran_uji, golongan_latih, golongan_uji = _siapkan()
+    baseline = DummyClassifier(strategy="most_frequent", random_state=SEED)
+    logistik = LogisticRegression(random_state=SEED)
+    pohon = DecisionTreeClassifier(max_depth=2, random_state=SEED)
+    pohon_dalam = DecisionTreeClassifier(random_state=SEED)
+    baseline.fit(ukuran_latih, golongan_latih)
+    logistik.fit(ukuran_latih, golongan_latih)
+    pohon.fit(ukuran_latih, golongan_latih)
+    pohon_dalam.fit(ukuran_latih, golongan_latih)
+    teks = _jalankan_sumber("latihan-kunci.ipynb")
+    assert f"salah_uji_baseline {_salah(baseline, ukuran_uji, golongan_uji)}" in teks
+    assert f"salah_uji_logistik {_salah(logistik, ukuran_uji, golongan_uji)}" in teks
+    assert f"salah_latih_pohon {_salah(pohon, ukuran_latih, golongan_latih)}" in teks
+    assert f"salah_uji_pohon {_salah(pohon, ukuran_uji, golongan_uji)}" in teks
+    assert (
+        f"salah_latih_pohon_dalam {_salah(pohon_dalam, ukuran_latih, golongan_latih)}"
+        in teks
+    )
+    assert (
+        f"salah_uji_pohon_dalam {_salah(pohon_dalam, ukuran_uji, golongan_uji)}"
+        in teks
+    )
+    assert "assert " in _seluruh_sumber("latihan-kunci.ipynb")
 
 
 def test_readme_punya_bagian_wajib_dan_batas_analogi():

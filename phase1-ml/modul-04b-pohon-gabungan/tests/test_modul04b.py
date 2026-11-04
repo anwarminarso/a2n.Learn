@@ -3,6 +3,8 @@
 Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
+import contextlib
+import io
 import json
 import re
 from pathlib import Path
@@ -53,6 +55,21 @@ def _siapkan():
 
 def _salah(model, ukuran, golongan):
     return int((model.predict(ukuran) != golongan.to_numpy()).sum())
+
+
+def _jalankan_sumber(nama):
+    """Jalankan sumber sel. Keluaran tersimpan tidak dibaca."""
+    nb = _baca_notebook(nama)
+    ruang = {"__name__": "__main__"}
+    potong = []
+    for nomor, cell in enumerate(nb["cells"]):
+        if cell["cell_type"] != "code":
+            continue
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            exec(compile(_sumber(cell), f"{nama}:{nomor}", "exec"), ruang)
+        potong.append(buf.getvalue())
+    return "".join(potong)
 
 
 def test_sel_pertama_adalah_seed():
@@ -128,6 +145,36 @@ def test_anggur_dan_tiga_model():
     assert salah_uji_boosting < salah_uji_pohon
     assert float(boosting.learning_rate) == 0.1
     assert int(hutan.n_estimators) == 100
+
+
+def test_kunci_dijalankan_dari_sumber():
+    """Mutasi di sel kunci menggagalkan tes ini.
+
+    Sumber sel dijalankan, jadi assert di dalam notebook ikut terpicu.
+    Angka pembanding dihitung ulang di tes, bukan diambil dari keluaran tersimpan.
+    """
+    ukuran_latih, ukuran_uji, golongan_latih, golongan_uji = _siapkan()
+    pohon = DecisionTreeClassifier(random_state=SEED)
+    hutan = RandomForestClassifier(random_state=SEED)
+    boosting = GradientBoostingClassifier(random_state=SEED)
+    pohon.fit(ukuran_latih, golongan_latih)
+    hutan.fit(ukuran_latih, golongan_latih)
+    boosting.fit(ukuran_latih, golongan_latih)
+    teks = _jalankan_sumber("latihan-kunci.ipynb")
+    assert f"salah_latih_pohon {_salah(pohon, ukuran_latih, golongan_latih)}" in teks
+    salah_pohon = _salah(pohon, ukuran_uji, golongan_uji)
+    salah_hutan = _salah(hutan, ukuran_uji, golongan_uji)
+    salah_boosting = _salah(boosting, ukuran_uji, golongan_uji)
+    assert f"salah_uji_pohon {salah_pohon}" in teks
+    assert f"salah_uji_hutan {salah_hutan}" in teks
+    assert f"salah_uji_boosting {salah_boosting}" in teks
+    pasangan = {
+        "pohon": salah_pohon,
+        "hutan_acak": salah_hutan,
+        "gradient_boosting": salah_boosting,
+    }
+    assert f"paling_sedikit_salah_uji {min(pasangan, key=pasangan.get)}" in teks
+    assert "assert " in _seluruh_sumber("latihan-kunci.ipynb")
 
 
 def test_readme_punya_bagian_wajib_dan_batas_analogi():
