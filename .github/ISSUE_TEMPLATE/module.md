@@ -5,6 +5,9 @@ title: "[Modul N] <nama>"
 labels: ["module", "ml"]
 ---
 
+## Tingkat
+<!-- beginner / intermediate / advanced; tambahkan label level:* yang sesuai -->
+
 ## Tujuan belajar
 
 ## Deliverables

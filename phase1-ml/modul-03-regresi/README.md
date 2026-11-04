@@ -2,6 +2,7 @@
 
 **Topik:** linear dan regularisasi
 **Tujuan:** Memahami regresi linear, fungsi loss, dan regularisasi (Ridge/Lasso).
+**Tingkat:** beginner
 **Status:** belum dimulai
 **Issue:** #3
 

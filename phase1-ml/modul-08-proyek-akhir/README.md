@@ -2,6 +2,7 @@
 
 **Topik:** data publik, ekspor ONNX, panggil dari .NET
 **Tujuan:** Proyek ujung-ke-ujung dengan data publik/sintetis, ekspor model ke ONNX, dan memanggilnya dari .NET.
+**Tingkat:** ditentukan Frieren
 **Status:** belum dimulai
 **Issue:** #8
 

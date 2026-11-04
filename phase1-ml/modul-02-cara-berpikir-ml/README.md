@@ -2,6 +2,7 @@
 
 **Topik:** framing, train/test split, data leakage, metrik
 **Tujuan:** Membingkai masalah ML, memisahkan data latih/uji, mengenali data leakage, dan memilih metrik.
+**Tingkat:** beginner
 **Status:** belum dimulai
 **Issue:** #2
 

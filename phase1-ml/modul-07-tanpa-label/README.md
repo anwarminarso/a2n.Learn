@@ -2,6 +2,7 @@
 
 **Topik:** clustering, PCA, deteksi anomali
 **Tujuan:** Memahami unsupervised learning: clustering, PCA, dan deteksi anomali.
+**Tingkat:** ditentukan Frieren
 **Status:** belum dimulai
 **Issue:** #7
 

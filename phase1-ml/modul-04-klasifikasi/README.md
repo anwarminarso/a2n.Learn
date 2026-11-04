@@ -2,6 +2,7 @@
 
 **Topik:** logistic regression, decision tree, random forest, gradient boosting
 **Tujuan:** Membangun dan membandingkan model klasifikasi utama.
+**Tingkat:** ditentukan Frieren
 **Status:** belum dimulai
 **Issue:** #4
 

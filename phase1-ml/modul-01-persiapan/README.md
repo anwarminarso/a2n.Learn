@@ -2,6 +2,7 @@
 
 **Topik:** Python, venv, Jupyter, Git, numpy/pandas
 **Tujuan:** Menyiapkan lingkungan kerja ML yang bisa diulang: Python 3.12, venv/uv, Jupyter, Git, dan dasar numpy/pandas.
+**Tingkat:** beginner
 **Status:** belum dimulai
 **Issue:** #1
 

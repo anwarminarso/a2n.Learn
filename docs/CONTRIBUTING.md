@@ -1,5 +1,11 @@
 # Kontribusi
 
+## Gaya penulisan
+Pembaca sasaran: anak SMP.
+- Istilah baru dijelaskan dulu dengan contoh sehari-hari, baru kemudian nama teknisnya.
+- Satu sel kode = satu ide, dengan komentar singkat berbahasa Indonesia.
+- Rumus hanya bila perlu, selalu disertai contoh angka kecil.
+
 ## Peran
 - **Pyra**: menulis notebook, kode, dan tes modul.
 - **Ursa**: menjalankan setiap notebook dari nol; PASS/FAIL hanya dari log mentah sesi yang benar-benar menjalankannya.

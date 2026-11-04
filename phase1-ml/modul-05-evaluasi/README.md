@@ -2,6 +2,7 @@
 
 **Topik:** cross-validation, confusion matrix, precision/recall, overfitting
 **Tujuan:** Mengevaluasi model dengan benar dan mengenali overfitting.
+**Tingkat:** ditentukan Frieren
 **Status:** belum dimulai
 **Issue:** #5
 
