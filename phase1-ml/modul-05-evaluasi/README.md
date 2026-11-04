@@ -7,4 +7,6 @@
 **Issue:** #5
 
 Isi folder ini nanti (ditulis Pyra), lihat [module-template](../../docs/module-template.md):
-`README.md` (teori 1 halaman), `notebook.ipynb`, `latihan.ipynb`, `latihan-kunci.ipynb`, `tests/`, `requirements.txt` (pinned, `uv export`). Python 3.12, CPU only.
+`README.md` (teori 1 halaman), `notebook.ipynb`, `latihan.ipynb`, `latihan-kunci.ipynb`, `tests/`, `pyproject.toml`, `uv.lock`, `requirements.txt` (`uv export`). `SEED = 42` di sel pertama tiap notebook. Python 3.12, CPU only.
+
+**Catatan isi wajib:** kebocoran data lewat preprocessing sebelum split, dan data berurutan waktu tidak di-shuffle.
