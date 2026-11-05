@@ -14,15 +14,19 @@ Urutan wajib: modul berikutnya baru dimulai setelah modul sebelumnya lolos Ursa 
 | 1 | Persiapan | — | Pyra | Ursa | Squal | Frieren | beginner | #1 |
 | 2 | Cara berpikir ML | Modul 1 | Pyra | Ursa | Squal | Frieren | beginner | #2 |
 | 3 | Regresi | Modul 2 | Pyra | Ursa | Squal | Frieren | beginner | #3 |
-| 4 | Klasifikasi | Modul 3 | Pyra | Ursa | Squal | Frieren | intermediate | #4 |
-| 5 | Evaluasi | Modul 4 | Pyra | Ursa | Squal | Frieren | intermediate | #5 |
-| 6 | Rekayasa fitur dan Pipeline | Modul 5 | Pyra | Ursa | Squal | Frieren | advanced | #6 |
-| 7 | Tanpa label | Modul 6 | Pyra | Ursa | Squal | Frieren | advanced | #7 |
+| 3b | Regularisasi (Ridge dan Lasso) | Modul 3 | Pyra | Ursa | Squal | Frieren | intermediate | #18 |
+| 4a | Klasifikasi | Modul 3b | Pyra | Ursa | Squal | Frieren | intermediate | #4 |
+| 4b | Pohon dan model gabungan | Modul 4a | Pyra | Ursa | Squal | Frieren | intermediate | #4 |
+| 5a | Validasi dan overfitting | Modul 4b | Pyra | Ursa | Squal | Frieren | intermediate | #5 |
+| 5b | Metrik penilaian dan ujian Intermediate | Modul 5a | Pyra | Ursa | Squal | Frieren | intermediate | #5 |
+| 6a | Rekayasa fitur | Modul 5b | Pyra | Ursa | Squal | Frieren | advanced | #6 |
+| 6b | Pipeline | Modul 6a | Pyra | Ursa | Squal | Frieren | advanced | #6 |
+| 7 | Tanpa label | Modul 6b | Pyra | Ursa | Squal | Frieren | advanced | #7 |
 | 8 | Proyek akhir | Modul 7 | Pyra | Ursa | Squal | Frieren | pro | #8 |
 
 Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas. Iris mengatur urutan dan merge.
 
-Modul yang butuh lebih dari tiga istilah baru dipecah menjadi dua modul pendek. Pyra menentukan pemecahannya saat menulis, dan Iris memperbarui penomoran, issue, dan tabel roadmap.
+Pemecahan modul sudah dilakukan: Pyra menentukan pemecahannya, Iris memperbarui penomoran, dan bagian bernomor huruf mengikuti urutan belajar.
 
 ## Kriteria tingkat
 Label: `level:beginner`, `level:intermediate`, `level:advanced`, `level:pro`.
@@ -30,8 +34,8 @@ Label: `level:beginner`, `level:intermediate`, `level:advanced`, `level:pro`.
 | Tingkat | Modul | Kriteria lulus |
 |---|---|---|
 | beginner | 1–3 | Pembaca bisa menjelaskan dengan kata-katanya sendiri mengapa model diuji pada data yang belum pernah dilihat, dan model dari modul regresi mengalahkan baseline dalam satu proyek mini. |
-| intermediate | 4–5 | Pembaca bisa memilih metrik yang tepat untuk satu kasus dan membuktikan bahwa model tidak sekadar menghafal (overfitting). |
-| advanced | 6–7 | Satu `Pipeline` lengkap dari data mentah sampai hasil, bebas data leakage, dan memberi hasil yang sama setiap kali diulang. |
+| intermediate | 3b–5b | Pembaca bisa memilih metrik yang tepat untuk satu kasus dan membuktikan bahwa model tidak sekadar menghafal (overfitting). |
+| advanced | 6a–7 | Satu `Pipeline` lengkap dari data mentah sampai hasil, bebas data leakage, dan memberi hasil yang sama setiap kali diulang. |
 | pro | 8 | Aplikasi .NET kecil yang memakai model hasil ekspor ONNX: label kelas identik dan probabilitas berada dalam toleransi yang tertulis, dan pembaca bisa menjelaskan keterbatasannya. |
 
 Setiap tingkat ditutup dengan **ujian level** (proyek mini plus beberapa pertanyaan) yang dijalankan Ursa dan diaudit Squal.
