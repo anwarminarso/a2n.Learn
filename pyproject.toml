@@ -21,5 +21,7 @@ testpaths = [
   "phase1-ml/modul-01-persiapan",
   "phase1-ml/modul-02-cara-berpikir-ml",
   "phase1-ml/modul-03-regresi",
+  "phase1-ml/modul-06a-rekayasa-fitur",
+  "phase1-ml/modul-06b-pipeline",
 ]
 python_files = ["test_*.py"]
