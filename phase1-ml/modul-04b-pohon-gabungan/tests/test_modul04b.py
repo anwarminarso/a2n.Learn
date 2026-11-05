@@ -177,6 +177,14 @@ def test_kunci_dijalankan_dari_sumber():
     assert "assert " in _seluruh_sumber("latihan-kunci.ipynb")
 
 
+def test_notebook_utama_dijalankan_dari_sumber():
+    """Mutasi di notebook utama menggagalkan tes ini.
+
+    Sumber sel dijalankan, jadi assert di dalam notebook ikut terpicu.
+    """
+    _jalankan_sumber("notebook.ipynb")
+
+
 def test_readme_punya_bagian_wajib_dan_batas_analogi():
     teks = (ROOT / "README.md").read_text(encoding="utf-8")
     for judul in (
