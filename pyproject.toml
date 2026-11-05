@@ -23,6 +23,8 @@ testpaths = [
   "phase1-ml/modul-03-regresi",
   "phase1-ml/modul-03b-regularisasi/tests",
   "phase1-ml/modul-03b-regularisasi",
+  "phase1-ml/modul-04a-klasifikasi",
+  "phase1-ml/modul-04b-pohon-gabungan",
   "phase1-ml/modul-05a-validasi-overfitting",
   "phase1-ml/modul-05b-metrik-penilaian",
   "phase1-ml/modul-06a-rekayasa-fitur",

@@ -12,8 +12,8 @@ Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk develop
 | 2 | [Cara berpikir ML](phase1-ml/modul-02-cara-berpikir-ml/) | framing, train/test split, baseline, ukuran kesalahan | beginner | #2 |
 | 3 | [Regresi](phase1-ml/modul-03-regresi/) | regresi linear dan fungsi loss | beginner | #3 |
 | 3b | Regularisasi (Ridge dan Lasso) | regularisasi: Ridge dan Lasso | intermediate | #18 |
-| 4a | Klasifikasi | regresi logistik dan pohon keputusan | intermediate | #4 |
-| 4b | Pohon dan model gabungan | hutan acak dan gradient boosting | intermediate | #4 |
+| 4a | [Klasifikasi](phase1-ml/modul-04a-klasifikasi/) | regresi logistik dan pohon keputusan | intermediate | #4 |
+| 4b | [Pohon dan model gabungan](phase1-ml/modul-04b-pohon-gabungan/) | hutan acak dan gradient boosting | intermediate | #4 |
 | 5a | [Validasi dan overfitting](phase1-ml/modul-05a-validasi-overfitting/) | data leakage, cross-validation, overfitting | intermediate | #5 |
 | 5b | [Metrik penilaian dan ujian Intermediate](phase1-ml/modul-05b-metrik-penilaian/) | confusion matrix, precision, recall | intermediate | #5 |
 | 6a | [Rekayasa fitur](phase1-ml/modul-06a-rekayasa-fitur/) | fitur, encoding, penskalaan | advanced | #6 |
