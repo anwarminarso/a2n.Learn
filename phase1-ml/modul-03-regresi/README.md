@@ -129,7 +129,7 @@ Indeks adalah nomor baris pada tabel, mulai dari 0.
 
 ## Cara menjalankan
 
-Paket adalah perkakas yang dipasang ke venv. venv di sini lingkungan terpisah dari modul 1. uv adalah alat yang membaca `uv.lock` di root repo dan memasang paket itu. Pustaka scikit-learn adalah salah satu paket tersebut.
+Paket adalah perkakas yang dipasang ke venv. Semua modul memakai satu venv di root repo, dibuat dengan `uv sync --frozen` dari root. Kamus menjelaskan venv sebagai lingkungan satu proyek. uv adalah alat yang membaca `uv.lock` di root repo dan memasang paket itu. Pustaka scikit-learn adalah salah satu paket tersebut.
 
 Sel pertama setiap notebook berisi `SEED = 42`, seperti di modul 1. Angka tetap itu dipakai pada setiap pemisahan acak dan pada pembuat angka, lewat `random_state=SEED`.
 
