@@ -54,7 +54,7 @@ Pada pecahan ini hutan acak salah nol kali di data uji. Aeberhard, Coomans, dan 
 
 ## Kesalahan yang paling sering terjadi
 
-1. Hutan acak dikira beberapa ahli dengan pengalaman yang berbeda. Pohon-pohonnya satu resep pada potongan data yang sama.
+1. Hutan acak dikira beberapa ahli dengan pengalaman yang berbeda. Pohon-pohonnya satu resep pada potongan data yang tumpang-tindih.
 2. Salah data latih yang nol dipakai untuk memilih model. Keluaran: `salah_latih_pohon 0` tetapi `salah_uji_pohon 2`. Angka untuk anggur baru adalah yang di data uji.
 3. Hutan acak disamakan dengan gradient boosting. Yang pertama merata-rata peluang banyak pohon. Yang kedua menambah pohon berurutan dengan langkah kecil.
 4. `salah_uji_hutan 0` pada `baris_uji 45` dianggap bukti model tidak akan salah lagi.
