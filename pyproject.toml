@@ -22,5 +22,9 @@ testpaths = [
   "phase1-ml/modul-02-cara-berpikir-ml",
   "phase1-ml/modul-04a-klasifikasi",
   "phase1-ml/modul-04b-pohon-gabungan",
+  "phase1-ml/modul-05a-validasi-overfitting",
+  "phase1-ml/modul-05b-metrik-penilaian",
+  "phase1-ml/modul-06a-rekayasa-fitur",
+  "phase1-ml/modul-06b-pipeline",
 ]
 python_files = ["test_*.py"]
