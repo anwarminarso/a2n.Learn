@@ -8,9 +8,11 @@ dependencies = [
   "jupyterlab",
   "nbmake",
   "numpy",
+  "onnxruntime>=1.31.1",
   "pandas",
   "pytest",
   "scikit-learn",
+  "skl2onnx>=1.20.0",
 ]
 
 [tool.uv]
@@ -30,5 +32,6 @@ testpaths = [
   "phase1-ml/modul-06a-rekayasa-fitur",
   "phase1-ml/modul-06b-pipeline",
   "phase1-ml/modul-07-tanpa-label",
+  "phase1-ml/modul-08-proyek-akhir",
 ]
 python_files = ["test_*.py"]
