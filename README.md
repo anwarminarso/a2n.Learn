@@ -3,17 +3,21 @@
 Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk developer (.NET) yang ingin bisa membangun model sesuai kebutuhan.
 
 ## Peta fase
-- **Fase 1 – Machine Learning** (`phase1-ml/`): 8 modul. Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
+- **Fase 1 – Machine Learning** (`phase1-ml/`): 8 modul yang dipecah menjadi 12 bagian. Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
 - **Fase 2 – Model AI**: garis besar saja, lihat [docs/ROADMAP.md](docs/ROADMAP.md).
 
 | # | Modul | Topik | Tingkat | Issue |
 |---|---|---|---|---|
 | 1 | [Persiapan](phase1-ml/modul-01-persiapan/) | Python, venv, Jupyter, Git, numpy/pandas | beginner | #1 |
 | 2 | [Cara berpikir ML](phase1-ml/modul-02-cara-berpikir-ml/) | framing, train/test split, baseline, ukuran kesalahan | beginner | #2 |
-| 3 | [Regresi](phase1-ml/modul-03-regresi/) | linear dan regularisasi | beginner | #3 |
-| 4 | [Klasifikasi](phase1-ml/modul-04-klasifikasi/) | logistic regression, decision tree, random forest, gradient boosting | intermediate | #4 |
-| 5 | [Evaluasi](phase1-ml/modul-05-evaluasi/) | cross-validation, confusion matrix, precision/recall, data leakage, pendalaman overfitting | intermediate | #5 |
-| 6 | [Rekayasa fitur dan Pipeline](phase1-ml/modul-06-rekayasa-fitur/) | feature engineering dan scikit-learn Pipeline | advanced | #6 |
+| 3 | [Regresi](phase1-ml/modul-03-regresi/) | regresi linear dan fungsi loss | beginner | #3 |
+| 3b | Regularisasi (Ridge dan Lasso) | regularisasi: Ridge dan Lasso | intermediate | #18 |
+| 4a | Klasifikasi | regresi logistik dan pohon keputusan | intermediate | #4 |
+| 4b | Pohon dan model gabungan | hutan acak dan gradient boosting | intermediate | #4 |
+| 5a | [Validasi dan overfitting](phase1-ml/modul-05a-validasi-overfitting/) | data leakage, cross-validation, overfitting | intermediate | #5 |
+| 5b | [Metrik penilaian dan ujian Intermediate](phase1-ml/modul-05b-metrik-penilaian/) | confusion matrix, precision, recall | intermediate | #5 |
+| 6a | [Rekayasa fitur](phase1-ml/modul-06a-rekayasa-fitur/) | fitur, encoding, penskalaan | advanced | #6 |
+| 6b | [Pipeline](phase1-ml/modul-06b-pipeline/) | Pipeline dan ColumnTransformer | advanced | #6 |
 | 7 | [Tanpa label](phase1-ml/modul-07-tanpa-label/) | clustering, PCA, deteksi anomali | advanced | #7 |
 | 8 | [Proyek akhir](phase1-ml/modul-08-proyek-akhir/) | data sintetis ala tambang, ekspor ONNX, panggil dari .NET | pro | #8 |
 
