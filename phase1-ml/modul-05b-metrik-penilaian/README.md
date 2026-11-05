@@ -239,6 +239,7 @@ ujian_precision 0.8
 ujian_recall 0.631578947368421
 ujian_skor_latih_dalam 1.0
 ujian_skor_uji_dalam 0.8916666666666667
+ujian_recall_dalam 0.631578947368421
 ujian_selisih_dalam 0.10833333333333328
 ujian_selisih_dangkal 0.04761904761904767
 ujian_menghafal dalam

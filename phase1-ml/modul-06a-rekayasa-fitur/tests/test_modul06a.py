@@ -3,8 +3,10 @@
 Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
+import io
 import json
 import re
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import numpy as np
@@ -110,6 +112,44 @@ def test_penskalaan_latih_berbeda_dari_semua():
     semua = StandardScaler().fit(gelas)
     assert float(latih.mean_[0]) != float(semua.mean_[0])
     assert float(semua.mean_[0]) == 117.5
+
+
+def _jalankan(nama, ganti=None):
+    ruang = {"__name__": "__main__"}
+    with redirect_stdout(io.StringIO()):
+        for cell in _baca_notebook(nama)["cells"]:
+            if cell["cell_type"] != "code":
+                continue
+            src = _sumber(cell)
+            if ganti:
+                src = src.replace(*ganti)
+            exec(src, ruang, ruang)
+    return ruang
+
+
+def test_penimbang_kasus_hanya_dari_data_latih():
+    ruang = _jalankan("notebook.ipynb")
+    rata = float(ruang["penimbang_kasus"].mean_[0])
+    assert rata == float(ruang["X_latih"]["gelas_ml"].mean()), (
+        "Penimbang harus belajar dari kolom gelas pada data latih."
+    )
+    assert rata != float(ruang["X"]["gelas_ml"].mean()), (
+        "Penimbang tidak boleh belajar dari seluruh baris."
+    )
+
+
+def test_mutasi_fit_seluruh_baris_memicu_assert():
+    try:
+        _jalankan(
+            "notebook.ipynb",
+            ganti=(
+                'penimbang_kasus.fit(X_latih[["gelas_ml"]])',
+                'penimbang_kasus.fit(X[["gelas_ml"]])',
+            ),
+        )
+    except AssertionError:
+        return
+    raise AssertionError("Mutasi fit seluruh baris tidak memicu assert.")
 
 
 def test_kasus_sintetis_tanpa_jawaban_di_fitur():

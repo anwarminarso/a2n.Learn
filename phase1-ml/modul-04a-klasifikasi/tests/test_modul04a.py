@@ -146,8 +146,11 @@ def test_iris_dua_spesies_dan_model():
     assert salah_latih_pohon == 1
     assert salah_uji_pohon == 3
     assert salah_latih_dalam == 0
-    assert salah_uji_dalam == 4
-    assert salah_uji_dalam > salah_uji_pohon
+    assert salah_uji_dalam == 4, "Salah uji pohon dalam harus 4, sama dengan angka di README."
+    assert salah_uji_dalam > salah_uji_pohon, "Pohon dalam harus lebih buruk di data uji daripada pohon pendek."
+    assert salah_uji_logistik < salah_uji_dalam, (
+        "Salah uji regresi logistik harus lebih kecil daripada pohon dalam."
+    )
 
 
 def test_kunci_dijalankan_dari_sumber():

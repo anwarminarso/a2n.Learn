@@ -3,16 +3,17 @@
 Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
+import io
 import json
 import re
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import numpy as np
 from sklearn.cluster import KMeans
-from sklearn.datasets import load_iris, make_blobs
+from sklearn.datasets import load_iris
 from sklearn.decomposition import PCA
 from sklearn.ensemble import IsolationForest
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -73,13 +74,14 @@ def _enam():
     )
 
 
-def _pipa_ujian():
-    return Pipeline(
-        [
-            ("skala", StandardScaler()),
-            ("kelompok", KMeans(n_clusters=3, n_init=10, random_state=42)),
-        ]
-    )
+def _jalankan(nama):
+    ruang = {"__name__": "__main__"}
+    with redirect_stdout(io.StringIO()):
+        for cell in _baca_notebook(nama)["cells"]:
+            if cell["cell_type"] != "code":
+                continue
+            exec(_sumber(cell), ruang, ruang)
+    return ruang
 
 
 def test_sel_pertama_adalah_seed():
@@ -206,21 +208,29 @@ def test_iris_clustering_memakai_empat_kolom():
 
 
 def test_ujian_tiga_syarat():
-    X, _nomor = make_blobs(
-        n_samples=120, centers=3, n_features=2, random_state=42
+    """Tes ujian memuat dan menjalankan ujian-kunci.ipynb."""
+    assert (ROOT / "ujian-kunci.ipynb").is_file(), "Berkas ujian-kunci.ipynb harus ada."
+    ruang = _jalankan("ujian-kunci.ipynb")
+    assert ruang["lulus_pipeline"] is True, "Pipeline ujian harus lulus."
+    assert ruang["lulus_tanpa_bocor"] is True, "Scaler ujian hanya melihat data latih."
+    assert ruang["lulus_ulang"] is True, "Label ujian harus sama saat diulang."
+    assert int(ruang["pipa"].named_steps["kelompok"].n_clusters) == 3, (
+        "Ujian memakai 3 kelompok."
     )
-    X_latih, X_uji = train_test_split(X, test_size=0.25, random_state=42)
-    pipa = _pipa_ujian()
-    pipa_lagi = _pipa_ujian()
-    pipa.fit(X_latih)
-    pipa_lagi.fit(X_latih)
-    assert list(pipa.named_steps) == ["skala", "kelompok"]
-    assert int(pipa.n_features_in_) == 2
-    assert int(pipa.named_steps["skala"].n_samples_seen_) == len(X_latih)
-    assert pipa.predict(X_uji).tolist() == pipa_lagi.predict(X_uji).tolist()
-    keliru = StandardScaler().fit(X)
-    assert int(keliru.n_samples_seen_) == len(X)
-    assert int(keliru.n_samples_seen_) != len(X_latih)
+    assert int(ruang["pipa"].named_steps["skala"].n_samples_seen_) == len(ruang["X_latih"]), (
+        "Scaler ujian harus belajar dari data latih saja."
+    )
+    assert int(ruang["scaler_keliru"].n_samples_seen_) == len(ruang["X"]), (
+        "Scaler keliru melihat seluruh baris."
+    )
+    assert int(ruang["scaler_keliru"].n_samples_seen_) != len(ruang["X_latih"]), (
+        "Scaler keliru tidak sama dengan data latih."
+    )
+
+
+def test_notebook_utama_dijalankan_dari_sumber():
+    """Assert di notebook utama ikut terpicu."""
+    _jalankan("notebook.ipynb")
 
 
 def test_readme_punya_bagian_wajib_dan_batas_analogi():

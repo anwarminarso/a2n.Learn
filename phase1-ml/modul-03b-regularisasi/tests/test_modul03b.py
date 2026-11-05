@@ -332,8 +332,12 @@ def test_alpha_nol_tidak_lebih_kecil_dan_bukan_nol_lasso():
     _pipa_ridge, _mae_ridge, _latih_ridge, koef_ridge = _pipa(
         Ridge(alpha=5.0), X_latih, y_latih, X_uji, y_uji
     )
-    assert not (mae_nol < mae_tanpa)
-    assert int(np.sum(koef_ridge_nol == 0.0)) == 0
+    assert not (mae_nol < mae_tanpa), "Alpha nol tidak boleh lebih baik daripada regresi tanpa penalti."
+    selisih_ridge_nol = float(np.max(np.abs(_pipa_nol.predict(X_uji) - _pipa_tanpa.predict(X_uji))))
+    assert selisih_ridge_nol < 1e-8, (
+        "Ridge dengan alpha 0 harus sama dengan regresi linear dalam toleransi 1e-8."
+    )
+    assert int(np.sum(koef_ridge_nol == 0.0)) == 0, "Koefisien Ridge alpha nol tidak boleh tepat nol."
     assert int(np.sum(koef_lasso_nol == 0.0)) == 0
     assert int(np.sum(koef_ridge == 0.0)) == 0
 
@@ -360,6 +364,24 @@ def test_menukar_ridge_ke_tempat_lasso_kehilangan_nol():
         Ridge(alpha=0.5), X_latih, y_latih, X_uji, y_uji
     )
     assert not np.any(koef == 0.0)
+
+
+def test_mutasi_hapus_skala_memicu_assert():
+    """Menghapus StandardScaler harus gagal pada assert, bukan KeyError."""
+    ruang = {"__name__": "modul_03b"}
+    kena = False
+    for cell in _baca_notebook("notebook.ipynb")["cells"]:
+        if cell["cell_type"] != "code":
+            continue
+        src = _sumber(cell).replace('("skala", StandardScaler()),\n', "")
+        try:
+            exec(src, ruang, ruang)
+        except AssertionError:
+            kena = True
+            break
+        except KeyError as salah:
+            raise AssertionError("hapus StandardScaler hanya memicu KeyError") from salah
+    assert kena, "Mutasi hapus StandardScaler tidak memicu assert."
 
 
 def test_notebook_dijalankan_dan_assert_di_sel_lulus():

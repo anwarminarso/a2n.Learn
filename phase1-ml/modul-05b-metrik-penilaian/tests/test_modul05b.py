@@ -260,6 +260,11 @@ def test_ujian_kunci_cocok_dengan_hitung_ulang():
     _ada(keluar, f"ujian_precision {precision}")
     _ada(keluar, f"ujian_recall {recall}")
     dalam = DecisionTreeClassifier(max_depth=None, random_state=SEED).fit(X_latih, y_latih)
+    _ada(
+        keluar,
+        "ujian_recall_dalam "
+        + str(float(recall_score(y_uji, dalam.predict(X_uji), pos_label=1, zero_division=0))),
+    )
     selisih_dalam = float(dalam.score(X_latih, y_latih) - dalam.score(X_uji, y_uji))
     selisih_dangkal = float(pohon.score(X_latih, y_latih) - (tebakan_uji == y_uji).mean())
     assert selisih_dalam > selisih_dangkal
