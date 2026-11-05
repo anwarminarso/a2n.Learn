@@ -1,18 +1,16 @@
 [project]
 name = "a2n-learn"
 version = "0.1.0"
-description = "Lingkungan belajar a2n.Learn. Modul 1 memakai numpy, pandas, dan scikit-learn. Modul 8 menambah skl2onnx dan onnxruntime."
+description = "Lingkungan belajar a2n.Learn. Modul 1 memakai numpy, pandas, dan scikit-learn."
 requires-python = "==3.14.*"
 dependencies = [
   "ipykernel",
   "jupyterlab",
   "nbmake",
   "numpy",
-  "onnxruntime>=1.31.1",
   "pandas",
   "pytest",
   "scikit-learn",
-  "skl2onnx>=1.20.0",
 ]
 
 [tool.uv]
@@ -22,6 +20,16 @@ package = false
 testpaths = [
   "phase1-ml/modul-01-persiapan",
   "phase1-ml/modul-02-cara-berpikir-ml",
+  "phase1-ml/modul-03-regresi",
+  "phase1-ml/modul-03b-regularisasi/tests",
+  "phase1-ml/modul-03b-regularisasi",
+  "phase1-ml/modul-04a-klasifikasi",
+  "phase1-ml/modul-04b-pohon-gabungan",
+  "phase1-ml/modul-05a-validasi-overfitting",
+  "phase1-ml/modul-05b-metrik-penilaian",
+  "phase1-ml/modul-06a-rekayasa-fitur",
+  "phase1-ml/modul-06b-pipeline",
+  "phase1-ml/modul-07-tanpa-label",
   "phase1-ml/modul-08-proyek-akhir",
 ]
 python_files = ["test_*.py"]
