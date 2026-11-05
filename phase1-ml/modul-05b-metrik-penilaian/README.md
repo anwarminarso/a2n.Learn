@@ -113,7 +113,7 @@ uv sync --frozen
 uv run pytest --nbmake
 ```
 
-Buka `notebook.ipynb` di folder ini, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All. Bagian terakhir latihan adalah ujian tingkat intermediate.
+Buka `notebook.ipynb` di folder ini, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Ujian tingkat ada di `ujian.ipynb`, kuncinya di `ujian-kunci.ipynb`. Pada tiap notebook: Restart & Run All.
 
 Sel pertama setiap notebook berisi `SEED = 42`. Angka tetap itu dipakai pada setiap undian acak, lewat `random_state=SEED`, supaya hasil yang sama muncul setiap kali notebook diulang.
 
@@ -172,6 +172,57 @@ latihan_precision 0.6666666666666666
 latihan_recall 0.6
 latihan_cocok 0.9
 latihan_recall_jarang 0.0
+```
+
+## Sumber
+
+- scikit-learn developers. *3.4. Metrics and scoring: quantifying the quality of predictions*, bagian 3.4.4.6 Confusion matrix dan 3.4.4.9 Precision, recall and F-measures. Angka gabungan di bagian F-measures berada di luar modul ini. <https://scikit-learn.org/stable/modules/model_evaluation.html>
+- scikit-learn developers. `confusion_matrix`, `precision_score`, dan `recall_score`. <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html>
+- scikit-learn developers. `make_classification`. <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html>
+- James, G., Witten, D., Hastie, T., dan Tibshirani, R. *An Introduction to Statistical Learning: with Applications in R*, Second Edition. Springer, 2021. Situs resmi menuliskan classification di antara babnya. <https://www.statlearning.com/>
+
+## Ujian tingkat intermediate
+
+Ini penutup tingkat intermediate: proyek mini plus pertanyaan. Bahan ada di `ujian.ipynb`. Kunci yang dijalankan ada di `ujian-kunci.ipynb`, lewat `uv run pytest --nbmake` dari root repo.
+
+**Proyek mini.** Alarm jemuran pada data sintetis baru, `random_state=SEED`, tanpa unduhan. Kelas positif adalah hujan. Hujan lebih jarang. Melewatkan hujan membuat jemuran basah. Alarm palsu hanya membuat jemuran diangkat terlalu cepat. Baseline selalu menebak kelas yang paling banyak. Bandingkan baseline itu dengan pohon `max_depth=2` pada data uji, termasuk precision, recall, dan empat kotak. Bandingkan juga pohon itu dengan pohon tanpa batas kedalaman.
+
+### Soal
+
+1. Metrik mana yang diutamakan, dan mengapa?
+2. Berapa recall baseline?
+3. Berapa precision dan recall pohon pendek pada data uji?
+4. Pohon mana yang menghafal? Bandingkan selisih skor data latih dan data uji antara pohon tanpa batas dan pohon pendek.
+5. Model mana yang dilaporkan?
+6. Jika rata-rata kolom dihitung dari seluruh baris sebelum data dibagi, apa nama kesalahannya, dan rata-rata mana yang boleh?
+
+### Aturan penilaian
+
+- Nomor soal di bagian ini, di `ujian.ipynb`, dan di `ujian-kunci.ipynb` sama. Kunci memakai nomor itu.
+- Proyek mini memakai `SEED` di sel pertama dan `random_state=SEED`. Tidak ada berkas yang diunduh.
+- Pohon dan baseline belajar dari data latih. Data uji hanya untuk mengukur.
+- Soal yang meminta angka lulus bila angkanya sama dengan keluaran `ujian-kunci.ipynb`.
+- Sel kunci punya `assert`. Tes modul menjalankan sumber sel itu.
+- Ujian lulus bila semua soal sesuai kunci dan assert di `ujian-kunci.ipynb` lulus.
+
+### Kunci ujian
+
+1. Recall. Melewatkan hujan lebih merugikan daripada alarm palsu sesekali. Baris `ujian_metrik_dipilih recall`.
+2. `ujian_recall_baseline 0.0`. Baseline tidak menemukan hujan.
+3. Precision pohon pendek pada data uji `ujian_precision 0.8`. Recall pohon pendek pada data uji `ujian_recall 0.631578947368421`.
+4. Pohon tanpa batas yang menghafal. Selisih skor data latih dan data uji pohon itu `ujian_selisih_dalam 0.10833333333333328`. Selisih pohon pendek `ujian_selisih_dangkal 0.04761904761904767`.
+5. Pohon pendek yang dilaporkan. Baris `ujian_model_dipilih dangkal`.
+6. Data leakage. Rata-rata yang boleh adalah rata-rata data latih. Baris `ujian_nama_kebocoran data leakage` dan `ujian_rata_boleh data latih`.
+
+Soal 3, 4, dan 5 di atas sudah tetap: precision dan recall pada data uji, pohon tanpa batas yang menghafal, dan pohon pendek yang dilaporkan.
+
+Empat kotak, skor latih, dan skor uji ada pada baris di bawah. Angka ini disalin dari keluaran yang dijalankan, bukan ditulis tangan.
+
+#### Angka yang disalin dari keluaran notebook
+
+Dari `ujian-kunci.ipynb`. `ujian.ipynb` tidak menyimpan keluaran.
+
+```
 ujian_baris 400
 ujian_bagian_hujan 0.16
 ujian_n_latih 280
@@ -196,43 +247,3 @@ ujian_metrik_dipilih recall
 ujian_nama_kebocoran data leakage
 ujian_rata_boleh data latih
 ```
-
-## Sumber
-
-- scikit-learn developers. *3.4. Metrics and scoring: quantifying the quality of predictions*, bagian 3.4.4.6 Confusion matrix dan 3.4.4.9 Precision, recall and F-measures. Angka gabungan di bagian F-measures berada di luar modul ini. <https://scikit-learn.org/stable/modules/model_evaluation.html>
-- scikit-learn developers. `confusion_matrix`, `precision_score`, dan `recall_score`. <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html>
-- scikit-learn developers. `make_classification`. <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html>
-- James, G., Witten, D., Hastie, T., dan Tibshirani, R. *An Introduction to Statistical Learning: with Applications in R*, Second Edition. Springer, 2021. Situs resmi menuliskan classification di antara babnya. <https://www.statlearning.com/>
-
-## Ujian tingkat intermediate
-
-Ini penutup tingkat intermediate: proyek mini plus pertanyaan. Bahan ada di bagian terakhir `latihan.ipynb`. Kunci yang dijalankan ada di `latihan-kunci.ipynb`, lewat `uv run pytest --nbmake` dari root repo.
-
-**Proyek mini.** Alarm jemuran pada data sintetis baru, `random_state=SEED`, tanpa unduhan. Kelas positif adalah hujan. Hujan lebih jarang. Melewatkan hujan membuat jemuran basah. Alarm palsu hanya membuat jemuran diangkat terlalu cepat.
-
-Tugas yang dijalankan kunci:
-
-1. Pilih metrik yang diutamakan.
-2. Bandingkan baseline kelas yang paling banyak dengan pohon `max_depth=2` pada data uji.
-3. Bandingkan skor data latih dan skor data uji pohon pendek dengan pohon tanpa batas, untuk melihat mana yang menghafal.
-4. Sebut kesalahan bila rata-rata kolom dihitung sebelum data dibagi.
-
-### Pertanyaan
-
-1. Metrik mana yang diutamakan, dan mengapa?
-2. Berapa recall baseline?
-3. Berapa precision dan recall pohon pendek pada data uji?
-4. Pohon mana yang menghafal? Bandingkan `ujian_selisih_dalam` dan `ujian_selisih_dangkal`.
-5. Model mana yang dilaporkan?
-6. Jika rata-rata kolom dihitung dari seluruh baris sebelum data dibagi, apa nama kesalahannya, dan rata-rata mana yang boleh?
-
-### Kunci ujian
-
-1. Recall. Melewatkan hujan lebih merugikan daripada alarm palsu sesekali. Baris `ujian_metrik_dipilih recall`.
-2. `ujian_recall_baseline 0.0`. Baseline tidak menemukan hujan.
-3. Salin `ujian_precision` dan `ujian_recall` dari blok keluaran kunci di atas. Keduanya dihitung pada data uji.
-4. Pohon tanpa batas, bila selisihnya lebih besar. Baris `ujian_menghafal` menyimpan nama itu.
-5. Pohon pendek, bila dialah yang tidak menghafal dan recall-nya mengalahkan baseline. Baris `ujian_model_dipilih`.
-6. Data leakage. Rata-rata yang boleh adalah rata-rata data latih. Baris `ujian_nama_kebocoran` dan `ujian_rata_boleh`.
-
-Empat kotak, skor latih, dan skor uji ada pada baris `ujian_` di blok keluaran `latihan-kunci.ipynb`.

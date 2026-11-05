@@ -1,7 +1,8 @@
 """Tes modul 5b.
 
 Angka dihitung ulang di sini, lalu dicocokkan dengan hasil menjalankan sumber
-notebook. Mengganti strategi baseline di sel kunci harus membuat assert gagal.
+notebook. Assert di sel kunci ujian gagal bila perbandingan dibalik, bila pohon
+di-fit pada seluruh data, atau bila baseline diganti.
 """
 
 import io
@@ -18,7 +19,16 @@ from sklearn.tree import DecisionTreeClassifier
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parents[1]
-NOTEBOOKS = ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb")
+NOTEBOOKS = (
+    "notebook.ipynb",
+    "latihan.ipynb",
+    "latihan-kunci.ipynb",
+    "ujian.ipynb",
+    "ujian-kunci.ipynb",
+)
+TANPA_KELUARAN = ("latihan.ipynb", "ujian.ipynb")
+DENGAN_KELUARAN = ("notebook.ipynb", "latihan-kunci.ipynb", "ujian-kunci.ipynb")
+DOKUMEN_GENERATOR = ("README.md", "notebook.ipynb", "ujian.ipynb", "ujian-kunci.ipynb")
 PATCH_ANGKA = re.compile(r"3\.14\.\d")
 SEED = 42
 FRASA_SALAH = (
@@ -101,7 +111,26 @@ def test_pemanggilan_acak_memakai_seed():
         teks = _sumber_semua(nama).replace(" ", "")
         assert "random_state=42" not in teks
         assert "default_rng(42)" not in teks
-        assert "random_state=SEED" in teks
+        if "random_state=" in teks:
+            assert "random_state=SEED" in teks
+        if "default_rng(" in teks:
+            assert "default_rng(SEED)" in teks
+    for nama in ("notebook.ipynb", "ujian.ipynb", "ujian-kunci.ipynb"):
+        assert "random_state=SEED" in _sumber_semua(nama).replace(" ", "")
+
+
+def test_satu_sel_satu_ide():
+    for nama in NOTEBOOKS:
+        nb = _baca_notebook(nama)
+        for cell in nb["cells"]:
+            if cell["cell_type"] != "code":
+                continue
+            src = _sumber(cell).lstrip()
+            assert src.startswith("# Angka tetap") or src.startswith("# Satu ide"), (
+                nama,
+                src.splitlines()[0],
+            )
+            assert src.count("# Satu ide") <= 1
 
 
 def test_tidak_ada_unduhan():
@@ -112,10 +141,22 @@ def test_tidak_ada_unduhan():
             assert pola not in teks
 
 
-def test_latihan_tanpa_keluaran_tersimpan():
-    nb = _baca_notebook("latihan.ipynb")
-    for cell in nb["cells"]:
-        assert cell.get("outputs", []) == []
+def test_latihan_dan_ujian_tanpa_keluaran_tersimpan():
+    for nama in TANPA_KELUARAN:
+        nb = _baca_notebook(nama)
+        for cell in nb["cells"]:
+            if cell["cell_type"] != "code":
+                continue
+            assert cell.get("outputs", []) == [], nama
+            assert cell.get("execution_count") is None, nama
+
+
+def test_latihan_tidak_memuat_ujian():
+    for nama in ("latihan.ipynb", "latihan-kunci.ipynb"):
+        teks = _sumber_semua(nama)
+        assert "make_classification" not in teks
+        assert "ujian_" not in teks
+        assert "DecisionTreeClassifier" not in teks
 
 
 def test_parameter_generator_mengikuti_dokumentasi():
@@ -127,7 +168,7 @@ def test_parameter_generator_mengikuti_dokumentasi():
         teks = path.read_text(encoding="utf-8")
         for frasa in FRASA_SALAH:
             assert frasa not in teks, (path, frasa)
-    for nama in ("README.md", *NOTEBOOKS):
+    for nama in DOKUMEN_GENERATOR:
         teks = (ROOT / nama).read_text(encoding="utf-8").replace("`", "")
         assert "make_classification" in teks
         for frasa in (
@@ -184,6 +225,11 @@ def test_kunci_cocok_dengan_hitung_ulang():
     _ada(keluar, f"latihan_recall {6 / (6 + 4)}")
     _ada(keluar, "latihan_cocok 0.9")
     _ada(keluar, "latihan_recall_jarang 0.0")
+    assert "ujian_" not in keluar
+
+
+def test_ujian_kunci_cocok_dengan_hitung_ulang():
+    keluar = _jalankan("ujian-kunci.ipynb")
     X, y = make_classification(
         n_samples=400,
         n_features=20,
@@ -226,19 +272,111 @@ def test_kunci_cocok_dengan_hitung_ulang():
 
 
 def test_assert_baseline_menghitung_ulang_kelas_mayoritas():
-    teks = _sumber_semua("latihan-kunci.ipynb")
+    teks = _sumber_semua("ujian-kunci.ipynb")
     assert teks.count("np.bincount(y_latih).argmax()") >= 2
+    assert teks.count("assert ") >= 5
+
+
+def _mutasi_gagal(ganti, pesan):
+    try:
+        _jalankan("ujian-kunci.ipynb", ganti=ganti)
+    except AssertionError:
+        return
+    raise AssertionError(pesan)
+
+
+def test_mutasi_perbandingan_memicu_assert():
+    teks = _sumber_semua("ujian-kunci.ipynb")
+    assert teks.count("selisih_dalam > selisih_dangkal") == 1
+    _mutasi_gagal(
+        ("selisih_dalam > selisih_dangkal", "selisih_dalam < selisih_dangkal"),
+        "mutasi perbandingan tidak memicu assert",
+    )
+
+
+def test_mutasi_fit_seluruh_data_memicu_assert():
+    teks = _sumber_semua("ujian-kunci.ipynb")
+    assert teks.count(".fit(X_latih, y_latih)") == 2
+    _mutasi_gagal(
+        (".fit(X_latih, y_latih)", ".fit(X_ujian, y_ujian)"),
+        "mutasi fit seluruh data tidak memicu assert",
+    )
 
 
 def test_mutasi_baseline_memicu_assert():
-    try:
-        _jalankan(
-            "latihan-kunci.ipynb",
-            ganti=(BARIS_BASELINE, "kelas_banyak = 1"),
-        )
-    except AssertionError:
-        return
-    raise AssertionError("mutasi baseline tidak memicu assert")
+    _mutasi_gagal(
+        (BARIS_BASELINE, "kelas_banyak = 1"),
+        "mutasi baseline tidak memicu assert",
+    )
+
+
+def _butir(teks, judul):
+    bagian = teks.split(judul, 1)[1]
+    hasil = []
+    for ln in bagian.splitlines():
+        if ln.startswith("#"):
+            break
+        if len(ln) >= 2 and ln[0].isdigit() and ln[1] == ".":
+            hasil.append(ln.strip())
+    return hasil
+
+
+def _markdown(nama):
+    nb = _baca_notebook(nama)
+    return "\n".join(_sumber(cell) for cell in nb["cells"] if cell["cell_type"] == "markdown")
+
+
+def test_soal_dan_kunci_bernomor_sama():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    soal = _butir(readme, "### Soal")
+    kunci = _butir(readme, "### Kunci ujian")
+    assert [b.split(".", 1)[0] for b in soal] == ["1", "2", "3", "4", "5", "6"]
+    assert [b.split(".", 1)[0] for b in kunci] == ["1", "2", "3", "4", "5", "6"]
+    assert soal == _butir(_markdown("ujian.ipynb"), "### Soal")
+    assert soal == _butir(_markdown("ujian-kunci.ipynb"), "### Soal")
+    assert kunci == _butir(_markdown("ujian-kunci.ipynb"), "### Kunci ujian")
+    assert "### Kunci ujian" not in _markdown("ujian.ipynb")
+
+
+def test_jawaban_ujian_berada_di_bawah_kunci():
+    teks = (ROOT / "README.md").read_text(encoding="utf-8")
+    atas, bawah = teks.split("### Kunci ujian", 1)
+    assert "ujian_" not in atas
+    for nama in (
+        "ujian_precision",
+        "ujian_recall_baseline",
+        "ujian_selisih_dalam",
+        "ujian_selisih_dangkal",
+        "ujian_menghafal",
+        "ujian_model_dipilih",
+        "ujian_metrik_dipilih",
+        "ujian_nama_kebocoran",
+    ):
+        assert nama in bawah
+    for angka in ("0.10833333333333328", "0.04761904761904767", "0.631578947368421"):
+        assert angka not in atas
+        assert angka in bawah
+
+
+def test_ujian_tidak_membocorkan_solusi():
+    nb = _baca_notebook("ujian.ipynb")
+    teks = "\n".join(_sumber(cell) for cell in nb["cells"] if cell["cell_type"] == "code")
+    for potongan in (
+        "DecisionTreeClassifier",
+        "precision_score",
+        "recall_score",
+        "confusion_matrix",
+        "ujian_precision",
+        "data leakage",
+    ):
+        assert potongan not in teks
+
+
+def test_ujian_terdaftar_di_testpaths():
+    teks = (REPO / "pyproject.toml").read_text(encoding="utf-8")
+    assert "phase1-ml/modul-05b-metrik-penilaian" in teks
+    for nama in ("ujian.ipynb", "ujian-kunci.ipynb"):
+        assert (ROOT / nama).is_file()
 
 
 def test_readme_punya_bagian_wajib():
@@ -251,6 +389,9 @@ def test_readme_punya_bagian_wajib():
         "Kunci jawaban",
         "Sumber",
         "Ujian tingkat intermediate",
+        "Soal",
+        "Aturan penilaian",
+        "Kunci ujian",
     ):
         assert judul in teks
     assert teks.count("Batas analogi") >= 3
@@ -262,7 +403,7 @@ def test_readme_punya_bagian_wajib():
 
 def test_readme_menyalin_keluaran_notebook():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    for nama in ("notebook.ipynb", "latihan-kunci.ipynb"):
+    for nama in DENGAN_KELUARAN:
         nb = _baca_notebook(nama)
         for cell in nb["cells"]:
             for keluaran in cell.get("outputs", []):
