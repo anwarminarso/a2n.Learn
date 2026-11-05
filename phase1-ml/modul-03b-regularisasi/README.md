@@ -4,7 +4,7 @@
 
 **Tingkat:** intermediate
 
-Modul ini tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5, bukan di sini.
+Modul 3b tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5b, bukan di sini.
 
 ## Cerita pembuka
 
@@ -30,7 +30,7 @@ intercept_ adalah nama tempat scikit-learn menyimpan bilangan geser.
 
 coef_ adalah nama tempat scikit-learn menyimpan koefisien.
 
-Fungsi kerugian adalah angka kesalahan yang diperkecil saat model belajar; pada regresi linear tanpa penalti, angka itu adalah jumlah kuadrat selisih antara tebakan dan jawaban.
+Fungsi kerugian adalah angka kesalahan yang diperkecil saat model belajar; pada regresi linear tanpa penalti, angka itu adalah jumlah kuadrat selisih antara tebakan dan jawaban. Selama banyak baris data latih tidak berubah, garis yang memperkecil jumlah kuadrat itu sama dengan garis yang memperkecil rata-ratanya.
 
 Data latih dan data uji berarti data dibagi dua: data latih dipakai model untuk belajar; data uji disisihkan dan tidak dilihat model saat belajar, dipakai untuk mengukur seberapa baik model pada data baru.
 
@@ -211,7 +211,7 @@ CPU only. Daftar paket yang terkunci ada di `uv.lock` di root repo.
 7. Penalti peka skala: petunjuk yang sebarannya jauh lebih besar bisa menguasai hitungan. `kasus_skala_latih True`: rata-rata StandardScaler sama dengan rata-rata data latih, bukan semua baris.
 8. Salah. Dokumentasi menyarankan LinearRegression bila tidak ada penalti.
 9. `kasus_baris_latih 37` dan `kasus_baris_uji 13`.
-10. Salah. Modul ini tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5.
+10. Salah. Modul 3b tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5b.
 
 Jawaban "coba sendiri" disalin dari keluaran di bawah: `tangan_kuadrat_a 8.0`, `tangan_kuadrat_b 9.0`, `tangan_mutlak_a 4.0`, `tangan_mutlak_b 3.0`.
 
