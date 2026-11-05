@@ -19,6 +19,11 @@ package = false
 [tool.pytest.ini_options]
 testpaths = [
   "phase1-ml/modul-01-persiapan",
+  "phase1-ml/modul-02-cara-berpikir-ml",
+  "phase1-ml/modul-05a-validasi-overfitting",
+  "phase1-ml/modul-05b-metrik-penilaian",
+  "phase1-ml/modul-06a-rekayasa-fitur",
+  "phase1-ml/modul-06b-pipeline",
   "phase1-ml/modul-07-tanpa-label",
 ]
 python_files = ["test_*.py"]
