@@ -14,10 +14,10 @@ Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk develop
 | 3b | Regularisasi (Ridge dan Lasso) | regularisasi: Ridge dan Lasso | intermediate | #18 |
 | 4a | Klasifikasi | regresi logistik dan pohon keputusan | intermediate | #4 |
 | 4b | Pohon dan model gabungan | hutan acak dan gradient boosting | intermediate | #4 |
-| 5a | Validasi dan overfitting | data leakage, cross-validation, overfitting | intermediate | #5 |
-| 5b | Metrik penilaian dan ujian Intermediate | confusion matrix, precision, recall | intermediate | #5 |
-| 6a | Rekayasa fitur | fitur, encoding, penskalaan | advanced | #6 |
-| 6b | Pipeline | Pipeline dan ColumnTransformer | advanced | #6 |
+| 5a | [Validasi dan overfitting](phase1-ml/modul-05a-validasi-overfitting/) | data leakage, cross-validation, overfitting | intermediate | #5 |
+| 5b | [Metrik penilaian dan ujian Intermediate](phase1-ml/modul-05b-metrik-penilaian/) | confusion matrix, precision, recall | intermediate | #5 |
+| 6a | [Rekayasa fitur](phase1-ml/modul-06a-rekayasa-fitur/) | fitur, encoding, penskalaan | advanced | #6 |
+| 6b | [Pipeline](phase1-ml/modul-06b-pipeline/) | Pipeline dan ColumnTransformer | advanced | #6 |
 | 7 | [Tanpa label](phase1-ml/modul-07-tanpa-label/) | clustering, PCA, deteksi anomali | advanced | #7 |
 | 8 | [Proyek akhir](phase1-ml/modul-08-proyek-akhir/) | data sintetis ala tambang, ekspor ONNX, panggil dari .NET | pro | #8 |
 
