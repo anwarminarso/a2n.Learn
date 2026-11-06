@@ -39,9 +39,9 @@ Nama teknisnya **Pipeline**: satu rantai langkah berurutan. Langkah di depan men
 
 Perumpamaan: seperti kartu resep.
 
-**Batas analogi:** Pipeline tidak memilih resep yang benar. Urutan yang salah tetap jalan selama bentuk langkahnya sah. Pipeline tidak membuat tebakan menjadi bagus. Ia tidak memperbaiki kebocoran yang sudah terjadi di luar rantai, sebelum data dibagi. Langkah selain yang terakhir harus bisa mengubah data. Kartu resep tidak menjelaskan isi tiap langkah.
+**Batas analogi:** Pipeline tidak memilih resep yang benar. Urutan yang salah tetap jalan selama bentuk langkahnya sah. Ia tidak memperbaiki kebocoran yang sudah terjadi di luar rantai, sebelum data dibagi. Langkah selain yang terakhir harus bisa mengubah data.
 
-Data leakage, istilah modul evaluasi: informasi yang seharusnya tidak tersedia saat model belajar ikut terpakai, sehingga skor terlihat lebih bagus dari kenyataan. Di modul ini yang kita ukur langsung adalah rata-rata di dalam rantai. Rata-rata itu tidak sama dengan rata-rata seluruh kolom. Kita tidak mengklaim skornya otomatis lebih jujur hanya dari selisih rata-rata; yang ditunjukkan adalah data uji tidak ikut menyetel timbangan.
+Data leakage: informasi yang belum boleh dipakai saat belajar ikut terpakai, sehingga skor terlihat lebih bagus dari kenyataan. Yang diukur di sini adalah rata-rata di dalam rantai, bukan rata-rata seluruh kolom. Yang ditunjukkan: data uji tidak ikut menyetel timbangan.
 
 ### ColumnTransformer
 
@@ -51,7 +51,7 @@ Nama teknisnya **ColumnTransformer**: satu langkah yang menerapkan cara ubah ber
 
 Perumpamaan: seperti dua wajan, lalu satu piring.
 
-**Batas analogi:** ColumnTransformer tidak mengerti arti kolom. Kolom teks yang masuk ke penskalaan gagal. Kolom yang tidak disebut dibuang bila `remainder='drop'`, dan itu nilai bawaannya. Ia tidak menggantikan Pipeline; ia biasanya menjadi salah satu langkah di dalam Pipeline. Gambar wajan tidak menjelaskan urutan kolom pada hasil sambungan.
+**Batas analogi:** ColumnTransformer tidak mengerti arti kolom. Kolom teks yang masuk ke penskalaan gagal. Kolom yang tidak disebut dibuang bila `remainder='drop'`, dan itu nilai bawaannya. Ia tidak menggantikan Pipeline, dan gambar wajan tidak menjelaskan urutan kolom pada hasil sambungan.
 
 ## Coba sendiri dulu, baru kode
 

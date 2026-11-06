@@ -16,9 +16,7 @@ Modul ini melakukan hal yang sama pada model yang sudah belajar. Kasusnya catata
 
 ## Teori
 
-Paket adalah kumpulan kode siap pakai yang dipasang ke proyek. Pustaka adalah paket yang dipanggil dari program. venv adalah lingkungan terpisah yang menyimpan pemasangan paket Python untuk satu proyek, supaya versi paket tidak tertukar. uv adalah alat yang membuat venv dan memasang paket sesuai daftar yang terkunci di `uv.lock`.
-
-Di modul ini hanya ada tiga istilah baru.
+Di modul ini hanya ada tiga istilah baru. Paket adalah kumpulan kode siap pakai yang dipasang ke proyek. Pustaka adalah paket yang dipanggil dari program. uv memasang paket sesuai daftar yang terkunci di `uv.lock`.
 
 Gambar alurnya dulu:
 
@@ -43,9 +41,9 @@ Data latih dipakai model untuk belajar. Data uji disisihkan dan tidak dilihat sa
 
 Kartu resep dengan aturan tulis yang baku bisa diikuti dapur lain tanpa meminjam buku catatanmu. Nama teknisnya **ONNX**: berkas standar yang menyimpan model yang sudah dilatih, supaya program lain bisa menghitung tebakan tanpa membuka kode Python aslinya.
 
-**Batas analogi:** kartu itu tidak memasak sendiri; tetap perlu program pembaca. Berkas ONNX bukan objek Python yang dilatih ulang dari program lain. Tidak semua model scikit-learn bisa ditulis menjadi berkas ini. Angka program lain boleh selisih sedikit dari Python; berkas ini tidak menjanjikan kedua hasil itu sama persis.
+**Batas analogi:** kartu itu tidak memasak sendiri; tetap perlu program pembaca. Berkas ONNX bukan objek Python yang dilatih ulang, dan tidak semua model scikit-learn bisa ditulis menjadi berkas ini. Angka program lain boleh selisih sedikit dari Python.
 
-skl2onnx adalah alat yang mengubah model scikit-learn menjadi berkas ONNX. onnxruntime adalah program yang membaca berkas itu dan menghitung tebakan. Keduanya dipasang lewat uv. Nomor versinya tidak ditulis di halaman ini; daftarnya terkunci di `uv.lock` di root repo.
+skl2onnx mengubah model scikit-learn menjadi berkas ONNX. onnxruntime membaca berkas itu dan menghitung tebakan. Nomor versinya tidak ditulis di halaman ini; daftarnya terkunci di `uv.lock`.
 
 ### opset
 
@@ -59,7 +57,7 @@ Modul ini mengunci edisi `22` lewat `OPSET = 22` dan `target_opset=OPSET`. Mengu
 
 Mengikuti kartu resep untuk satu piring memakai resepnya, bukan menulis resep baru. Nama teknisnya **inferensi**: memakai model yang sudah dilatih untuk menghitung tebakan pada catatan yang diberikan, tanpa mengubah model itu.
 
-**Batas analogi:** berhenti berlaku saat model dilatih ulang. Satu tebakan pada satu baris bukan nilai pada seluruh data uji. Inferensi tidak membuktikan tebakan itu tepat.
+**Batas analogi:** berhenti berlaku saat model dilatih ulang. Satu tebakan pada satu baris bukan nilai pada seluruh data uji, dan inferensi tidak membuktikan tebakan itu tepat.
 
 ### Batas angka
 
