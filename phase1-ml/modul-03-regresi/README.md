@@ -21,7 +21,7 @@ Di modul 2, tebakan paling sederhana tidak membaca petunjuk. Garis di modul ini 
 
 ## Teori
 
-Di modul ini hanya ada tiga istilah baru. Pustaka adalah kumpulan fungsi siap pakai. scikit-learn adalah pustaka yang sudah dipakai di modul 1 dan 2. Nama fungsi di pustaka bukan istilah baru. Kata model di kamus tetap bahasa biasa untuk cara menebak, sama seperti di modul 2, dan belum masuk kamus. Baseline dan rata-rata selisih mutlak dipakai lagi dengan arti yang sama seperti di modul 2.
+Di modul ini hanya ada tiga istilah baru. Pustaka adalah kumpulan fungsi siap pakai. Nama fungsi di pustaka bukan istilah baru. Kata model tetap bahasa biasa untuk cara menebak, dan belum masuk kamus. Baseline dan rata-rata selisih mutlak dipakai lagi dengan arti yang sama seperti di modul 2.
 
 ### regresi linear
 
@@ -33,13 +33,13 @@ menit         4     6     9
 garis coba    4     6     8
 ```
 
-Ada bayaran awal, lalu tambahan yang mengikuti jarak. Nama teknisnya **regresi linear**. Artinya: Cara menyusun tebakan angka berupa garis lurus dari data latih: satu angka awal, ditambah satu angka pengali untuk tiap petunjuk. Garis itu membaca petunjuk.
+Nama teknisnya **regresi linear**. Artinya: Cara menyusun tebakan angka berupa garis lurus dari data latih: satu angka awal, ditambah satu angka pengali untuk tiap petunjuk. Garis itu membaca petunjuk.
 
 Perumpamaan: seperti ongkos angkot: ada bayaran awal, lalu tambahannya mengikuti jarak.
 
-**Batas analogi:** gambar ongkos itu satu petunjuk, yaitu jarak, jadi bisa digambar sebagai satu garis di kertas. Bila petunjuk lebih dari satu, tetap satu angka awal ditambah satu angka pengali per petunjuk, tetapi bukan garis di satu kertas. Garis ini tidak melengkung. Ini bukan baseline: baseline selalu menebak rata-rata data latih dan tidak membaca petunjuk. Angka awal adalah tebakan saat semua petunjuk bernilai nol. Pada kolom yang sudah digeser pembuat dataset, nol itu bukan nol kilometer atau nol kilogram.
+**Batas analogi:** gambar ongkos itu satu petunjuk, jadi satu garis di kertas. Banyak petunjuk tetap satu angka awal ditambah satu pengali per petunjuk, tetapi bukan garis di satu kertas. Garis ini tidak melengkung, dan bukan baseline. Angka awal adalah tebakan saat semua petunjuk nol; pada kolom yang sudah digeser, nol itu bukan nol kilometer.
 
-Garis pada gambar kita pilih dengan tangan. Pustaka nanti mencari garis lain, dengan angka awal dan angka pengali yang membuat fungsi kerugian lebih kecil. Notebook mencetak kedua garis itu.
+Garis pada gambar dipilih dengan tangan. Pustaka mencari garis lain yang membuat fungsi kerugian lebih kecil. Notebook mencetak keduanya.
 
 ### fungsi kerugian
 
@@ -64,9 +64,9 @@ Dalam bahasa Inggris, angka ini sering disebut loss. Sebutan itu bukan istilah k
 
 Perumpamaan: seperti mencatat menit yang meleset, mengkuadratkan menit itu, lalu merata-ratakannya. Meleset dua menit dihitung empat, jadi satu meleset besar lebih berat daripada dua meleset kecil yang jumlah jaraknya sama.
 
-**Batas analogi:** lebih berat hanya gambar. Yang dihitung adalah kuadrat, bukan perasaan penumpang. Ini bukan rata-rata selisih mutlak. Rata-rata selisih mutlak membuang tanda minus dan tidak mengkuadratkan; modul 3 tetap memakainya untuk membandingkan garis dengan baseline pada data uji. Dokumentasi scikit-learn memperkecil jumlah kuadrat selisih. Selama banyak baris data latih tidak berubah, garis yang memperkecil jumlah itu sama dengan garis yang memperkecil rata-ratanya. Angka ini dihitung pada data latih dan bukan nilai pada data uji. Nol berarti tebakan sama dengan jawaban pada baris data latih, dan nol itu belum menilai data baru.
+**Batas analogi:** yang dihitung adalah kuadrat, bukan perasaan penumpang. Ini bukan rata-rata selisih mutlak, dan modul ini tetap memakai ukuran itu pada data uji. Angka ini dihitung pada data latih; nol di situ belum menilai data baru. Dokumentasi scikit-learn memperkecil jumlah kuadrat selisih. Selama banyak baris data latih tidak berubah, garis yang memperkecil jumlah itu sama dengan garis yang memperkecil rata-ratanya.
 
-Rata-rata selisih mutlak pada amplop tetap pembanding dengan baseline, sama seperti modul 2. Fungsi kerugian tidak menggantikan pembanding itu.
+Rata-rata selisih mutlak pada amplop tetap pembanding dengan baseline. Fungsi kerugian tidak menggantikannya.
 
 ### overfitting
 
@@ -81,13 +81,13 @@ menit
     +-------------- jarak
 ```
 
-Garis lurus meleset sedikit pada titik yang melonjak. Garis yang dipelintir bisa menempel di setiap titik, termasuk lonjakan yang kebetulan, lalu meleset jauh pada catatan di amplop. Nama teknisnya **overfitting**. Artinya: Model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru.
+Garis lurus meleset sedikit pada titik yang melonjak. Nama teknisnya **overfitting**. Artinya: Model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru.
 
 Di modul 2 pola ini hanya disebut "model menghafal". Nama overfitting baru dipakai di modul ini.
 
 Perumpamaan: seperti garis yang dipelintir sampai menempel di setiap titik catatan yang terbuka, termasuk satu titik yang kebetulan meleset, lalu meleset jauh pada catatan di amplop.
 
-**Batas analogi:** gambar garis yang dipelintir adalah untuk satu petunjuk. Modul 3 tidak memasang garis yang dipelintir itu. Angka pada notebook memakai garis lurus dengan banyak petunjuk, yang bisa menempel di setiap baris data latih karena petunjuknya lebih banyak daripada baris latih. Menempel di data latih bukan nilai pada data uji. Gambar ini tidak mengatakan setiap garis lurus menghafal. Garis dengan satu petunjuk pada kasus diabetes dibanding baseline memakai rata-rata selisih mutlak pada data uji. Menyalin jawaban data latih sampai jaraknya nol adalah contoh menghafal dari modul 2; nama overfitting baru dipakai di sini, dan nol itu tetap bukan nilai pada data uji.
+**Batas analogi:** gambar garis yang dipelintir adalah untuk satu petunjuk, dan modul ini tidak memasang garis itu. Angka pada notebook memakai garis lurus, yang bisa menempel di data latih bila petunjuk lebih banyak daripada baris latih. Menempel di data latih bukan nilai pada data uji, dan tidak setiap garis lurus menghafal.
 
 ## Coba sendiri dulu, baru kode
 

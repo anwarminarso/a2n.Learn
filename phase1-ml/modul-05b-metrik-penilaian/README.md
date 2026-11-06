@@ -22,9 +22,7 @@ Angka di modul ini dibuat di memori. Tidak ada berkas yang diunduh. Bukan data a
 
 Pustaka adalah kumpulan fungsi siap pakai, bukan rak buku. Paket adalah bundel kode yang dipasang ke lingkungan proyek. NumPy dan scikit-learn adalah pustaka sekaligus paket.
 
-Kelas di sini artinya golongan jawaban, bukan ruang belajar. Kelas positif adalah golongan yang kita cari.
-
-Data latih dipakai model untuk belajar. Data uji disisihkan dan tidak dilihat saat belajar. Baseline adalah cara menebak paling sederhana, misalnya selalu menebak kelas yang paling banyak. Rata-rata selisih mutlak pada regresi adalah satu angka seberapa jauh tebakan dari jawaban. Pada dua golongan, satu angka "seberapa sering cocok" menyembunyikan jenis salahnya.
+Kelas di sini artinya golongan jawaban, bukan ruang belajar. Kelas positif adalah golongan yang kita cari. Data latih dipakai untuk belajar. Data uji disisihkan. Baseline selalu menebak kelas yang paling banyak. Satu angka "seberapa sering cocok" menyembunyikan jenis salahnya.
 
 Di bagian ini ada tiga istilah baru.
 
@@ -44,7 +42,7 @@ Tabel empat hitungan itu bernama **confusion matrix**: tabel hitungan untuk dua 
 
 Perumpamaan: seperti empat keranjang di meja sortir buah. Keranjang memisahkan buah matang yang lolos, buah mentah yang keliru masuk, buah matang yang tertinggal, dan buah mentah yang benar ditolak.
 
-**Batas analogi:** empat keranjang hanya untuk dua golongan. Tiga golongan atau lebih butuh lebih dari empat kotak. Keranjang menghitung banyaknya buah, bukan harga kesalahan. Dua buah matang yang tertinggal bisa lebih merugikan daripada sepuluh buah mentah yang keliru masuk; tabelnya tidak menuliskan harga itu.
+**Batas analogi:** empat keranjang hanya untuk dua golongan. Tiga golongan atau lebih butuh lebih dari empat kotak. Keranjang menghitung banyaknya buah, bukan harga kesalahan.
 
 Di kode, baris confusion matrix adalah jawaban benar dan kolom adalah tebakan, mengikuti dokumentasi scikit-learn. Notebook mencetak nama tiap kotak supaya posisinya tidak tertukar.
 
@@ -58,7 +56,7 @@ Rumus, setelah gambar di atas:
 
 Perumpamaan: di antara buah yang kamu taruh di keranjang matang, bagian yang memang matang.
 
-**Batas analogi:** tidak menghitung buah matang yang tidak masuk keranjang. Keranjang berisi satu buah matang dan tidak ada yang lain punya precision sempurna, walaupun banyak buah matang tertinggal di luar.
+**Batas analogi:** tidak menghitung buah matang yang tidak masuk keranjang. Keranjang berisi satu buah matang dan tidak ada yang lain punya precision sempurna, walaupun banyak buah matang tertinggal.
 
 ### recall
 
@@ -72,11 +70,11 @@ Perumpamaan: di antara semua buah matang yang ada, bagian yang berhasil masuk ke
 
 **Batas analogi:** tidak menghitung buah mentah yang ikut masuk. Memasukkan semua buah membuat recall sempurna dan keranjang itu tidak berguna. Precision dan recall tidak saling menggantikan.
 
-Hasil bagi dua rumus itu kamu hitung sendiri dulu. Notebook mencetaknya. Dokumentasi juga membahas angka gabungan dari precision dan recall. Angka gabungan itu di luar modul ini.
+Hasil bagi dua rumus itu kamu hitung sendiri dulu. Notebook mencetaknya. Angka gabungan dari precision dan recall ada di dokumentasi, dan di luar modul ini.
 
-Overfitting, dengan arti yang sudah tetap: model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru. Metrik yang dilaporkan dihitung pada data uji. Selisih skor data latih dan data uji menunjukkan apakah model menghafal.
+Overfitting, arti yang sudah tetap: model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru. Metrik di modul ini dihitung pada data uji. Selisih skor latih dan uji menunjukkan apakah model menghafal.
 
-Data leakage, dengan arti yang sudah tetap: informasi yang seharusnya tidak tersedia saat model belajar ikut terpakai, sehingga skor terlihat lebih bagus dari kenyataan. Modul ini tidak mengubah arti itu.
+Data leakage, arti yang sudah tetap: informasi yang belum boleh dipakai saat belajar ikut terpakai, sehingga skor terlihat lebih bagus dari kenyataan. Modul ini tidak mengubah arti itu.
 
 ## Coba sendiri dulu, baru kode
 

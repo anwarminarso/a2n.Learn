@@ -14,7 +14,7 @@ Modul ini tidak memakai data asli perusahaan. Angka 8, 10, 12, dan 16 adalah con
 
 ## Teori
 
-Pustaka adalah kumpulan fungsi siap pakai yang dipanggil dari kode. Di modul ini hanya ada tiga istilah baru. Kata model di arti kamus dipakai sebagai bahasa biasa untuk cara menebak, dan belum masuk kamus. Nama fungsi di pustaka juga belum masuk kamus.
+Pustaka adalah kumpulan fungsi siap pakai yang dipanggil dari kode. Di modul ini hanya ada tiga istilah baru. Kata model dipakai sebagai bahasa biasa untuk cara menebak, dan belum masuk kamus.
 
 ### data latih dan data uji
 
@@ -22,7 +22,7 @@ Tiga catatan terbuka dipakai untuk menyusun tebakan. Catatan di amplop disisihka
 
 Perumpamaan: seperti catatan perjalanan yang terbuka untuk menyusun tebakan, dan satu catatan di amplop tertutup yang baru dibuka saat mengukur melesetnya tebakan.
 
-**Batas analogi:** amplop pada gambar tidak memilih catatan secara acak. Notebook memisahkan baris secara acak dan mengulang pilihan yang sama lewat `random_state=SEED`. Membaca catatan tidak menghapus baris. Catatan di amplop berasal dari kumpulan yang sama dan ditutup sebelum rata-rata dihitung. Gambar ini tidak menjanjikan perjalanan besok sama. Kalau amplop dibuka lalu rata-ratanya diubah, catatan itu berhenti menjadi penilaian yang jujur. Pada cerita, amplopnya satu catatan; data uji pada kasus berisi beberapa baris.
+**Batas analogi:** amplop pada gambar tidak memilih catatan secara acak; notebook memisahkan baris lewat `random_state=SEED`. Pada cerita amplopnya satu catatan, data uji pada kasus berisi beberapa baris. Kalau amplop dibuka lalu rata-ratanya diubah, catatan itu berhenti menjadi penilaian yang jujur.
 
 ### baseline
 
@@ -32,13 +32,13 @@ Gambar dulu. Tiga jawaban yang terbuka:
 8    10    12
 ```
 
-Tebakan untuk setiap baris, termasuk baris di amplop, adalah rata-rata tiga angka itu. Gambar di istilah berikutnya memakai hasil rata-rata itu. Tebakan ini tidak melihat jarak perjalanan. Nama teknisnya **baseline**. Artinya: cara menebak paling sederhana (misalnya selalu menebak rata-rata atau kelas yang paling banyak) yang dipakai sebagai pembanding; model yang baik harus mengalahkannya.
+Tebakan untuk setiap baris, termasuk baris di amplop, adalah rata-rata tiga angka itu. Tebakan ini tidak melihat jarak. Nama teknisnya **baseline**. Artinya: cara menebak paling sederhana (misalnya selalu menebak rata-rata atau kelas yang paling banyak) yang dipakai sebagai pembanding; model yang baik harus mengalahkannya.
 
-Di modul ini jawabannya angka, jadi baseline selalu menebak rata-rata data latih. Contoh "kelas yang paling banyak" ada di arti kamus untuk jawaban berupa pilihan. Modul ini tidak menghitung contoh itu, supaya angka penilaian tetap satu.
+Di modul ini jawabannya angka, jadi baseline selalu menebak rata-rata data latih. Contoh kelas yang paling banyak ada di kamus dan tidak dihitung di sini.
 
 Perumpamaan: seperti menjawab "biasanya sekitar sepuluh menit" pada setiap perjalanan, tanpa melihat jaraknya.
 
-**Batas analogi:** "sepuluh menit" hanya angka pada cerita. Angka baseline di notebook adalah rata-rata jawaban data latih yang tercetak. Tebakan ini tidak membaca petunjuk. Gambar rata-rata berhenti berlaku bila jawabannya bukan angka. Arti baseline di kamus menyebut contoh lain, yaitu kelas yang paling banyak, dan modul ini tidak menghitung contoh itu. Mengalahkan baseline berarti rata-rata selisih mutlak pada data uji lebih kecil. Baseline adalah pembanding, bukan tebakan untuk keputusan sungguhan. Modul berikutnya baru mencoba cara menebak yang membaca petunjuk.
+**Batas analogi:** "sepuluh menit" hanya angka pada cerita. Angka di notebook adalah rata-rata jawaban data latih. Tebakan ini tidak membaca petunjuk, dan gambar rata-rata berhenti bila jawabannya bukan angka. Mengalahkan baseline berarti rata-rata selisih mutlak pada data uji lebih kecil.
 
 ### rata-rata selisih mutlak
 
@@ -53,7 +53,7 @@ jarak              2     0     2
 
 Data uji: jawaban 16, tebakan 10, jarak 6.
 
-Jarak adalah selisih yang tanda minusnya dibuang. Terlalu singkat dan terlalu lama sama-sama dihitung sebagai jarak.
+Jarak adalah selisih yang tanda minusnya dibuang.
 
 Rumus pada gambar di atas:
 
@@ -65,11 +65,9 @@ Rata-rata selisih bertanda pada gambar itu nol, padahal ada jarak. Karena itu mo
 
 Perumpamaan: seperti mencatat berapa menit tebakan meleset, baik terlalu singkat maupun terlalu lama, lalu merata-rata menit meleset itu.
 
-**Batas analogi:** gambar menit perjalanan adalah cerita pembuka. Pada kasus, yang dirata-rata adalah jarak antara tebakan dan kolom `Weight`, bukan menit ke warung. Terlalu singkat dan terlalu lama tidak saling meniadakan. Gambar ini tidak mengkuadratkan selisih dan tidak menarik akar. Angka ini tidak memberi tahu arah salahnya, hanya besar melesetnya. Nol berarti tebakan sama dengan jawaban pada baris yang diukur, termasuk bila model menghafal data latih. Nol pada data latih tidak menilai data uji. Ukuran ini untuk jawaban berupa angka.
+**Batas analogi:** pada kasus yang dirata-rata adalah jarak ke kolom `Weight`, bukan menit ke warung. Gambar ini tidak mengkuadratkan selisih. Nol pada data latih, termasuk bila model menghafal, tidak menilai data uji.
 
-Nama di kamus satu saja: rata-rata selisih mutlak. `mean_absolute_error` adalah nama fungsinya, bukan istilah kedua. Hitungan ini yang dipilih karena jawabannya angka, dan jarak tanpa tanda minus bisa dicek dengan gambar 8, 10, dan 12. Selisih yang dikuadratkan butuh langkah lain, jadi tidak masuk modul ini. Menghitung berapa tebakan yang tepat hanya cocok untuk jawaban berupa pilihan. Modul ini tidak melatih pilihan itu, dan tidak menambah angka penilaian lain.
-
-Menyalin jawaban data latih membuat rata-rata selisih mutlak pada data latih menjadi nol. Itu model menghafal. Angka nol itu tidak mengukur data uji.
+`mean_absolute_error` adalah nama fungsinya, bukan istilah kedua. Menyalin jawaban data latih membuat jarak pada data latih menjadi nol. Angka nol itu tidak mengukur data uji.
 
 ## Coba sendiri dulu, baru kode
 
