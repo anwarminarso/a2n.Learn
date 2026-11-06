@@ -84,7 +84,7 @@ Kita membaca dataset bunga iris lewat `sklearn.datasets.load_iris`. Dokumentasi 
 
 Ada empat ukuran bunga. Kolom spesies tidak ikut, karena itu kolom jawaban. Jumlah kelompok 2 kita pilih untuk dicoba pada seluruh tabel. Tidak ada baris yang ditahan di kasus ini, jadi ini merangkum tabel, bukan ujian kebocoran.
 
-PCA pada tabel yang sama menyimpan dua kolom baru. Scaler berada di dalam Pipeline supaya sebaran kolom disamakan dulu. `fit` artinya langkah itu belajar dari baris yang diberikan. Pipeline, topik modul rekayasa fitur, adalah urutan langkah yang diikat jadi satu: tiap langkah belajar hanya dari data yang diberikan ke `fit`. Kalimat ini mengingatkan, bukan arti baru.
+PCA pada tabel yang sama menyimpan dua kolom baru. Scaler berada di dalam Pipeline supaya sebaran kolom disamakan dulu. `fit` artinya langkah itu belajar dari baris yang diberikan. Pipeline, dari modul 6b, adalah satu rantai langkah berurutan. Langkah di depan mengubah data, langkah terakhir biasanya model. Saat belajar, setiap langkah hanya melihat data latih, lalu langkah itu dipakai apa adanya pada data uji. Kalimat ini mengingatkan arti di modul 6b, bukan arti baru.
 
 ## Kesalahan yang paling sering terjadi
 
@@ -274,4 +274,4 @@ lulus_ulang True
 
 ## Catatan istilah
 
-Hanya tiga entri kamus baru. KMeans, StandardScaler, PCA sebagai nama alat, IsolationForest, Pipeline, `n_init`, `contamination`, outlier detection, dan novelty detection dijelaskan satu kalimat dan tidak menjadi entri. Pipeline tetap topik modul rekayasa fitur menurut roadmap. Modul 6 belum ada di pohon ini, jadi ujian mengingatkan satu kalimat tanpa menambah arti di kamus. Modul ini tidak dipecah: tiga topik roadmap tepat tiga istilah.
+Hanya tiga entri kamus baru. KMeans, StandardScaler, PCA sebagai nama alat, IsolationForest, Pipeline, `n_init`, `contamination`, outlier detection, dan novelty detection dijelaskan satu kalimat dan tidak menjadi entri. Arti Pipeline sama dengan modul 6b: satu rantai langkah berurutan. Langkah di depan mengubah data, langkah terakhir biasanya model. Saat belajar, setiap langkah hanya melihat data latih, lalu langkah itu dipakai apa adanya pada data uji. Modul 6a dan modul 6b ada di pohon ini. Ujian hanya mengingatkan arti itu, tanpa menambah entri kamus. Modul ini tidak dipecah: tiga topik roadmap tepat tiga istilah.
