@@ -43,7 +43,7 @@ Hasilnya kamu hitung sendiri di bagian berikutnya. Notebook mencetak hasilnya.
 
 Perumpamaan: dua saklar untuk "panas" dan "dingin". Satu menyala, yang lain mati. Bukan termometer.
 
-Nama teknisnya **encoding**: mengubah kategori, yaitu teks berlabel terbatas, menjadi angka supaya model bisa menghitung.
+Nama teknisnya **encoding**: mengubah kategori, yaitu teks berlabel terbatas, menjadi angka supaya model bisa menghitung. Berlabel di sini berarti kategori punya nama, misalnya panas atau dingin, bukan kolom jawaban yang ditebak.
 
 **Batas analogi:** angka 0 dan 1 di sini bukan urutan "lebih panas". Gambar dua saklar hanya untuk dua kategori pada contoh ini; tiga kategori berarti tiga saklar, bukan skala 1 sampai 3. Encoding tidak mengubah kolom yang memang sudah angka. Kategori yang tidak ada saat belajar tidak punya saklar, dan langkahnya bisa berhenti, kecuali caranya disiapkan untuk kategori baru.
 

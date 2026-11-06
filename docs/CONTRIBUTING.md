@@ -59,7 +59,8 @@ Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
 
 ## Versi Python
 - **Python 3.14** (versi stabil terbaru yang masih bugfix; EOL 2030-10). Wheel dicek Pyra pada 2026-11-04 untuk Linux x86_64 dan Windows (macOS dan ARM belum dicek). Tidak perlu fallback saat ini.
-- `.python-version` cukup berisi `3.14`. Nomor patch 3.14.x tidak dikunci di `uv.lock`. Dasar pengujian saat ini adalah Python 3.14.10; patch tercatat di log mentah. Catatan ini diperbarui setiap kali versi di lingkungan agen berubah.
+- `.python-version` cukup berisi `3.14`. Nomor patch 3.14.x tidak dikunci di `uv.lock`. Dasar pengujian saat ini adalah Python 3.14.10; patch tercatat di log mentah. Catatan ini diperbarui setiap kali versi di lingkungan agen berubah. Nomor patch itu hanya ditulis di kalimat ini.
+- Pasang lingkungan dari root repo dengan `uv sync --frozen`. Perintah lengkap ada di [Cara menjalankan](../README.md#cara-menjalankan).
 - Versi paket tidak ditulis di dokumen ini; Pyra menguncinya di `uv.lock` di root repo (di-commit).
 - Python 3.15 belum dipakai. Python 3.10 sudah EOL (2026-10-01), jangan dipakai.
 - Aturan untuk kerusakan di masa depan: bila salah satu dependensi tidak punya wheel untuk 3.14, turun ke 3.13; jangan pernah 3.12 atau lebih lama. Catat keputusan dan tanggalnya di tabel di bawah.
@@ -70,4 +71,4 @@ Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
 | Tanggal | Keputusan | Dasar |
 |---|---|---|
 | 2026-11-04 | Python 3.14, tanpa fallback | Pengecekan wheel oleh Pyra (Linux x86_64, Windows) |
-| 2026-11-04 | Patch 3.14.x tidak dikunci di `uv.lock`. Dasar uji: Python 3.14.10, tercatat di log mentah | Lingkungan agen; perbarui catatan ini bila versi itu berubah |
+| 2026-11-04 | Patch 3.14.x tidak dikunci di `uv.lock`. Dasar uji mengikuti nomor patch pada bagian Versi Python, tercatat di log mentah | Lingkungan agen; perbarui catatan ini bila versi itu berubah |

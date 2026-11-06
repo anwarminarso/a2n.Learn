@@ -24,7 +24,7 @@ Pustaka adalah kumpulan fungsi siap pakai, bukan rak buku. Paket adalah bundel k
 
 Kelas di sini artinya golongan jawaban, bukan ruang belajar. Kelas positif adalah golongan yang kita cari.
 
-Data latih dipakai model untuk belajar. Data uji disisihkan dan tidak dilihat saat belajar. Baseline adalah cara menebak paling sederhana, misalnya selalu menebak kelas yang paling banyak. Ukuran kesalahan pada regresi adalah satu angka seberapa jauh tebakan dari jawaban. Pada dua golongan, satu angka "seberapa sering cocok" menyembunyikan jenis salahnya.
+Data latih dipakai model untuk belajar. Data uji disisihkan dan tidak dilihat saat belajar. Baseline adalah cara menebak paling sederhana, misalnya selalu menebak kelas yang paling banyak. Rata-rata selisih mutlak pada regresi adalah satu angka seberapa jauh tebakan dari jawaban. Pada dua golongan, satu angka "seberapa sering cocok" menyembunyikan jenis salahnya.
 
 Di bagian ini ada tiga istilah baru.
 
@@ -213,8 +213,6 @@ Ini penutup tingkat intermediate: proyek mini plus pertanyaan. Bahan ada di `uji
 4. Pohon tanpa batas yang menghafal. Selisih skor data latih dan data uji pohon itu `ujian_selisih_dalam 0.10833333333333328`. Selisih pohon pendek `ujian_selisih_dangkal 0.04761904761904767`.
 5. Pohon pendek yang dilaporkan. Baris `ujian_model_dipilih dangkal`.
 6. Data leakage. Rata-rata yang boleh adalah rata-rata data latih. Baris `ujian_nama_kebocoran data leakage` dan `ujian_rata_boleh data latih`.
-
-Soal 3, 4, dan 5 di atas sudah tetap: precision dan recall pada data uji, pohon tanpa batas yang menghafal, dan pohon pendek yang dilaporkan.
 
 Empat kotak, skor latih, dan skor uji ada pada baris di bawah. Angka ini disalin dari keluaran yang dijalankan, bukan ditulis tangan.
 

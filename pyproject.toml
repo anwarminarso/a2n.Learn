@@ -1,7 +1,7 @@
 [project]
 name = "a2n-learn"
 version = "0.1.0"
-description = "Lingkungan belajar a2n.Learn. Modul 1 memakai numpy, pandas, dan scikit-learn."
+description = "Lingkungan belajar a2n.Learn untuk modul 1 sampai 8, dengan numpy, pandas, dan scikit-learn. Modul 8 juga memakai onnxruntime dan skl2onnx."
 requires-python = "==3.14.*"
 dependencies = [
   "ipykernel",
@@ -23,7 +23,7 @@ testpaths = [
   "phase1-ml/modul-01-persiapan",
   "phase1-ml/modul-02-cara-berpikir-ml",
   "phase1-ml/modul-03-regresi",
-  "phase1-ml/modul-03b-regularisasi/tests",
+  # Tes modul 3b ada di phase1-ml/modul-03b-regularisasi/tests dan ikut folder induk, jadi jalur itu tidak diulang.
   "phase1-ml/modul-03b-regularisasi",
   "phase1-ml/modul-04a-klasifikasi",
   "phase1-ml/modul-04b-pohon-gabungan",

@@ -32,13 +32,6 @@ Bayangkan timbangan yang mengubah bukti menjadi peluang antara 0 dan 1. Peluang 
 
 Nama teknisnya **regresi logistik**: model klasifikasi yang mengubah jumlah berbobot dari kolom menjadi peluang, lalu memilih golongan dengan peluang terbesar.
 
-Gambar kecil, sebelum rumus. Dua peluang tangan:
-
-```
-0.7  lebih besar dari 0.5  -> virginica
-0.4  tidak                 -> versicolor
-```
-
 **Batas analogi:** peluang itu pemetaan skor model, bukan janji bahwa di dunia nyata kamu benar tujuh dari sepuluh kali. Skornya jumlah berbobot, jadi batasnya lurus pada skor itu, bukan sembarang lengkung. Saat peluang tepat 0.5, kedua golongan seri dan scikit-learn memilih nama yang lebih dulu di daftar `classes_`. Secara bawaan bobot kolom ditahan agar tidak terlalu besar; tombol itu bukan istilah modul ini. Ini bukan model yang menebak kilogram.
 
 ### pohon keputusan
@@ -103,6 +96,11 @@ CPU only. Versi paket terkunci di `uv.lock` di root repo.
 
 1. **klasifikasi:** model yang menebak golongan, bukan angka. **regresi logistik:** model klasifikasi yang mengubah jumlah berbobot dari kolom menjadi peluang, lalu memilih golongan dengan peluang terbesar. **pohon keputusan:** model klasifikasi yang memilah baris dengan pertanyaan ya atau tidak beruntun; setiap pertanyaan memakai satu kolom dan satu batas.
 2. 0.7 masuk virginica. 0.4 masuk versicolor. Disalin dari keluaran di bawah.
+
+```
+0.7  lebih besar dari 0.5  -> virginica
+0.4  tidak                 -> versicolor
+```
 3. Data uji tidak dilihat model saat belajar, jadi angka itu mengukur tebakan pada baris yang disisihkan.
 4. `salah_uji_baseline 13` dan `salah_uji_logistik 2`. Logistik lebih kecil. `logistik_mengalahkan_baseline True`.
 5. `salah_latih_pohon_dalam 0` dan `salah_uji_pohon_dalam 4`. Gejalanya overfitting.

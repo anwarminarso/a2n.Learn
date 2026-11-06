@@ -46,7 +46,7 @@ Jawab dulu. Jangan gulir ke kunci. Setelah itu buka `notebook.ipynb` dan jalanka
 
 `sklearn.datasets.load_wine` membaca berkas yang sudah terpasang. Tidak ada unduhan. Bukan data asli perusahaan.
 
-Isinya analisis kimia anggur dari daerah yang sama di Italia, tiga kelompok varietas. Nama golongannya `class_0`, `class_1`, dan `class_2`: tiga kelompok, bukan peringkat dari buruk ke baik. `feature_names` pada kode adalah nama kolom bawaan dataset, bukan istilah baru.
+Isinya analisis kimia anggur dari daerah yang sama di Italia, tiga kelompok varietas. Nama golongannya `class_0`, `class_1`, dan `class_2`: tiga kelompok, bukan peringkat dari buruk ke baik. Kata `kelas` pada `RandomForestClassifier` dan `GradientBoostingClassifier` adalah nama tipe di pustaka, bukan golongan jawaban pada `class_0`, `class_1`, dan `class_2`. `feature_names` pada kode adalah nama kolom bawaan dataset, bukan istilah baru.
 
 Satu pohon tanpa batas kedalaman, hutan acak, dan gradient boosting belajar hanya dari data latih. Yang dibandingkan adalah banyak tebakan salah di data uji, bukan angka nol di data latih. Baseline tetap golongan yang paling banyak di data latih.
 
@@ -165,7 +165,7 @@ paling_sedikit_salah_uji hutan_acak
 - scikit-learn developers. `GradientBoostingClassifier`. <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html>
 - scikit-learn developers. *Toy datasets* (Wine recognition dataset) dan `load_wine`. <https://scikit-learn.org/stable/datasets/toy_dataset.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html>
 - Forina, M., Leardi, R., Armanino, C., dan Lanteri, S. *PARVUS: An extendable package of programs for data exploration, classification and correlation.* Elsevier, Amsterdam, 1988. ISBN 0-444-43012-1. Ejaan judul mengikuti tinjauan Vandeginste, B. G. M., Journal of Chemometrics (1990), doi:10.1002/cem.1180040210. Berkas `wine.names` di UCI menulis "Extendible Package" tanpa "of Programs".
-- UCI Machine Learning Repository. `wine.names` menyebut "three different cultivars". Halaman toy dataset scikit-learn menulis "cultivators" dan sempat menyebut R.A. Fisher sebagai creator. Fisher adalah penulis dataset iris, bukan pemilik data anggur. Modul ini mengikuti `wine.names`: tiga kelompok varietas.
+- UCI Machine Learning Repository. `wine.names` menulis "three different cultivars", dan di modul ini itu tiga kelompok varietas. Halaman toy dataset scikit-learn menulis "cultivators" dan sempat menyebut R.A. Fisher sebagai creator. Fisher adalah penulis dataset iris, bukan pemilik data anggur. Modul ini mengikuti `wine.names`: tiga kelompok varietas.
 - Aeberhard, S., Coomans, D., dan de Vel, O. "Comparison of Classifiers in High Dimensional Settings." Tech. Rep. no. 92-02, (1992), Dept. of Computer Science and Dept. of Mathematics and Statistics, James Cook University of North Queensland.
 - Breiman, L. "Random Forests." Machine Learning 45, 5-32 (2001). doi:10.1023/A:1010933404324
 - Friedman, J. H. "Greedy Function Approximation: A Gradient Boosting Machine." The Annals of Statistics 29(5), 1189-1232 (2001). doi:10.1214/aos/1013203451
