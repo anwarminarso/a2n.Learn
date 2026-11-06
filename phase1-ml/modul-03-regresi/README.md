@@ -21,7 +21,7 @@ Di modul 2, tebakan paling sederhana tidak membaca petunjuk. Garis di modul ini 
 
 ## Teori
 
-Di modul ini hanya ada tiga istilah baru. Pustaka adalah kumpulan fungsi siap pakai. Nama fungsi di pustaka bukan istilah baru. Kata model tetap bahasa biasa untuk cara menebak, dan belum masuk kamus. Baseline dan rata-rata selisih mutlak dipakai lagi dengan arti yang sama seperti di modul 2.
+Di modul ini hanya ada tiga istilah baru. Pustaka adalah kumpulan fungsi siap pakai. Baseline dan rata-rata selisih mutlak dipakai lagi dengan arti yang sama seperti di modul 2.
 
 ### regresi linear
 
@@ -52,7 +52,7 @@ selisih      0     0     1
 kuadrat      0     0     1
 ```
 
-Kuadrat artinya selisih dikali dirinya sendiri. Selisih 1 menjadi 1. Selisih 2 menjadi 4. Dua selisih 1 punya jumlah kuadrat 2, lebih kecil daripada satu selisih 2.
+Kuadrat artinya selisih dikali dirinya sendiri. Selisih 2 menjadi 4.
 
 Rumus pada gambar di atas:
 
@@ -60,9 +60,7 @@ Rumus pada gambar di atas:
 
 Nama teknisnya **fungsi kerugian**. Artinya: Angka pada data latih yang dibuat sekecil mungkin saat garis disusun. Pada regresi linear di modul 3, angka itu adalah rata-rata dari selisih yang dikuadratkan: tiap selisih dikali dirinya sendiri, lalu dirata-rata. Makin kecil, makin dekat garis ke jawaban data latih yang dipakai menyusunnya.
 
-Dalam bahasa Inggris, angka ini sering disebut loss. Sebutan itu bukan istilah kedua.
-
-Perumpamaan: seperti mencatat menit yang meleset, mengkuadratkan menit itu, lalu merata-ratakannya. Meleset dua menit dihitung empat, jadi satu meleset besar lebih berat daripada dua meleset kecil yang jumlah jaraknya sama.
+Perumpamaan: seperti mencatat menit yang meleset, mengkuadratkan menit itu, lalu merata-ratakannya.
 
 **Batas analogi:** yang dihitung adalah kuadrat, bukan perasaan penumpang. Ini bukan rata-rata selisih mutlak, dan modul ini tetap memakai ukuran itu pada data uji. Angka ini dihitung pada data latih; nol di situ belum menilai data baru. Dokumentasi scikit-learn memperkecil jumlah kuadrat selisih. Selama banyak baris data latih tidak berubah, garis yang memperkecil jumlah itu sama dengan garis yang memperkecil rata-ratanya.
 
@@ -82,8 +80,6 @@ menit
 ```
 
 Garis lurus meleset sedikit pada titik yang melonjak. Nama teknisnya **overfitting**. Artinya: Model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru.
-
-Di modul 2 pola ini hanya disebut "model menghafal". Nama overfitting baru dipakai di modul ini.
 
 Perumpamaan: seperti garis yang dipelintir sampai menempel di setiap titik catatan yang terbuka, termasuk satu titik yang kebetulan meleset, lalu meleset jauh pada catatan di amplop.
 
