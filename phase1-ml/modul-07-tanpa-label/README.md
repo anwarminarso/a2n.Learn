@@ -40,9 +40,9 @@ Mengumpulkan yang mirip, tanpa label nama pemilik, itulah **clustering**: membag
 
 Perumpamaan: seperti memisahkan cucian berdasarkan warna dan jenis kain, tanpa label nama pemilik.
 
-**Batas analogi:** berhenti berlaku pada KMeans, cara yang dipakai modul ini, karena jumlah kelompok harus disebut dari awal, sedangkan tumpukan cucian boleh bertambah mengikuti isi keranjang. Kemiripan diukur dengan kuadrat jarak angka, bukan dengan mata. Nama kelompok tidak keluar dari metode. Dua catatan bisa sekelompok walau satu kolomnya jauh, bila kolom lain sangat dekat. Kelompok yang bentuknya panjang atau melengkung bisa gagal terpotong rapi, karena cara ini mencari gumpalan.
+**Batas analogi:** pada KMeans jumlah kelompok harus disebut dari awal, sedangkan tumpukan cucian boleh bertambah sendiri. Kemiripan diukur dengan kuadrat jarak angka, bukan dengan mata, dan nama kelompok tidak keluar dari metode. Kelompok yang panjang atau melengkung bisa gagal terpotong rapi.
 
-KMeans adalah satu cara clustering, bukan istilah baru: setiap titik ditaruh ke pusat kelompok terdekat, pusat digeser ke rata-rata anggotanya, lalu langkah itu diulang. `n_init` adalah berapa kali pusat awal dicoba. Kita tulis 10 supaya angka itu tidak mengikuti bawaan yang bisa berubah.
+KMeans adalah satu cara clustering, bukan istilah baru: tiap titik ditaruh ke pusat terdekat, pusat digeser ke rata-rata anggotanya, lalu langkah itu diulang. `n_init` adalah berapa kali pusat awal dicoba. Kita tulis 10 supaya angka itu tidak mengikuti bawaan yang bisa berubah.
 
 Rumus sesudah gambar. Tanda ^2 artinya dikali dirinya. Di kode, pangkat ditulis `**`.
 
@@ -54,9 +54,9 @@ A ke B dan A ke C kamu hitung sendiri di bagian berikutnya. Notebook mencetak ha
 
 Banyak kolom angka yang bergerak bersama bisa diringkas. Nama teknisnya **PCA**: merangkum banyak kolom angka menjadi lebih sedikit kolom baru yang tetap menyimpan sebagian besar variasi. Kependekan ini dari principal component analysis. Dalam bahasa Indonesia sering disebut analisis komponen utama. Itu satu istilah, bukan dua.
 
-Perumpamaan: seperti merangkum nota belanja yang punya banyak kolom angka menjadi dua kolom baru yang muncul dari pola angkanya, bukan dari judul yang kamu pilih lebih dulu.
+Perumpamaan: seperti merangkum nota belanja menjadi dua kolom baru dari pola angkanya, bukan dari judul yang kamu pilih lebih dulu.
 
-**Batas analogi:** dua kolom baru itu bukan judul nota yang lama dan tidak selalu bisa dibaca sebagai satu kolom asal. Arahnya adalah campuran kolom yang paling banyak menyimpan variasi, bukan nama yang kamu tentukan di muka. PCA tidak mengurangi jumlah baris. Variasi yang dibuang bukan berarti pencatatannya salah. PCA tidak membagi kelompok dan tidak menandai baris aneh. Pada scikit-learn, PCA menggeser kolom ke rata-rata nol tetapi tidak menyamakan sebaran. Kolom yang angkanya lebih besar bisa menelan yang lain bila belum diskalakan. Perumpamaan nota berhenti bila kolom punya satuan yang berbeda, karena kolom berangka besar bisa menguasai arah baru.
+**Batas analogi:** dua kolom baru itu bukan judul nota yang lama, dan bukan nama yang kamu tentukan di muka. PCA tidak mengurangi jumlah baris, tidak membagi kelompok, dan tidak menandai baris aneh. Pada scikit-learn, PCA menggeser kolom ke rata-rata nol tetapi tidak menyamakan sebaran, jadi kolom berangka besar bisa menelan yang lain bila belum diskalakan.
 
 `explained_variance_ratio_` adalah bagian variasi yang tersimpan di tiap kolom baru. Bukan istilah kamus.
 
@@ -66,7 +66,7 @@ Satu kaus bolong tidak harus menjadi tumpukan baru. Nama teknisnya **deteksi ano
 
 Perumpamaan: seperti menemukan satu kaus yang bolong di antara tumpukan kaus yang utuh.
 
-**Batas analogi:** satu kaus bolong tetap satu barang untuk diperiksa, bukan kelompok baru yang harus diisi. Cara ini tidak membagi semua barang menjadi kelompok yang sama rata. Modul ini memakai outlier detection: baris aneh sudah tercampur di tabel yang dipelajari. Baris biasa ditandai 1 dan baris aneh ditandai -1. Ini bukan novelty detection, yaitu memeriksa barang baru ketika tabel belajar dianggap bersih. Bila banyak barang aneh menggumpal rapat, cara outlier detection bisa gagal menandainya, karena ia menganggap yang aneh jarang dan tidak menggumpal. Ambang jauh bergantung pada `contamination`, yaitu perkiraan bagian baris aneh yang kamu tulis, bukan pada setiap perbedaan kecil. Tanda ini bukan penyebab kerusakan. Outlier detection, novelty detection, dan contamination dijelaskan di kalimat ini dan tidak menjadi istilah baru.
+**Batas analogi:** satu kaus bolong tetap satu barang untuk diperiksa, bukan kelompok baru. Modul ini memakai outlier detection: baris aneh sudah tercampur di tabel yang dipelajari, baris biasa ditandai 1, baris aneh ditandai -1. Ini bukan novelty detection, yaitu memeriksa barang baru pada tabel belajar yang dianggap bersih. Ambang jauh bergantung pada `contamination`, perkiraan bagian baris aneh. Tanda ini bukan penyebab kerusakan. Outlier detection, novelty detection, dan contamination bukan istilah baru.
 
 IsolationForest adalah satu alat untuk deteksi anomali, bukan istilah baru: baris yang mudah dipisahkan dari mayoritas ditandai aneh.
 
@@ -84,7 +84,7 @@ Kita membaca dataset bunga iris lewat `sklearn.datasets.load_iris`. Dokumentasi 
 
 Ada empat ukuran bunga. Kolom spesies tidak ikut, karena itu kolom jawaban. Jumlah kelompok 2 kita pilih untuk dicoba pada seluruh tabel. Tidak ada baris yang ditahan di kasus ini, jadi ini merangkum tabel, bukan ujian kebocoran.
 
-PCA pada tabel yang sama menyimpan dua kolom baru. Scaler berada di dalam Pipeline supaya sebaran kolom disamakan dulu. `fit` artinya langkah itu belajar dari baris yang diberikan. Pipeline, topik modul rekayasa fitur, adalah urutan langkah yang diikat jadi satu: tiap langkah belajar hanya dari data yang diberikan ke `fit`. Kalimat ini mengingatkan, bukan arti baru.
+PCA pada tabel yang sama menyimpan dua kolom baru. Scaler berada di dalam Pipeline supaya sebaran kolom disamakan dulu. `fit` artinya langkah itu belajar dari baris yang diberikan. Pipeline, dari modul 6b, adalah satu rantai langkah berurutan. Langkah di depan mengubah data, langkah terakhir biasanya model. Saat belajar, setiap langkah hanya melihat data latih, lalu langkah itu dipakai apa adanya pada data uji. Kalimat ini mengingatkan arti di modul 6b, bukan arti baru.
 
 ## Kesalahan yang paling sering terjadi
 
@@ -274,4 +274,4 @@ lulus_ulang True
 
 ## Catatan istilah
 
-Hanya tiga entri kamus baru. KMeans, StandardScaler, PCA sebagai nama alat, IsolationForest, Pipeline, `n_init`, `contamination`, outlier detection, dan novelty detection dijelaskan satu kalimat dan tidak menjadi entri. Pipeline tetap topik modul rekayasa fitur menurut roadmap. Modul 6 belum ada di pohon ini, jadi ujian mengingatkan satu kalimat tanpa menambah arti di kamus. Modul ini tidak dipecah: tiga topik roadmap tepat tiga istilah.
+Hanya tiga entri kamus baru. KMeans, StandardScaler, PCA sebagai nama alat, IsolationForest, Pipeline, `n_init`, `contamination`, outlier detection, dan novelty detection dijelaskan satu kalimat dan tidak menjadi entri. Arti Pipeline sama dengan modul 6b: satu rantai langkah berurutan. Langkah di depan mengubah data, langkah terakhir biasanya model. Saat belajar, setiap langkah hanya melihat data latih, lalu langkah itu dipakai apa adanya pada data uji. Modul 6a dan modul 6b ada di pohon ini. Ujian hanya mengingatkan arti itu, tanpa menambah entri kamus. Modul ini tidak dipecah: tiga topik roadmap tepat tiga istilah.

@@ -4,7 +4,7 @@
 
 **Tingkat:** intermediate
 
-Modul ini tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5, bukan di sini.
+Modul 3b tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5b, bukan di sini.
 
 ## Cerita pembuka
 
@@ -12,7 +12,7 @@ Kamu meracik jus. Banyak bahan, dan satu gelas percobaan kebetulan terasa pas. K
 
 Yang ingin ditebak: kadar manis, satu angka. Bahan yang dicatat membantu tebakan, tetapi tidak semuanya berguna. Modul ini tidak memakai data asli perusahaan. Angka pada cerita adalah gambar, bukan hasil pengukuran.
 
-## Teori
+## Pengingat
 
 Hanya ada tiga istilah baru: regularisasi, Ridge, dan Lasso. Kalimat di bawah menjelaskan kata lain satu kali. Kata-kata itu bukan istilah baru.
 
@@ -30,7 +30,7 @@ intercept_ adalah nama tempat scikit-learn menyimpan bilangan geser.
 
 coef_ adalah nama tempat scikit-learn menyimpan koefisien.
 
-Fungsi kerugian adalah angka kesalahan yang diperkecil saat model belajar; pada regresi linear tanpa penalti, angka itu adalah jumlah kuadrat selisih antara tebakan dan jawaban.
+Fungsi kerugian adalah angka kesalahan yang diperkecil saat model belajar; pada regresi linear tanpa penalti, angka itu adalah jumlah kuadrat selisih antara tebakan dan jawaban. Selama banyak baris data latih tidak berubah, garis yang memperkecil jumlah kuadrat itu sama dengan garis yang memperkecil rata-ratanya.
 
 Data latih dan data uji berarti data dibagi dua: data latih dipakai model untuk belajar; data uji disisihkan dan tidak dilihat model saat belajar, dipakai untuk mengukur seberapa baik model pada data baru.
 
@@ -62,6 +62,8 @@ Parameter noise pada make_regression adalah simpangan baku derau Gauss yang dita
 
 Parameter bias pada make_regression adalah geseran tetap, yaitu bilangan geser pada model linear yang membuat jawaban.
 
+## Teori
+
 ### regularisasi
 
 Pada jus, denda membesar bila takaran membesar. Garis tebakan yang tanpa denda bebas membesarkan koefisien agar kebetulan data latih tertiru. Nama teknisnya **regularisasi**.
@@ -70,7 +72,7 @@ Artinya: penalti yang ditambahkan pada fungsi kerugian regresi linear supaya koe
 
 Perumpamaan: seperti denda pada takaran bumbu: makin jauh takaran dari nol, makin besar dendanya, jadi resep tidak meniru setiap kebetulan satu gelas percobaan.
 
-**Batas analogi:** denda pada cerita tidak dijumlahkan dengan rasa yang meleset. Pada model, penalti dijumlahkan dengan fungsi kerugian, lalu jumlah itu yang diperkecil. Gambar bumbu tidak membedakan kuadrat dan nilai mutlak. Pada rumus Ridge dan Lasso di scikit-learn, penalti mengenai koefisien, bukan bilangan geser.
+**Batas analogi:** denda pada cerita tidak dijumlahkan dengan rasa yang meleset. Pada model, penalti dijumlahkan dengan fungsi kerugian, lalu jumlah itu yang diperkecil. Gambar bumbu tidak membedakan kuadrat dan nilai mutlak. Penalti mengenai koefisien, bukan bilangan geser.
 
 ### Ridge
 
@@ -94,7 +96,7 @@ Pada scikit-learn, yang diperkecil adalah jumlah kuadrat selisih ditambah alpha 
 
 Perumpamaan: seperti tali yang menarik tiap takaran mendekati nol: makin jauh, tarikannya makin cepat membesar, tetapi takaran tidak dipaksa putus menjadi nol.
 
-**Batas analogi:** tali tidak menghitung kuadrat. Penalti Ridge adalah jumlah kuadrat koefisien, dikali alpha. Dua koefisien sedang bisa lebih murah daripada satu koefisien besar. Koefisien bisa sangat kecil tanpa menjadi tepat nol. Menukar Ridge dengan Lasso bisa menghasilkan koefisien nol; itu bukan sifat penalti kuadrat. Angka alpha yang sama tidak berarti kekuatan yang sama dengan Lasso, karena bagian selisih kuadrat pada rumus scikit-learn disusun berbeda.
+**Batas analogi:** tali tidak menghitung kuadrat. Penalti Ridge adalah jumlah kuadrat koefisien, dikali alpha. Koefisien bisa sangat kecil tanpa menjadi tepat nol. Alpha yang sama bukan kekuatan yang sama dengan Lasso, karena bagian selisih kuadrat pada rumus scikit-learn disusun berbeda.
 
 ### Lasso
 
@@ -106,7 +108,7 @@ Pada scikit-learn, yang diperkecil adalah jumlah kuadrat selisih dibagi dua kali
 
 Perumpamaan: seperti boleh membuang satu bumbu sampai takarannya tepat nol bila bumbu itu tidak membantu.
 
-**Batas analogi:** membuang bumbu pada gambar adalah pilihan orang. Nol pada Lasso muncul dari penalti nilai mutlak, bukan dari mencoret kolom dengan tangan. Tidak semua koefisien harus nol. Ridge tidak melakukan ini. Koefisien nol pada data ini tidak membuktikan petunjuk itu tak berguna pada data lain. Penalti tetap peka pada skala petunjuk.
+**Batas analogi:** membuang bumbu pada gambar adalah pilihan orang. Nol pada Lasso muncul dari penalti nilai mutlak, bukan dari mencoret kolom dengan tangan. Tidak semua koefisien harus nol. Koefisien nol pada data ini tidak membuktikan petunjuk itu tak berguna pada data lain.
 
 Gambar di atas hanya bagian penalti, belum ditambah selisih tebakan. Notebook mencetak jumlahnya; kunci di bawah menyalin cetakan itu.
 
@@ -211,7 +213,7 @@ CPU only. Daftar paket yang terkunci ada di `uv.lock` di root repo.
 7. Penalti peka skala: petunjuk yang sebarannya jauh lebih besar bisa menguasai hitungan. `kasus_skala_latih True`: rata-rata StandardScaler sama dengan rata-rata data latih, bukan semua baris.
 8. Salah. Dokumentasi menyarankan LinearRegression bila tidak ada penalti.
 9. `kasus_baris_latih 37` dan `kasus_baris_uji 13`.
-10. Salah. Modul ini tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5.
+10. Salah. Modul 3b tidak menutup tingkat. Ujian tingkat untuk label ini ada di modul 5b.
 
 Jawaban "coba sendiri" disalin dari keluaran di bawah: `tangan_kuadrat_a 8.0`, `tangan_kuadrat_b 9.0`, `tangan_mutlak_a 4.0`, `tangan_mutlak_b 3.0`.
 

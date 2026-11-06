@@ -3,8 +3,10 @@
 Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
+import io
 import json
 import re
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import numpy as np
@@ -206,6 +208,36 @@ def test_contoh_tangan():
     assert float((menit_latih - rata).mean()) == 0.0
     assert float(mean_absolute_error(np.array([16.0]), np.array([rata]))) == 6.0
     assert float(mean_absolute_error(menit_latih, menit_latih)) == 0.0
+
+
+def _jalankan_sumber(nama):
+    nb = _baca_notebook(nama)
+    ruang = {"__name__": "__main__"}
+    with redirect_stdout(io.StringIO()):
+        for cell in nb["cells"]:
+            if cell["cell_type"] != "code":
+                continue
+            exec(_sumber(cell), ruang, ruang)
+    return ruang
+
+
+def test_notebook_dan_kunci_dijalankan_dari_sumber():
+    """Sumber sel dijalankan, jadi assert di dalam notebook ikut terpicu."""
+    ruang = _jalankan_sumber("notebook.ipynb")
+    assert ruang["baseline"].strategy == "mean", "Baseline harus memakai strategi rata-rata."
+    assert ruang["mae_latih"] > ruang["mae_hafal"], (
+        "Galat baseline harus lebih besar dari galat model yang menghafal."
+    )
+    kunci = _jalankan_sumber("latihan-kunci.ipynb")
+    assert kunci["baseline"].strategy == "mean", "Baseline kunci harus memakai strategi rata-rata."
+
+
+def test_kunci_baseline_memakai_dummy_bukan_tautologi():
+    teks = _seluruh_sumber("latihan-kunci.ipynb")
+    assert "DummyRegressor" in teks, "Kunci baseline harus memakai DummyRegressor."
+    assert 'assert float(latih["Waist"].mean()) == rata' not in teks, (
+        "Assert baseline tidak boleh membandingkan rata-rata dengan dirinya sendiri."
+    )
 
 
 def test_latihan_tangan():

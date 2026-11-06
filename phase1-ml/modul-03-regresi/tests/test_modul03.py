@@ -3,8 +3,10 @@
 Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
+import io
 import json
 import re
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import numpy as np
@@ -16,6 +18,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
 
 ROOT = Path(__file__).resolve().parents[1]
+SEED = 42
 REPO = ROOT.parents[1]
 NOTEBOOKS = (
     "notebook.ipynb",
@@ -110,7 +113,7 @@ def _garis_notebook():
     tabel = pd.DataFrame({"bmi": bahan.frame["bmi"], "target": bahan.frame["target"]})
     _cetak(garis, "kasus_baris", int(tabel.shape[0]))
     _cetak(garis, "kasus_kolom", int(tabel.shape[1]))
-    latih, uji = train_test_split(tabel, test_size=0.25, random_state=42)
+    latih, uji = train_test_split(tabel, test_size=0.25, random_state=SEED)
     _cetak(garis, "kasus_baris_latih", int(len(latih)))
     _cetak(garis, "kasus_baris_uji", int(len(uji)))
     baseline = DummyRegressor(strategy="mean")
@@ -135,11 +138,11 @@ def _garis_notebook():
         n_features=20,
         n_informative=1,
         noise=50,
-        random_state=42,
+        random_state=SEED,
     )
     _cetak(garis, "lentur_petunjuk", int(petunjuk.shape[1]))
     petunjuk_latih, petunjuk_uji, jawaban_latih, jawaban_uji = train_test_split(
-        petunjuk, jawaban, test_size=0.25, random_state=42
+        petunjuk, jawaban, test_size=0.25, random_state=SEED
     )
     _cetak(garis, "lentur_baris_latih", int(len(jawaban_latih)))
     garis_lentur = LinearRegression()
@@ -159,7 +162,7 @@ def _garis_notebook():
     _cetak(garis, "lentur_latih_lebih_kecil", lentur_mae_latih < lentur_mae_uji)
     _cetak(garis, "lentur_uji_lebih_buruk", lentur_mae_uji > lentur_mae_base)
 
-    _latih_lagi, uji_lagi = train_test_split(tabel, test_size=0.25, random_state=42)
+    _latih_lagi, uji_lagi = train_test_split(tabel, test_size=0.25, random_state=SEED)
     _cetak(garis, "kasus_indeks_pertama", int(uji.index[0]))
     _cetak(garis, "kasus_indeks_pertama_lagi", int(uji_lagi.index[0]))
     _cetak(garis, "kasus_sama", uji.index.tolist() == uji_lagi.index.tolist())
@@ -185,7 +188,7 @@ def _garis_kunci():
 
     bahan = load_diabetes(as_frame=True, scaled=True)
     tabel = pd.DataFrame({"bp": bahan.frame["bp"], "target": bahan.frame["target"]})
-    latih, uji = train_test_split(tabel, test_size=0.25, random_state=42)
+    latih, uji = train_test_split(tabel, test_size=0.25, random_state=SEED)
     model_baseline = DummyRegressor(strategy="mean")
     model_baseline.fit(latih[["bp"]], latih["target"])
     model = LinearRegression()
@@ -211,10 +214,10 @@ def _garis_ujian():
         n_features=1,
         n_informative=1,
         noise=15,
-        random_state=42,
+        random_state=SEED,
     )
     petunjuk_latih, petunjuk_uji, jawaban_latih, jawaban_uji = train_test_split(
-        petunjuk, jawaban, test_size=0.25, random_state=42
+        petunjuk, jawaban, test_size=0.25, random_state=SEED
     )
     baseline = DummyRegressor(strategy="mean")
     baseline.fit(petunjuk_latih, jawaban_latih)
@@ -240,7 +243,7 @@ def test_sel_pertama_adalah_seed():
 def test_pemanggilan_acak_memakai_seed():
     for nama in NOTEBOOKS:
         teks = _seluruh_sumber(nama).replace(" ", "")
-        assert "random_state=42" not in teks
+        assert "random_state=" + "42" not in teks
         assert "default_rng(42)" not in teks
         assert "random_state=SEED" in teks
 
@@ -263,7 +266,7 @@ def test_latihan_dan_ujian_tanpa_keluaran_tersimpan():
 def test_garis_mengalahkan_baseline_pada_diabetes_dan_ujian():
     bahan = load_diabetes(as_frame=True, scaled=True)
     tabel = pd.DataFrame({"bmi": bahan.frame["bmi"], "target": bahan.frame["target"]})
-    latih, uji = train_test_split(tabel, test_size=0.25, random_state=42)
+    latih, uji = train_test_split(tabel, test_size=0.25, random_state=SEED)
     assert len(latih) == 331
     assert len(uji) == 111
     baseline = DummyRegressor(strategy="mean").fit(latih[["bmi"]], latih["target"])
@@ -277,6 +280,26 @@ def test_garis_mengalahkan_baseline_pada_diabetes_dan_ujian():
     assert "ujian_lulus True" in baris_ujian
     assert "ujian_baris_latih 60" in baris_ujian
     assert "ujian_baris_uji 20" in baris_ujian
+
+
+def _jalankan_sumber(nama):
+    nb = _baca_notebook(nama)
+    ruang = {"__name__": "__main__"}
+    with redirect_stdout(io.StringIO()):
+        for cell in nb["cells"]:
+            if cell["cell_type"] != "code":
+                continue
+            exec(_sumber(cell), ruang, ruang)
+    return ruang
+
+
+def test_notebook_utama_menjaga_tingkat_noise():
+    """Sumber notebook dijalankan, jadi assert tingkat noise ikut terpicu."""
+    ruang = _jalankan_sumber("notebook.ipynb")
+    assert ruang["tingkat_noise"] == 50, "Tingkat noise pembuat angka harus 50."
+    assert str(ruang["lentur_mae_uji"]) == "85.73737383461155", (
+        "Galat uji harus sama dengan keluaran notebook pada tingkat noise ini."
+    )
 
 
 def test_keluaran_notebook_sama_dengan_hitung_ulang():

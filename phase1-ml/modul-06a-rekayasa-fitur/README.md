@@ -31,7 +31,7 @@ Perumpamaan: bahan yang masuk ke adonan ikut dihitung. Catatan di pinggir kertas
 
 Nama teknisnya **fitur**: kolom, atau hasil hitungan dari kolom, yang dipakai model untuk menebak. Kolom jawaban yang ditebak bukan fitur.
 
-**Batas analogi:** tidak semua kolom tabel adalah fitur. Kolom jawaban bukan fitur. Nama baris bukan fitur. Fitur hasil hitungan tidak otomatis lebih berguna: ia bisa mengulang informasi yang sudah ada, atau gagal bila pembaginya nol. Gambar adonan tidak menjelaskan bahwa model hanya melihat angka.
+**Batas analogi:** tidak semua kolom tabel adalah fitur. Kolom jawaban dan nama baris bukan fitur. Fitur hasil hitungan bisa mengulang informasi yang sudah ada, atau gagal bila pembaginya nol. Gambar adonan tidak menjelaskan bahwa model hanya melihat angka.
 
 Contoh hitungan, setelah gambar di atas. Satu liter sama dengan 1000 mililiter:
 
@@ -43,11 +43,11 @@ Hasilnya kamu hitung sendiri di bagian berikutnya. Notebook mencetak hasilnya.
 
 Perumpamaan: dua saklar untuk "panas" dan "dingin". Satu menyala, yang lain mati. Bukan termometer.
 
-Nama teknisnya **encoding**: mengubah kategori, yaitu teks berlabel terbatas, menjadi angka supaya model bisa menghitung.
+Nama teknisnya **encoding**: mengubah kategori, yaitu teks berlabel terbatas, menjadi angka supaya model bisa menghitung. Berlabel di sini berarti kategori punya nama, misalnya panas atau dingin, bukan kolom jawaban yang ditebak.
 
-**Batas analogi:** angka 0 dan 1 di sini bukan urutan "lebih panas". Gambar dua saklar hanya untuk dua kategori pada contoh ini; tiga kategori berarti tiga saklar, bukan skala 1 sampai 3. Encoding tidak mengubah kolom yang memang sudah angka. Kategori yang tidak ada saat belajar tidak punya saklar, dan langkahnya bisa berhenti, kecuali caranya disiapkan untuk kategori baru.
+**Batas analogi:** angka 0 dan 1 di sini bukan urutan "lebih panas". Tiga kategori berarti tiga saklar, bukan skala 1 sampai 3. Encoding tidak mengubah kolom yang memang sudah angka. Kategori yang tidak ada saat belajar tidak punya saklar, kecuali caranya disiapkan untuk kategori baru.
 
-Cara yang dipakai di notebook namanya one-hot: satu kolom baru per kategori, berisi 1 jika cocok dan 0 jika tidak. Mengisi satu kolom dengan 0 lalu 1 lalu 2 mengarang urutan. Itu bukan encoding yang kita pakai.
+Cara di notebook namanya one-hot: satu kolom baru per kategori, berisi 1 jika cocok dan 0 jika tidak. Mengisi satu kolom dengan 0, 1, lalu 2 mengarang urutan. Itu bukan encoding yang kita pakai.
 
 ### penskalaan
 
@@ -55,17 +55,15 @@ Perumpamaan: gram dan ons disamakan dulu sebelum beratnya dibandingkan, supaya y
 
 Nama teknisnya **penskalaan**: mengubah angka sebuah kolom supaya rentangnya sebanding dengan kolom lain, memakai rata-rata dan sebaran yang dihitung hanya dari data yang boleh dilihat.
 
-**Batas analogi:** hasilnya bukan gram dan bukan ons. Tiap angka digeser supaya rata-ratanya nol, lalu dibagi sebarannya. Penskalaan tidak menambah informasi. Ia tidak cocok untuk kolom teks. Rata-rata dan sebaran hanya boleh dihitung dari data latih; kalau data uji ikut, itu data leakage. Kolom yang semua nilainya sama punya sebaran nol dan tidak bisa dibagi.
+**Batas analogi:** hasilnya bukan gram dan bukan ons. Tiap angka digeser ke rata-rata nol, lalu dibagi sebarannya. Penskalaan tidak menambah informasi dan tidak cocok untuk kolom teks. Rata-rata dan sebaran hanya dari data latih; kalau data uji ikut, itu data leakage. Kolom yang nilainya semua sama tidak bisa dibagi.
 
-Data latih dan data uji, istilah modul cara berpikir: data dibagi dua. Data latih dipakai model untuk belajar. Data uji disisihkan dan tidak dilihat model saat belajar, dipakai untuk mengukur seberapa baik model pada data baru.
+Data latih dipakai untuk belajar. Data uji disisihkan. Pada empat gelas ini skor tidak diukur; yang terlihat hanya rata-ratanya berubah.
 
-Data leakage, istilah modul evaluasi: informasi yang seharusnya tidak tersedia saat belajar ikut terpakai, sehingga skor terlihat lebih bagus dari kenyataan. Pada empat gelas ini skor tidak diukur. Yang terlihat adalah rata-ratanya berubah, jadi bagian tentang skor tidak terbukti di tabel itu.
-
-Sebaran adalah simpangan baku: seberapa jauh angka tersebar dari rata-rata. Rumus, setelah gambar gelas di atas:
+Sebaran adalah simpangan baku: seberapa jauh angka tersebar dari rata-rata.
 
 `(angka - rata-rata) / sebaran`
 
-StandardScaler membagi dengan banyaknya data, bukan banyaknya data dikurangi satu. `fit` artinya langkah itu belajar dari data latih. `transform` artinya langkah yang sudah belajar mengubah data, tanpa belajar ulang. Angka hasilnya ada di keluaran notebook.
+StandardScaler membagi dengan banyaknya data, bukan banyaknya data dikurangi satu. `fit` belajar dari data latih. `transform` mengubah data tanpa belajar ulang. Angka hasilnya ada di keluaran notebook.
 
 ## Coba sendiri dulu, baru kode
 

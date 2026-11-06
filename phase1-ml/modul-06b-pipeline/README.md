@@ -18,7 +18,7 @@ Di bagian ini ada dua istilah baru: Pipeline dan ColumnTransformer.
 
 Encoding, istilah bagian rekayasa fitur: mengubah kategori, yaitu teks berlabel terbatas, menjadi angka supaya model bisa menghitung. Penskalaan, istilah yang sama: mengubah angka sebuah kolom supaya rentangnya sebanding dengan kolom lain, memakai rata-rata dan sebaran yang dihitung hanya dari data yang boleh dilihat.
 
-Model adalah cara menebak yang belajar dari data latih. Label adalah jawaban yang ingin ditebak pada tiap baris. Regresi logistik adalah model yang menebak salah satu dari dua label. Namanya dari modul klasifikasi. Di sini ia hanya berdiri di ujung rantai.
+Model adalah cara menebak yang belajar dari data latih. Label adalah jawaban yang ingin ditebak pada tiap baris, misalnya kolom `kembali`. Itu berbeda dari teks berlabel pada encoding, yaitu nama kategori seperti panas atau dingin. Regresi logistik adalah model yang menebak salah satu dari dua label. Namanya dari modul klasifikasi. Di sini ia hanya berdiri di ujung rantai.
 
 `fit` artinya langkah itu belajar dari data latih. `transform` artinya langkah yang sudah belajar mengubah data, tanpa belajar ulang. Praolah adalah sebutan untuk langkah yang mengubah data sebelum model.
 
@@ -39,9 +39,9 @@ Nama teknisnya **Pipeline**: satu rantai langkah berurutan. Langkah di depan men
 
 Perumpamaan: seperti kartu resep.
 
-**Batas analogi:** Pipeline tidak memilih resep yang benar. Urutan yang salah tetap jalan selama bentuk langkahnya sah. Pipeline tidak membuat tebakan menjadi bagus. Ia tidak memperbaiki kebocoran yang sudah terjadi di luar rantai, sebelum data dibagi. Langkah selain yang terakhir harus bisa mengubah data. Kartu resep tidak menjelaskan isi tiap langkah.
+**Batas analogi:** Pipeline tidak memilih resep yang benar. Urutan yang salah tetap jalan selama bentuk langkahnya sah. Ia tidak memperbaiki kebocoran yang sudah terjadi di luar rantai, sebelum data dibagi. Langkah selain yang terakhir harus bisa mengubah data.
 
-Data leakage, istilah modul evaluasi: informasi yang seharusnya tidak tersedia saat model belajar ikut terpakai, sehingga skor terlihat lebih bagus dari kenyataan. Di modul ini yang kita ukur langsung adalah rata-rata di dalam rantai. Rata-rata itu tidak sama dengan rata-rata seluruh kolom. Kita tidak mengklaim skornya otomatis lebih jujur hanya dari selisih rata-rata; yang ditunjukkan adalah data uji tidak ikut menyetel timbangan.
+Data leakage: informasi yang belum boleh dipakai saat belajar ikut terpakai, sehingga skor terlihat lebih bagus dari kenyataan. Yang diukur di sini adalah rata-rata di dalam rantai, bukan rata-rata seluruh kolom. Yang ditunjukkan: data uji tidak ikut menyetel timbangan.
 
 ### ColumnTransformer
 
@@ -51,7 +51,7 @@ Nama teknisnya **ColumnTransformer**: satu langkah yang menerapkan cara ubah ber
 
 Perumpamaan: seperti dua wajan, lalu satu piring.
 
-**Batas analogi:** ColumnTransformer tidak mengerti arti kolom. Kolom teks yang masuk ke penskalaan gagal. Kolom yang tidak disebut dibuang bila `remainder='drop'`, dan itu nilai bawaannya. Ia tidak menggantikan Pipeline; ia biasanya menjadi salah satu langkah di dalam Pipeline. Gambar wajan tidak menjelaskan urutan kolom pada hasil sambungan.
+**Batas analogi:** ColumnTransformer tidak mengerti arti kolom. Kolom teks yang masuk ke penskalaan gagal. Kolom yang tidak disebut dibuang bila `remainder='drop'`, dan itu nilai bawaannya. Ia tidak menggantikan Pipeline, dan gambar wajan tidak menjelaskan urutan kolom pada hasil sambungan.
 
 ## Coba sendiri dulu, baru kode
 
@@ -160,7 +160,7 @@ dari 2
 error True
 ```
 
-Latihan 1 memakai 10, 30, 50, dan 70. Jumlah tiga angka pertama 90. Rata-ratanya 30.0. Rata-rata empat angka itu 40.0, jadi angka 70 tidak boleh ikut. Latihan 2 dan 3 memakai delapan gelas. Coretan tidak ikut (`ada_catatan False`). Dua kali jalan memberi tebakan yang sama, yaitu `['ya', 'ya']`, tetapi hanya 1 dari 2 yang cocok dengan label uji. Tulisan "hangat" yang tidak ada saat belajar membuat langkah berhenti (`error True`).
+Latihan 1 memakai 10, 30, 50, dan 70. Jumlah tiga angka pertama 90. Rata-ratanya 30.0. Rata-rata empat angka itu 40.0, jadi angka 70 tidak boleh ikut. Array latihan menyimpan delapan nilai: 10, 30, 50, 70, 90, 110, 130, dan 150. Empat gelas pada latihan 1 adalah empat nilai pertama array itu. Latihan 2 dan 3 memakai kedelapan nilai. Coretan tidak ikut (`ada_catatan False`). Dua kali jalan memberi tebakan yang sama, yaitu `['ya', 'ya']`, tetapi hanya 1 dari 2 yang cocok dengan label uji. Tulisan "hangat" yang tidak ada saat belajar membuat langkah berhenti (`error True`).
 
 ## Sumber
 

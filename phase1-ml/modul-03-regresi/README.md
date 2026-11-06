@@ -21,7 +21,7 @@ Di modul 2, tebakan paling sederhana tidak membaca petunjuk. Garis di modul ini 
 
 ## Teori
 
-Di modul ini hanya ada tiga istilah baru. Pustaka adalah kumpulan fungsi siap pakai. scikit-learn adalah pustaka yang sudah dipakai di modul 1 dan 2. Nama fungsi di pustaka bukan istilah baru. Kata model di kamus tetap bahasa biasa untuk cara menebak, sama seperti di modul 2, dan belum masuk kamus. Baseline dan rata-rata selisih mutlak dipakai lagi dengan arti yang sama seperti di modul 2.
+Di modul ini hanya ada tiga istilah baru. Pustaka adalah kumpulan fungsi siap pakai. Baseline dan rata-rata selisih mutlak dipakai lagi dengan arti yang sama seperti di modul 2.
 
 ### regresi linear
 
@@ -33,13 +33,13 @@ menit         4     6     9
 garis coba    4     6     8
 ```
 
-Ada bayaran awal, lalu tambahan yang mengikuti jarak. Nama teknisnya **regresi linear**. Artinya: Cara menyusun tebakan angka berupa garis lurus dari data latih: satu angka awal, ditambah satu angka pengali untuk tiap petunjuk. Garis itu membaca petunjuk.
+Nama teknisnya **regresi linear**. Artinya: Cara menyusun tebakan angka berupa garis lurus dari data latih: satu angka awal, ditambah satu angka pengali untuk tiap petunjuk. Garis itu membaca petunjuk.
 
 Perumpamaan: seperti ongkos angkot: ada bayaran awal, lalu tambahannya mengikuti jarak.
 
-**Batas analogi:** gambar ongkos itu satu petunjuk, yaitu jarak, jadi bisa digambar sebagai satu garis di kertas. Bila petunjuk lebih dari satu, tetap satu angka awal ditambah satu angka pengali per petunjuk, tetapi bukan garis di satu kertas. Garis ini tidak melengkung. Ini bukan baseline: baseline selalu menebak rata-rata data latih dan tidak membaca petunjuk. Angka awal adalah tebakan saat semua petunjuk bernilai nol. Pada kolom yang sudah digeser pembuat dataset, nol itu bukan nol kilometer atau nol kilogram.
+**Batas analogi:** gambar ongkos itu satu petunjuk, jadi satu garis di kertas. Banyak petunjuk tetap satu angka awal ditambah satu pengali per petunjuk, tetapi bukan garis di satu kertas. Garis ini tidak melengkung, dan bukan baseline. Angka awal adalah tebakan saat semua petunjuk nol; pada kolom yang sudah digeser, nol itu bukan nol kilometer.
 
-Garis pada gambar kita pilih dengan tangan. Pustaka nanti mencari garis lain, dengan angka awal dan angka pengali yang membuat fungsi kerugian lebih kecil. Notebook mencetak kedua garis itu.
+Garis pada gambar dipilih dengan tangan. Pustaka mencari garis lain yang membuat fungsi kerugian lebih kecil. Notebook mencetak keduanya.
 
 ### fungsi kerugian
 
@@ -52,21 +52,19 @@ selisih      0     0     1
 kuadrat      0     0     1
 ```
 
-Kuadrat artinya selisih dikali dirinya sendiri. Selisih 1 menjadi 1. Selisih 2 menjadi 4. Dua selisih 1 punya jumlah kuadrat 2, lebih kecil daripada satu selisih 2.
+Kuadrat artinya selisih dikali dirinya sendiri. Selisih 2 menjadi 4.
 
 Rumus pada gambar di atas:
 
 `fungsi kerugian garis coba = (0 + 0 + 1) / 3`
 
-Nama teknisnya **fungsi kerugian**. Artinya: Angka pada data latih yang dibuat sekecil mungkin saat garis disusun. Pada regresi linear di modul ini, angka itu adalah rata-rata dari selisih yang dikuadratkan: tiap selisih dikali dirinya sendiri, lalu dirata-rata. Makin kecil, makin dekat garis ke jawaban data latih yang dipakai menyusunnya.
+Nama teknisnya **fungsi kerugian**. Artinya: Angka pada data latih yang dibuat sekecil mungkin saat garis disusun. Pada regresi linear di modul 3, angka itu adalah rata-rata dari selisih yang dikuadratkan: tiap selisih dikali dirinya sendiri, lalu dirata-rata. Makin kecil, makin dekat garis ke jawaban data latih yang dipakai menyusunnya.
 
-Dalam bahasa Inggris, angka ini sering disebut loss. Sebutan itu bukan istilah kedua.
+Perumpamaan: seperti mencatat menit yang meleset, mengkuadratkan menit itu, lalu merata-ratakannya.
 
-Perumpamaan: seperti mencatat menit yang meleset, mengkuadratkan menit itu, lalu merata-ratakannya. Meleset dua menit dihitung empat, jadi satu meleset besar lebih berat daripada dua meleset kecil yang jumlah jaraknya sama.
+**Batas analogi:** yang dihitung adalah kuadrat, bukan perasaan penumpang. Ini bukan rata-rata selisih mutlak, dan modul ini tetap memakai ukuran itu pada data uji. Angka ini dihitung pada data latih; nol di situ belum menilai data baru. Dokumentasi scikit-learn memperkecil jumlah kuadrat selisih. Selama banyak baris data latih tidak berubah, garis yang memperkecil jumlah itu sama dengan garis yang memperkecil rata-ratanya.
 
-**Batas analogi:** lebih berat hanya gambar. Yang dihitung adalah kuadrat, bukan perasaan penumpang. Ini bukan rata-rata selisih mutlak. Rata-rata selisih mutlak membuang tanda minus dan tidak mengkuadratkan; modul ini tetap memakainya untuk membandingkan garis dengan baseline pada data uji. Dokumentasi scikit-learn memperkecil jumlah kuadrat selisih. Selama banyak baris data latih tidak berubah, garis yang memperkecil jumlah itu sama dengan garis yang memperkecil rata-ratanya. Angka ini dihitung pada data latih dan bukan nilai pada data uji. Nol berarti tebakan sama dengan jawaban pada baris data latih, dan nol itu belum menilai data baru.
-
-Rata-rata selisih mutlak pada amplop tetap pembanding dengan baseline, sama seperti modul 2. Fungsi kerugian tidak menggantikan pembanding itu.
+Rata-rata selisih mutlak pada amplop tetap pembanding dengan baseline. Fungsi kerugian tidak menggantikannya.
 
 ### overfitting
 
@@ -81,13 +79,11 @@ menit
     +-------------- jarak
 ```
 
-Garis lurus meleset sedikit pada titik yang melonjak. Garis yang dipelintir bisa menempel di setiap titik, termasuk lonjakan yang kebetulan, lalu meleset jauh pada catatan di amplop. Nama teknisnya **overfitting**. Artinya: Model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru.
-
-Di modul 2 pola ini hanya disebut "model menghafal". Nama overfitting baru dipakai di modul ini.
+Garis lurus meleset sedikit pada titik yang melonjak. Nama teknisnya **overfitting**. Artinya: Model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru.
 
 Perumpamaan: seperti garis yang dipelintir sampai menempel di setiap titik catatan yang terbuka, termasuk satu titik yang kebetulan meleset, lalu meleset jauh pada catatan di amplop.
 
-**Batas analogi:** gambar garis yang dipelintir adalah untuk satu petunjuk. Modul ini tidak memasang garis yang dipelintir itu. Angka pada notebook memakai garis lurus dengan banyak petunjuk, yang bisa menempel di setiap baris data latih karena petunjuknya lebih banyak daripada baris latih. Menempel di data latih bukan nilai pada data uji. Gambar ini tidak mengatakan setiap garis lurus menghafal. Garis dengan satu petunjuk pada kasus diabetes dibanding baseline memakai rata-rata selisih mutlak pada data uji. Menyalin jawaban data latih sampai jaraknya nol adalah contoh menghafal dari modul 2; nama overfitting baru dipakai di sini, dan nol itu tetap bukan nilai pada data uji.
+**Batas analogi:** gambar garis yang dipelintir adalah untuk satu petunjuk, dan modul ini tidak memasang garis itu. Angka pada notebook memakai garis lurus, yang bisa menempel di data latih bila petunjuk lebih banyak daripada baris latih. Menempel di data latih bukan nilai pada data uji, dan tidak setiap garis lurus menghafal.
 
 ## Coba sendiri dulu, baru kode
 
@@ -104,7 +100,7 @@ Jangan gulir ke kunci. Setelah itu buka `notebook.ipynb`. Sel pertama hanya meny
 
 Kita membaca dataset diabetes lewat `sklearn.datasets.load_diabetes`. Dokumentasi scikit-learn menyatakan dataset mainan ini tidak perlu diunduh dari situs lain: berkasnya sudah ikut terpasang. Modul ini tidak memakai data asli perusahaan.
 
-Ada 442 baris. Notebook hanya memakai satu petunjuk, kolom `bmi`, dan satu jawaban, kolom `target`, supaya garisnya tetap satu garis di kertas. `bmi` pada dokumentasi adalah ukuran tubuh. Kolom itu sudah dipusatkan dan diskalakan pembuat dataset, sampai jumlah kuadrat isi kolom itu 1. Bukan kilogram yang kamu timbang di rumah. `target` adalah ukuran seberapa jauh penyakit berkembang, satu tahun setelah pengukuran awal. Halaman dokumentasinya tidak menyebut satuan jawaban. Modul ini tidak mengarang satuan. Karena kolom `bmi` sudah diskalakan, angka pengali yang tercetak bisa besar. Itu bukan "satu langkah timbangan menambah ratusan penyakit".
+Ada 442 baris. Notebook hanya memakai satu petunjuk, kolom `bmi`, dan satu jawaban, kolom `target`, supaya garisnya tetap satu garis di kertas. `bmi` pada dokumentasi adalah ukuran tubuh. Kolom itu sudah dipusatkan dan diskalakan pembuat dataset, sampai jumlah kuadrat isi kolom itu 1. Bukan kilogram yang kamu timbang di rumah. `target` adalah ukuran seberapa jauh penyakit berkembang, satu tahun setelah pengukuran awal. Halaman dokumentasinya tidak menyebut satuan jawaban. Modul ini tidak mengarang satuan. Karena kolom `bmi` sudah diskalakan, angka pengali pada garis, yaitu koefisien petunjuk itu, yang tercetak bisa besar. Pengali itu bukan "satu langkah timbangan menambah ratusan penyakit".
 
 Seperempat baris menjadi data uji, lewat `train_test_split` dengan `test_size=0.25` dan `random_state=SEED`. Sama seperti pilihan di modul 2.
 
@@ -114,7 +110,7 @@ Garis regresi linear disusun hanya dari data latih. Pembandingnya rata-rata seli
 
 Pada keluaran yang sama, rata-rata selisih mutlak garis di data latih sedikit lebih besar daripada di data uji. Itu boleh terjadi pada kumpulan baris ini. Angka yang kecil di data latih tidak otomatis angka yang kecil di data uji.
 
-Bagian overfitting memakai `make_regression`: pembuat angka di komputer, bukan unduhan. Ada 24 baris dan 20 petunjuk. Hanya satu petunjuk yang benar-benar dipakai membuat jawaban. Petunjuk lain kebetulan. `noise`: gangguan acak pada jawaban (derau). Geseran tetap adalah parameter `bias`. Petunjuk lebih banyak daripada baris data latih, jadi garis lurus bisa menempel di data latih. Jarak pada data uji lebih buruk daripada baseline. Garis satu petunjuk pada diabetes tidak diperlakukan seperti itu.
+Bagian overfitting memakai `make_regression`: pembuat angka di komputer, bukan unduhan. Ada 24 baris dan 20 petunjuk. Hanya satu petunjuk yang benar-benar dipakai membuat jawaban. Petunjuk lain kebetulan. `noise` adalah simpangan baku gangguan acak pada jawaban (derau). Geseran tetap adalah parameter `bias`. Petunjuk lebih banyak daripada baris data latih, jadi garis lurus bisa menempel di data latih. Jarak pada data uji lebih buruk daripada baseline. Garis satu petunjuk pada diabetes tidak diperlakukan seperti itu.
 
 Indeks adalah nomor baris pada tabel, mulai dari 0.
 
@@ -158,7 +154,7 @@ CPU only. Versi paket terkunci di `uv.lock` di root repo. Jalan yang dipakai mod
 
 ### Kunci jawaban
 
-1. **regresi linear:** cara menyusun tebakan angka berupa garis lurus dari data latih: satu angka awal, ditambah satu angka pengali untuk tiap petunjuk. Garis itu membaca petunjuk. **fungsi kerugian:** angka pada data latih yang dibuat sekecil mungkin saat garis disusun. Pada regresi linear di modul ini, angka itu adalah rata-rata dari selisih yang dikuadratkan. **overfitting:** model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru.
+1. **regresi linear:** cara menyusun tebakan angka berupa garis lurus dari data latih: satu angka awal, ditambah satu angka pengali untuk tiap petunjuk. Garis itu membaca petunjuk. **fungsi kerugian:** angka pada data latih yang dibuat sekecil mungkin saat garis disusun. Pada regresi linear di modul 3, angka itu adalah rata-rata dari selisih yang dikuadratkan. **overfitting:** model terlalu menyesuaikan diri dengan data latih, termasuk kebetulan-kebetulannya, sehingga hasilnya bagus di data latih tetapi buruk di data baru.
 2. Salah. Fungsi kerugian mengkuadratkan selisih pada data latih. Rata-rata selisih mutlak tidak mengkuadratkan, dan pembanding dengan baseline memakai angka pada data uji.
 3. Karena selisih dikali dirinya sendiri. Selisih 2 menjadi 4. Dua selisih 1 menjadi 1 + 1 = 2.
 4. Salah. `kasus_baseline` adalah rata-rata jawaban data latih. Tebakan baseline tidak mengikuti `bmi`.
@@ -241,7 +237,7 @@ Berkasnya: `ujian.ipynb` untuk dikerjakan, `ujian-kunci.ipynb` untuk kunci yang 
 
 ### Proyek mini
 
-Angka dibuat dengan `make_regression`: 80 baris, satu petunjuk, `noise` 15: gangguan acak pada jawaban (derau), `random_state=SEED`. Bukan unduhan. Bukan data asli perusahaan. Seperempat baris menjadi data uji dengan `test_size=0.25` dan `random_state=SEED`. Baseline adalah rata-rata jawaban data latih. Garis regresi linear disusun hanya dari data latih. Pembandingnya rata-rata selisih mutlak pada data uji.
+Angka dibuat dengan `make_regression`: 80 baris, satu petunjuk, `noise` 15 adalah simpangan baku gangguan acak pada jawaban (derau), `random_state=SEED`. Bukan unduhan. Bukan data asli perusahaan. Seperempat baris menjadi data uji dengan `test_size=0.25` dan `random_state=SEED`. Baseline adalah rata-rata jawaban data latih. Garis regresi linear disusun hanya dari data latih. Pembandingnya rata-rata selisih mutlak pada data uji.
 
 ### Pertanyaan
 

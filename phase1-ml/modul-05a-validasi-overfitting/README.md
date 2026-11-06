@@ -45,9 +45,9 @@ Nama teknisnya **data leakage**: informasi yang seharusnya tidak tersedia saat m
 
 Perumpamaan: seperti mengerjakan latihan dengan kunci jawaban masih terbuka di meja. Nilai latihan terlihat tinggi karena jawaban yang belum boleh dilihat sudah ikut terbaca.
 
-**Batas analogi:** kunci yang terbuka menggambarkan bocornya label. Analogi berhenti bila yang bocor bukan labelnya, melainkan ringkasan yang dihitung dari seluruh baris sebelum data uji disisihkan, misalnya rata-rata kolom. Tidak ada kunci yang terbuka, tetapi data uji sudah ikut membentuk angka yang dipakai saat belajar. Analogi juga berhenti pada data berurutan waktu: memakai kejadian besok untuk menebak hari ini tetap kebocoran, walaupun tidak ada lembar kunci.
+**Batas analogi:** kunci yang terbuka menggambarkan bocornya label. Analogi berhenti bila yang bocor adalah ringkasan seluruh baris, misalnya rata-rata kolom, sebelum data uji disisihkan. Pada data berurutan waktu, memakai kejadian besok untuk menebak hari ini tetap kebocoran.
 
-Rata-rata yang bocor belum tentu menggeser skor pohon, karena pohon tidak memakai rata-rata kolom. Kebocorannya tetap nyata: angka dari data uji sudah terpakai. Contoh pemilihan kolom di notebook memakai model yang terpengaruh, dan skornya terlihat lebih tinggi.
+Rata-rata yang bocor belum tentu menggeser skor pohon. Kebocorannya tetap nyata: angka dari data uji sudah terpakai. Notebook menunjukkan pemilihan kolom yang skornya terlihat lebih tinggi.
 
 ### overfitting
 
@@ -83,7 +83,7 @@ Nama teknisnya **cross-validation**: cara mengukur model dengan memutar bagian y
 
 Perumpamaan: seperti regu yang bergiliran menahan satu halaman. Setiap halaman sekali tidak dipakai untuk belajar. Nilai regu adalah rata-rata giliran, bukan nilai satu halaman saja.
 
-**Batas analogi:** regu itu tetap memakai buku yang sama. Cross-validation tidak mendatangkan data dari bulan depan. Bila baris berurutan waktu, mengocok halaman bisa membuat masa depan ikut melatih masa lalu. Untuk urutan waktu, giliran yang adil menahan masa depan di belakang, bukan mengocoknya. Analogi halaman juga tidak mengukur jenis kesalahan mana yang lebih mahal.
+**Batas analogi:** regu itu tetap memakai buku yang sama. Cross-validation tidak mendatangkan data dari bulan depan. Bila baris berurutan waktu, mengocok bisa membuat masa depan ikut melatih masa lalu; giliran yang adil menahan masa depan di belakang. Analogi halaman tidak mengukur jenis kesalahan mana yang lebih mahal.
 
 TimeSeriesSplit memotong data berurutan tanpa mengocok: jam pada data uji selalu di belakang jam pada data latih. Nama itu satu kalimat, bukan istilah baru.
 

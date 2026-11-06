@@ -16,9 +16,7 @@ Modul ini melakukan hal yang sama pada model yang sudah belajar. Kasusnya catata
 
 ## Teori
 
-Paket adalah kumpulan kode siap pakai yang dipasang ke proyek. Pustaka adalah paket yang dipanggil dari program. venv adalah lingkungan terpisah yang menyimpan pemasangan paket Python untuk satu proyek, supaya versi paket tidak tertukar. uv adalah alat yang membuat venv dan memasang paket sesuai daftar yang terkunci di `uv.lock`.
-
-Di modul ini hanya ada tiga istilah baru.
+Di modul ini hanya ada tiga istilah baru. Paket adalah kumpulan kode siap pakai yang dipasang ke proyek. Pustaka adalah paket yang dipanggil dari program. uv memasang paket sesuai daftar yang terkunci di `uv.lock`.
 
 Gambar alurnya dulu:
 
@@ -43,9 +41,9 @@ Data latih dipakai model untuk belajar. Data uji disisihkan dan tidak dilihat sa
 
 Kartu resep dengan aturan tulis yang baku bisa diikuti dapur lain tanpa meminjam buku catatanmu. Nama teknisnya **ONNX**: berkas standar yang menyimpan model yang sudah dilatih, supaya program lain bisa menghitung tebakan tanpa membuka kode Python aslinya.
 
-**Batas analogi:** kartu itu tidak memasak sendiri; tetap perlu program pembaca. Berkas ONNX bukan objek Python yang dilatih ulang dari program lain. Tidak semua model scikit-learn bisa ditulis menjadi berkas ini. Angka program lain boleh selisih sedikit dari Python; berkas ini tidak menjanjikan kedua hasil itu sama persis.
+**Batas analogi:** kartu itu tidak memasak sendiri; tetap perlu program pembaca. Berkas ONNX bukan objek Python yang dilatih ulang, dan tidak semua model scikit-learn bisa ditulis menjadi berkas ini. Angka program lain boleh selisih sedikit dari Python.
 
-skl2onnx adalah alat yang mengubah model scikit-learn menjadi berkas ONNX. onnxruntime adalah program yang membaca berkas itu dan menghitung tebakan. Keduanya dipasang lewat uv. Nomor versinya tidak ditulis di halaman ini; daftarnya terkunci di `uv.lock` di root repo.
+skl2onnx mengubah model scikit-learn menjadi berkas ONNX. onnxruntime membaca berkas itu dan menghitung tebakan. Nomor versinya tidak ditulis di halaman ini; daftarnya terkunci di `uv.lock`.
 
 ### opset
 
@@ -59,7 +57,7 @@ Modul ini mengunci edisi `22` lewat `OPSET = 22` dan `target_opset=OPSET`. Mengu
 
 Mengikuti kartu resep untuk satu piring memakai resepnya, bukan menulis resep baru. Nama teknisnya **inferensi**: memakai model yang sudah dilatih untuk menghitung tebakan pada catatan yang diberikan, tanpa mengubah model itu.
 
-**Batas analogi:** berhenti berlaku saat model dilatih ulang. Satu tebakan pada satu baris bukan nilai pada seluruh data uji. Inferensi tidak membuktikan tebakan itu tepat.
+**Batas analogi:** berhenti berlaku saat model dilatih ulang. Satu tebakan pada satu baris bukan nilai pada seluruh data uji, dan inferensi tidak membuktikan tebakan itu tepat.
 
 ### Batas angka
 
@@ -92,12 +90,12 @@ Hitung dengan tangan dulu. Jangan gulir ke kunci. Setelah itu buka `notebook.ipy
 
 Generator `tambang_sintetis.py` di folder ini membangun tabel. Tidak ada unduhan. Bukan data asli perusahaan. Modul ini tidak memanggil `make_regression`.
 
-Di `make_regression`, `noise` adalah simpangan baku derau Gauss pada jawaban, dan `bias` adalah geseran tetap pada jawaban. Generator di repo ini memakai parameter lain, dicocokkan ke dokumentasi NumPy:
+Di `make_regression`, `noise` adalah simpangan baku derau Gauss pada jawaban, dan `bias` adalah geseran tetap pada jawaban. Fungsi `buat_batch` hanya menerima `seed`. `skala` dan `pusat` adalah angka di dalam fungsi, bukan parameter yang dikirim pemanggil. Angka itu dicocokkan ke dokumentasi NumPy:
 
 - `seed` masuk ke `numpy.random.default_rng`. Seed mengunci keadaan pembangkit supaya undian yang sama berulang. Bukan simpangan derau dan bukan geseran tetap.
-- Gangguan fitur berasal dari `Generator.normal(loc=0, scale=1)`. `loc` adalah rata-rata gangguan. `scale` adalah simpangan bakunya.
-- Hasil gangguan dikali `skala` tiap kolom, jadi rata-rata gangguan tetap 0 dan simpangan bakunya sama dengan `skala` kolom itu.
-- `pusat` adalah nilai tengah fitur untuk tiap kelas, ditambahkan sesudah gangguan. Itu geseran pada fitur, bukan `bias` pada jawaban.
+- Gangguan fitur di dalam fungsi berasal dari `Generator.normal(loc=0, scale=1)`. `loc` adalah rata-rata gangguan. `scale` adalah simpangan bakunya.
+- Hasil gangguan dikali angka `skala` tiap kolom. Angka itu tertulis di dalam fungsi. Rata-rata gangguan tetap 0 dan simpangan bakunya sama dengan angka `skala` kolom itu.
+- `pusat` di dalam fungsi adalah nilai tengah fitur untuk tiap kelas, ditambahkan sesudah gangguan. Itu geseran pada fitur, bukan `bias` pada jawaban, dan bukan parameter `buat_batch`.
 
 Empat fitur: kadar logam (persen), kadar air (persen), ukuran butir (milimeter), dan kedalaman (meter). Fitur adalah kolom angka yang dipakai untuk menebak. Kelasnya `sisihkan`, `campur`, atau `simpan`.
 
@@ -126,7 +124,7 @@ uv run pytest --nbmake
 
 Buka `notebook.ipynb`, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan-kunci.ipynb`. Pada tiap notebook: Restart & Run All. Sel pertama berisi `SEED = 42`. Angka itu dikirim sebagai `seed` ke `buat_batch` (mengunci `default_rng`) dan sebagai `random_state=SEED` pada pembagian data serta model. Keduanya supaya langkah acak berulang. `random_state` bukan parameter generator tabel.
 
-.NET di modul ini adalah program di luar Python yang membaca berkas ONNX yang sama. C# adalah bahasa berkas pemanggil itu; kamu tidak perlu menghafalnya. Alat `dotnet` tidak dipasang oleh `uv sync --frozen`.
+.NET di modul ini adalah program di luar Python yang membaca berkas ONNX yang sama. C# adalah bahasa berkas pemanggil itu; kamu tidak perlu menghafalnya. Alat `dotnet` tidak dipasang oleh `uv sync --frozen`. Proyek `PemanggilOnnx` menargetkan `net10.0`, jadi perintah `dotnet` di bawah membutuhkan SDK .NET 10.
 
 Dari root repo, setelah `model.onnx` dan `baris.json` ada (lihat ujian di bawah):
 
@@ -158,7 +156,7 @@ CPU only. Versi paket terkunci di `uv.lock` di root repo.
 
 ### Angka yang disalin dari keluaran notebook
 
-Jawaban "coba sendiri", angka batch, dan hasil banding disalin dari keluaran `notebook.ipynb` dan `latihan-kunci.ipynb`. Kedua notebook mencetak baris yang sama. Jangan dibulatkan dengan tangan.
+Jawaban "coba sendiri", angka batch, dan hasil banding disalin dari keluaran `notebook.ipynb` dan `latihan-kunci.ipynb`. Baris yang dicetak notebook utama juga ada di kunci. Baris `nama_uji` hanya dicetak kunci, bukan notebook utama. Jangan dibulatkan dengan tangan.
 
 Dua baris `opset ai.onnx 22` berarti konverter menuliskan edisi yang sama dua kali. Edisi yang kita kunci tetap 22. Baris `opset ai.onnx.ml 1` adalah edisi domain lain yang dipilih konverter, bukan kunci kita.
 
@@ -223,7 +221,7 @@ Path("baris.json").write_text(
 )
 ```
 
-Lalu, dari root repo:
+Lalu, dari root repo. Perintah `dotnet` ini membutuhkan SDK .NET 10, karena proyek menargetkan `net10.0`:
 
 ```bash
 dotnet run --project phase1-ml/modul-08-proyek-akhir/dotnet/PemanggilOnnx -- model.onnx baris.json keluar.json
