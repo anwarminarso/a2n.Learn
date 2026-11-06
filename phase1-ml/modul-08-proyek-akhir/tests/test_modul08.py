@@ -170,6 +170,26 @@ def test_kunci_dijalankan_dan_cocok_dengan_hitungan():
     assert selisih <= ATOL
 
 
+def test_toleransi_longgar_ditolak():
+    """Batas di kunci harus tetap 1e-5. Angka ini literal, bukan variabel yang bisa dilonggarkan."""
+    teks = _seluruh_sumber("latihan-kunci.ipynb")
+    assert "assert selisih_maks <= 1e-5" in teks, "Batas selisih maksimum di kunci harus 1e-5."
+    assert "assert selisih_mini <= 1e-5" in teks, "Batas selisih mini di kunci harus 1e-5."
+    pipeline, masukan, _berkas, keluar = _latih_dan_banding(42)
+    selisih = float(
+        np.max(np.abs(pipeline.predict_proba(masukan) - keluar["probabilities"]))
+    )
+    assert selisih < 1e-5, "Selisih maksimum harus lebih kecil dari 1e-5."
+    selisih_mini = float(
+        np.max(
+            np.abs(
+                pipeline.predict_proba(masukan)[:8] - keluar["probabilities"][:8]
+            )
+        )
+    )
+    assert selisih_mini < 1e-5, "Selisih mini harus lebih kecil dari 1e-5."
+
+
 def test_ujian_level_pro_label_dan_probabilitas():
     _pipeline, masukan, berkas, keluar = _latih_dan_banding(42)
     domain_kosong = [op.version for op in berkas.opset_import if op.domain == ""]

@@ -140,11 +140,20 @@ def test_anggur_dan_tiga_model():
     assert salah_latih_pohon == 0
     assert salah_uji_pohon == 2
     assert salah_uji_hutan == 0
-    assert salah_uji_boosting == 1
+    assert salah_uji_boosting == 1, "Salah uji boosting harus 1, sama dengan angka di README."
     assert salah_uji_hutan < salah_uji_pohon
     assert salah_uji_boosting < salah_uji_pohon
-    assert float(boosting.learning_rate) == 0.1
-    assert int(hutan.n_estimators) == 100
+    assert float(boosting.learning_rate) == 0.1, "Laju langkah boosting harus 0.1."
+    assert int(hutan.n_estimators) == 100, "Hutan harus memakai 100 pohon."
+    assert int(boosting.n_estimators) == 100, "Gradient boosting harus memakai 100 pohon."
+    pasangan = {
+        "pohon": salah_uji_pohon,
+        "hutan_acak": salah_uji_hutan,
+        "gradient_boosting": salah_uji_boosting,
+    }
+    assert min(pasangan, key=pasangan.get) == "hutan_acak", (
+        "Model dengan salah uji paling sedikit harus hutan acak."
+    )
 
 
 def test_kunci_dijalankan_dari_sumber():
