@@ -1,132 +1,113 @@
 """Tes placeholder Fase 2.
 
-Memeriksa rencana di README, bukan materi yang belum ditulis.
+Memeriksa tujuh modul utuh. docs/ROADMAP.md dikunci agar tetap sama dengan develop.
 """
 
+import hashlib
 import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 FASE2 = REPO / "phase2-ai"
-EM_DASH = "\u2014"
+ISSUE = "https://github.com/anwarminarso/a2n.Learn/issues/{}"
+ROADMAP_SHA256 = "3debc57d06173192efff9d778d2372ff5f42ec21f4728d43f05ed97994a084ec"
 TERLARANG = re.compile(
     "".join(["s", "m", "p"]) + "|" + "".join(["a", "n", "t", "a", "m"]),
     re.IGNORECASE,
 )
 LEWATI = {".venv", "__pycache__", ".pytest_cache", ".ipynb_checkpoints"}
+LISENSI_BOLEH = {"Apache-2.0", "MIT"}
 
 MODUL = (
     {
-        "nomor": "9a",
-        "folder": "modul-09a-tensor-autograd",
-        "judul": "Tensor dan autograd",
-        "bergantung": "Modul 8",
-        "prasyarat": "phase1-ml/modul-08-proyek-akhir",
-        "istilah": ("tensor", "autograd", "gradien"),
-    },
-    {
-        "nomor": "9b",
-        "folder": "modul-09b-jaringan-saraf",
-        "judul": "Jaringan saraf kecil dan putaran latihan",
-        "bergantung": "Modul 9a",
-        "prasyarat": "modul-09a-tensor-autograd",
-        "istilah": ("jaringan saraf", "putaran latihan", "fungsi aktivasi"),
+        "nomor": "9",
+        "folder": "modul-09-pytorch",
+        "judul": "PyTorch",
+        "roadmap": "Dasar jaringan saraf dan PyTorch",
+        "issue": 26,
+        "tautan": ("phase1-ml/modul-08-proyek-akhir",),
+        "sesi": (
+            ("tensor", "autograd", "gradien"),
+            ("jaringan saraf", "putaran latihan", "fungsi aktivasi"),
+        ),
     },
     {
         "nomor": "10",
-        "folder": "modul-10-embedding-tokenisasi",
-        "judul": "Embedding dan tokenisasi",
-        "bergantung": "Modul 9b",
-        "prasyarat": "modul-09b-jaringan-saraf",
-        "istilah": ("token", "embedding", "kemiripan vektor"),
+        "folder": "modul-10-tokenisasi-embedding",
+        "judul": "Tokenisasi dan embedding",
+        "roadmap": "Embedding dan tokenisasi",
+        "issue": 27,
+        "tautan": ("modul-09-pytorch",),
+        "sesi": (("token", "embedding", "kemiripan vektor"),),
     },
     {
-        "nomor": "11a",
-        "folder": "modul-11a-attention",
-        "judul": "Attention skala mini",
-        "bergantung": "Modul 10",
-        "prasyarat": "modul-10-embedding-tokenisasi",
-        "istilah": ("attention", "kueri, kunci, dan nilai", "Transformer"),
-    },
-    {
-        "nomor": "11b",
-        "folder": "modul-11b-klasifikasi-teks",
-        "judul": "Klasifikasi teks dengan model siap pakai",
-        "bergantung": "Modul 11a",
-        "prasyarat": "modul-11a-attention",
-        "istilah": ("model pra-latih",),
+        "nomor": "11",
+        "folder": "modul-11-attention-transformer",
+        "judul": "Attention dan Transformer mini",
+        "roadmap": "Transformer",
+        "issue": 28,
+        "tautan": ("modul-10-tokenisasi-embedding",),
+        "sesi": (
+            ("attention", "kueri, kunci, dan nilai", "Transformer"),
+            ("model pra-latih",),
+        ),
     },
     {
         "nomor": "12",
         "folder": "modul-12-lora",
-        "judul": "Penyelarasan dengan LoRA",
-        "bergantung": "Modul 11b",
-        "prasyarat": "modul-11b-klasifikasi-teks",
-        "istilah": ("penyelarasan", "LoRA", "adapter"),
+        "judul": "Fine-tune LoRA pada model kecil",
+        "roadmap": "Fine-tune dengan LoRA",
+        "issue": 29,
+        "tautan": ("modul-11-attention-transformer",),
+        "sesi": (("penyelarasan", "LoRA", "adapter"),),
     },
     {
         "nomor": "13",
         "folder": "modul-13-model-lokal",
-        "judul": "Menjalankan model lokal",
-        "bergantung": "Modul 12",
-        "prasyarat": "modul-12-lora",
-        "istilah": ("GGUF", "penggabungan adapter", "peladen lokal"),
+        "judul": "Model lokal lewat Ollama",
+        "roadmap": "Menjalankan model lokal dengan Ollama",
+        "issue": 30,
+        "tautan": ("modul-12-lora",),
+        "sesi": (("GGUF", "penggabungan adapter", "peladen lokal"),),
     },
     {
-        "nomor": "14a",
-        "folder": "modul-14a-penyimpan-vektor",
-        "judul": "Potongan teks dan penyimpan vektor",
-        "bergantung": "Modul 13",
-        "prasyarat": "modul-13-model-lokal",
-        "istilah": ("potongan", "penyimpan vektor", "pengambilan"),
-    },
-    {
-        "nomor": "14b",
-        "folder": "modul-14b-jawaban-sumber",
-        "judul": "Jawaban dengan sumber",
-        "bergantung": "Modul 14a",
-        "prasyarat": "modul-14a-penyimpan-vektor",
-        "istilah": ("RAG", "jawaban mengarang", "kutipan sumber"),
+        "nomor": "14",
+        "folder": "modul-14-rag",
+        "judul": "RAG",
+        "roadmap": "RAG (Retrieval-Augmented Generation)",
+        "issue": 31,
+        "tautan": ("modul-13-model-lokal", "modul-10-tokenisasi-embedding"),
+        "sesi": (
+            ("potongan", "penyimpan vektor", "pengambilan"),
+            ("RAG", "jawaban mengarang", "kutipan sumber"),
+        ),
     },
     {
         "nomor": "15",
         "folder": "modul-15-agen",
-        "judul": "Agen",
-        "bergantung": "Modul 14b",
-        "prasyarat": "modul-14b-jawaban-sumber",
-        "istilah": ("pemanggilan alat", "loop agen", "injeksi prompt"),
+        "judul": "Agen dan proyek akhir",
+        "roadmap": "Agen dan proyek akhir Fase 2",
+        "issue": 32,
+        "tautan": ("modul-14-rag",),
+        "sesi": (
+            ("pemanggilan alat", "loop agen", "injeksi prompt"),
+            (),
+        ),
     },
 )
 
-JUDUL_WAJIB = (
-    "## Prasyarat",
-    "## Garis besar bagian",
-    "## Rencana latihan",
-    "## Kriteria lulus",
-    "## Mode cepat dan mode penuh",
-    "## Model dan dataset kandidat",
-    "## Aturan",
-)
-
 KALIMAT_ATURAN = (
-    "dataset publik berlisensi jelas atau sintetis dari generator di repo",
-    "Tanpa data asli perusahaan",
-    "Mode cepat memakai model sangat kecil, beberapa langkah, dan jalan di CPU",
-    "Mode cepat dipakai untuk gate QA tiap PR",
-    "Mode penuh memakai GPU",
-    "laptop RTX 5070 8 GB VRAM",
-    "di-pin ke revisi",
-    "Hanya format safetensors",
+    "Data hanya sintetis atau dataset publik. Data asli perusahaan dilarang sama sekali, termasuk yang sudah disamarkan.",
+    "Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face.",
+    "Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR.",
+    "Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.",
+    "Apache-2.0 atau MIT",
+    "Lisensi dicek sebelum unduh",
     "trust_remote_code=False",
-    "Lisensi tiap model dicatat",
-    "Pengecekan pakai ambang",
-    "loss turun minimal X",
-    "bukan angka persis",
-    "tidak boleh masuk repo atau di-push ke Hugging Face",
+    "Hanya format safetensors",
+    "belum dipin",
     "127.0.0.1",
-    "0.40.14",
     "convert_hf_to_gguf.py",
-    "MLX",
     "allowlist read-only di folder sandbox",
     "tanpa shell bebas",
     "tanpa akses jaringan internal",
@@ -147,9 +128,13 @@ def _bagian(teks, judul):
     return sisa[:akhir]
 
 
-def _istilah(teks):
+def _sesi(teks):
     bagian = _bagian(teks, "Istilah baru yang direncanakan")
-    return tuple(re.findall(r"^\d+\. (.+)$", bagian, flags=re.M))
+    potong = re.split(r"^### Sesi \d+\s*$", bagian, flags=re.M)
+    assert len(potong) > 1
+    return tuple(
+        tuple(re.findall(r"^\d+\. (.+)$", sesi, flags=re.M)) for sesi in potong[1:]
+    )
 
 
 def _kolom_kamus(kamus, istilah):
@@ -160,12 +145,12 @@ def _kolom_kamus(kamus, istilah):
     return kolom
 
 
-def _berkas_yang_dicek():
+def _berkas_dokumen():
     berkas = [
         REPO / "README.md",
-        REPO / "docs" / "ROADMAP.md",
-        REPO / "docs" / "kamus-istilah.md",
         REPO / "data" / "README.md",
+        REPO / "docs" / "kamus-istilah.md",
+        REPO / "docs" / "lisensi-model.md",
         REPO / ".gitignore",
         REPO / "pyproject.toml",
         Path(__file__),
@@ -174,158 +159,169 @@ def _berkas_yang_dicek():
     return berkas
 
 
-def test_hanya_modul_yang_direncanakan():
+def test_hanya_tujuh_modul_utuh():
     folder = sorted(path.name for path in FASE2.iterdir() if path.is_dir() and path.name.startswith("modul-"))
-    assert folder == sorted(modul["folder"] for modul in MODUL)
+    assert folder == [modul["folder"] for modul in MODUL]
+    for nama in ("modul-09a-tensor-autograd", "modul-09b-jaringan-saraf", "modul-11a-attention", "modul-11b-klasifikasi-teks", "modul-14a-penyimpan-vektor", "modul-14b-jawaban-sumber"):
+        assert not (FASE2 / nama).exists()
 
 
-def test_readme_punya_bagian_wajib():
+def test_readme_punya_bagian_wajib_dan_issue():
     for modul in MODUL:
         teks = _readme(modul)
         assert teks.startswith(f"# Modul {modul['nomor']}: {modul['judul']}\n")
         assert "**Status:** PLACEHOLDER" in teks
         assert "**Tingkat:** pro" in teks
         assert "**Tujuan belajar:**" in teks
-        assert "PLACEHOLDER" in teks
-        for judul in JUDUL_WAJIB:
-            assert judul in teks, (modul["nomor"], judul)
-        assert modul["prasyarat"] in teks
+        assert modul["roadmap"] in teks
+        assert ISSUE.format(modul["issue"]) in teks
+        assert ISSUE.format(33) in teks
+        for judul in (
+            "## Issue",
+            "## Prasyarat",
+            "## Garis besar bagian",
+            "## Rencana latihan",
+            "## Kriteria lulus",
+            "## Mode cepat dan mode penuh",
+            "## Model dan dataset kandidat",
+            "## Aturan",
+        ):
+            assert judul in teks
         assert "Notebook, latihan, dan kunci belum dibuat." in teks
-        assert len(modul["istilah"]) <= 3
-        assert _istilah(teks) == modul["istilah"]
+        assert _sesi(teks) == modul["sesi"]
+        for sesi in modul["sesi"]:
+            assert len(sesi) <= 3
 
 
-def test_tautan_prasyarat_menunjuk_folder_yang_ada():
+def test_tautan_prasyarat_ada():
     for modul in MODUL:
         teks = _readme(modul)
-        if modul["nomor"] == "9a":
-            tujuan = REPO / "phase1-ml" / "modul-08-proyek-akhir" / "README.md"
-        else:
-            tujuan = FASE2 / modul["prasyarat"] / "README.md"
-        assert tujuan.is_file(), modul["nomor"]
-        assert modul["prasyarat"] in teks
+        for slug in modul["tautan"]:
+            assert slug in teks
+            if slug.startswith("phase1-ml/"):
+                assert (REPO / slug / "README.md").is_file()
+            else:
+                assert (FASE2 / slug / "README.md").is_file()
 
 
-def test_kriteria_draf_dan_mode():
+def test_kriteria_dan_mode():
     for modul in MODUL:
         teks = _readme(modul)
         kriteria = _bagian(teks, "Kriteria lulus")
         mode = _bagian(teks, "Mode cepat dan mode penuh")
-        kandidat = _bagian(teks, "Model dan dataset kandidat")
         assert "DRAF" in kriteria
         assert "belum dipilih" in kriteria
+        assert "sel siswa" in kriteria
+        assert "16 baris atau lebih" in kriteria
         assert "### mode cepat" in mode
         assert "### mode penuh" in mode
         assert "CPU" in mode
-        assert "RTX 5070" in mode
-        assert "belum dipin" in kandidat
-        assert "Lisensi belum dicatat" in kandidat
-        assert "Apache" not in teks
-        assert "CC-BY" not in teks
-        assert re.search(r"\bMIT\b", teks) is None
+        assert "MyLegion7i" in mode
+        assert "log mentah" in mode
+        assert "RTX 5070" not in teks
 
 
-def test_aturan_gate_ada_di_setiap_readme():
+def test_aturan_gate():
     for modul in MODUL:
         aturan = _bagian(_readme(modul), "Aturan")
         for kalimat in KALIMAT_ATURAN:
             assert kalimat in aturan, (modul["nomor"], kalimat)
-        assert "data asli perusahaan" in aturan
-        assert "safetensors" in aturan
 
 
 def test_isi_khusus_modul():
-    assert "data yang sama" in _readme(MODUL[1])
-    assert "Fase 1" in _readme(MODUL[1])
-    assert "set uji yang sama" in _readme(MODUL[5])
-    assert "fine-tune" in _readme(MODUL[5])
-    modul13 = _readme(MODUL[6])
+    assert "data yang sama" in _readme(MODUL[0])
+    assert "Fase 1" in _readme(MODUL[0])
+    assert "set uji yang sama" in _readme(MODUL[3])
+    assert "fine-tune" in _readme(MODUL[3]).lower() or "Fine-tune" in _readme(MODUL[3])
+    modul13 = _readme(MODUL[4])
     assert "kontrol tanpa LoRA" in modul13
     assert "convert_hf_to_gguf.py" in modul13
-    assert "127.0.0.1" in modul13
-    assert "jawaban mengarang" in _readme(MODUL[8])
-    modul15 = _readme(MODUL[9])
+    modul14 = _readme(MODUL[5])
+    assert "jawaban mengarang" in modul14
+    modul15 = _readme(MODUL[6])
     assert "injeksi prompt" in modul15
     assert "allowlist" in modul15
     assert "sandbox" in modul15
-    assert "shell" in modul15
+    assert ".NET" in modul15
+    assert "HTTP" in modul15
+    assert "127.0.0.1" in modul15
 
 
-def test_kamus_mengunci_nama_placeholder():
+def test_kamus_mengunci_nama_pada_modul_utuh():
     kamus = (REPO / "docs" / "kamus-istilah.md").read_text(encoding="utf-8")
-    assert "PLACEHOLDER" in kamus.split("Catatan Fase 2:", 1)[0]
+    assert "folder berhuruf" in kamus
     for modul in MODUL:
-        for istilah in modul["istilah"]:
-            _nama, arti, perumpamaan, pengenal, batas = _kolom_kamus(kamus, istilah)
-            assert arti == "PLACEHOLDER"
-            assert perumpamaan == "PLACEHOLDER"
-            assert batas == "PLACEHOLDER"
+        istilah = [nama for sesi in modul["sesi"] for nama in sesi]
+        for nama in istilah:
+            _judul, arti, perumpamaan, pengenal, batas = _kolom_kamus(kamus, nama)
+            assert arti == perumpamaan == batas == "PLACEHOLDER"
             assert pengenal == modul["nomor"]
+        jumlah = [b for b in kamus.splitlines() if f"| {modul['nomor']} |" in b and "PLACEHOLDER" in b]
+        assert len(jumlah) == len(istilah)
+    assert "9a" not in kamus
+    assert "14a" not in kamus
     indeks = [i for i, b in enumerate(kamus.splitlines()) if b.startswith("|")]
     assert indeks[-1] - indeks[0] + 1 == len(indeks)
 
 
-def test_roadmap_tabel_fase2():
-    teks = (REPO / "docs" / "ROADMAP.md").read_text(encoding="utf-8")
-    assert "## Fase 2 " in teks
-    assert "PLACEHOLDER" in teks
-    assert "garis besar, belum ada issue" not in teks
-    assert teks.split("## Fase 2", 1)[0].count("| pro | 8 |") == 1
-    for modul in MODUL:
-        baris = [b for b in teks.splitlines() if b.startswith(f"| {modul['nomor']} |")]
-        assert len(baris) == 1, modul["nomor"]
-        kolom = [k.strip() for k in baris[0].strip().strip("|").split("|")]
-        assert kolom[0] == modul["nomor"]
-        assert kolom[1] == modul["judul"]
-        assert kolom[2] == modul["bergantung"]
-        assert kolom[3:7] == ["Pyra", "Ursa", "Squal", "Frieren"]
-        assert kolom[7] == "pro"
-        assert kolom[8] == EM_DASH
-    assert "Tidak dipecah" in teks
-    assert "modul 9 menjadi 9a" in teks
-    assert "Modul 11 menjadi 11a" in teks
-    assert "Modul 14 menjadi 14a" in teks
+def test_roadmap_sama_dengan_develop():
+    data = (REPO / "docs" / "ROADMAP.md").read_bytes()
+    assert hashlib.sha256(data).hexdigest() == ROADMAP_SHA256
+    teks = data.decode("utf-8")
+    assert "Tracking: #33" in teks
+    assert "| 9 | Dasar jaringan saraf dan PyTorch | Modul 8 |" in teks
+    assert "| #26 |" in teks
+    assert "| #32 |" in teks
+    assert "MyLegion7i" in teks
+    assert "sel siswa 16 baris atau lebih" in teks
+    assert "9a" not in teks
 
 
-def test_readme_root_menautkan_setiap_modul():
+def test_readme_root_menautkan_issue():
     teks = (REPO / "README.md").read_text(encoding="utf-8")
-    assert "PLACEHOLDER" in teks
+    assert "7 modul utuh" in teks
+    assert "docs/lisensi-model.md" in teks
     for modul in MODUL:
-        tautan = f"(phase2-ai/{modul['folder']}/)"
-        assert tautan in teks, modul["folder"]
-        assert f"| {EM_DASH} |" in teks
-    assert "Notebook, latihan, dan kunci menyusul bersama materi." in teks
+        assert f"(phase2-ai/{modul['folder']}/)" in teks
+        assert ISSUE.format(modul["issue"]) in teks
+    assert "modul-09a-tensor-autograd" not in teks
 
 
-def test_pyproject_memuat_phase2_tanpa_paket_baru():
+def test_register_lisensi_hanya_apache_atau_mit():
+    teks = (REPO / "docs" / "lisensi-model.md").read_text(encoding="utf-8")
+    assert "tanpa mengunduh bobot" in teks
+    assert "sebelum unduh" in teks
+    baris = [b for b in teks.splitlines() if b.startswith("| `")]
+    assert len(baris) == 5
+    for baris_kandidat in baris:
+        kolom = [k.strip() for k in baris_kandidat.strip().strip("|").split("|")]
+        assert kolom[2] in LISENSI_BOLEH, kolom
+        assert kolom[3] == "belum dipin"
+    assert "GPL" not in teks
+    assert "CC-BY" not in teks
+
+
+def test_data_readme_dan_gitignore():
+    data = (REPO / "data" / "README.md").read_text(encoding="utf-8")
+    assert "termasuk yang sudah disamarkan" in data
+    assert "Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face." in data
+    abaikan = (REPO / ".gitignore").read_text(encoding="utf-8")
+    for pola in ("*.safetensors", "*.gguf", "*.pt", "*.pth"):
+        assert pola in abaikan
+
+
+def test_pyproject_tanpa_paket_baru():
     teks = (REPO / "pyproject.toml").read_text(encoding="utf-8")
     assert '"phase2-ai"' in teks
     for nama in ("torch", "transformers", "peft", "datasets"):
         assert nama not in teks
 
 
-def test_gitignore_menolak_bobot():
-    teks = (REPO / ".gitignore").read_text(encoding="utf-8")
-    for pola in ("*.safetensors", "*.gguf", "*.pt", "*.pth"):
-        assert pola in teks
-
-
-def test_data_readme_menyebut_aturan_fase2():
-    teks = (REPO / "data" / "README.md").read_text(encoding="utf-8")
-    assert "phase2-ai" in teks
-    assert "safetensors" in teks
-    assert "trust_remote_code=False" in teks
-    assert "tidak boleh masuk repo atau di-push ke Hugging Face" in teks
-    assert "Tanpa data asli perusahaan" in teks
-
-
 def test_tanpa_kata_terlarang():
-    for path in _berkas_yang_dicek():
-        if not path.is_file():
+    for path in _berkas_dokumen():
+        if not path.is_file() or path.suffix == ".pyc":
             continue
         if LEWATI.intersection(path.parts):
-            continue
-        if path.suffix == ".pyc":
             continue
         teks = path.read_text(encoding="utf-8")
         assert TERLARANG.search(teks) is None, path

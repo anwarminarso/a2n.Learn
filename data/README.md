@@ -11,6 +11,6 @@ Salinan kecil data publik (pengecualian yang sudah disetujui Frieren atau mas An
 
 Placeholder di `phase2-ai/` menambah aturan berikut. Materi belum ditulis.
 
-- Dataset publik berlisensi jelas atau sintetis dari generator di repo. Tanpa data asli perusahaan.
-- Model dan dataset Hugging Face di-pin ke revisi. Hanya format safetensors. `trust_remote_code=False`. Lisensi tiap model dicatat.
-- Dataset, adapter LoRA, dan indeks vektor dari data non-publik tidak boleh masuk repo atau di-push ke Hugging Face.
+- Data hanya sintetis atau dataset publik. Data asli perusahaan dilarang sama sekali, termasuk yang sudah disamarkan.
+- Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face. Tidak ada file GGUF di repo.
+- Unduhan model hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi di-pin. Hanya format safetensors. `trust_remote_code=False`. Register: [docs/lisensi-model.md](../docs/lisensi-model.md).
