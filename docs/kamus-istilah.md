@@ -1,6 +1,6 @@
 # Kamus istilah
 
-Satu istilah = satu arti, konsisten di semua modul. **Pyra** menulis entri baru saat membuat modul (maksimal tiga istilah baru per modul); **Squal** memeriksa konsistensi arti dan perumpamaan. Kolom yang masih kosong diisi Pyra.
+Satu istilah = satu arti, konsisten di semua modul. **Pyra** menulis entri baru saat membuat modul (maksimal tiga istilah baru per modul); **Squal** memeriksa konsistensi arti dan perumpamaan. Kolom yang masih kosong diisi Pyra. Baris Fase 2 yang bertuliskan PLACEHOLDER pada kolom arti, perumpamaan, dan batas analogi hanya mengunci nama. Ketiga kolom itu belum arti yang diajarkan.
 
 | Istilah | Arti (satu arti konsisten di semua modul) | Perumpamaan | Modul pengenal | Di mana perumpamaan berhenti berlaku |
 |---|---|---|---|---|
@@ -37,6 +37,34 @@ Satu istilah = satu arti, konsisten di semua modul. **Pyra** menulis entri baru 
 | ONNX | Berkas standar yang menyimpan model yang sudah dilatih, supaya program lain bisa menghitung tebakan tanpa membuka kode Python aslinya. | Seperti kartu resep dengan aturan tulis yang baku: dapur lain bisa mengikuti kartu itu tanpa meminjam buku catatanmu. | 8 | Kartu itu tidak memasak sendiri; tetap perlu program pembaca. Berkas ONNX bukan objek Python yang dilatih ulang dari program lain. Tidak semua model scikit-learn bisa ditulis menjadi berkas ini. Angka program lain boleh selisih sedikit dari Python; berkas ini tidak menjanjikan kedua hasil itu sama persis. |
 | opset | Nomor edisi kumpulan operasi di dalam berkas ONNX. Penulis berkas dan program pembaca harus memakai edisi yang sama. | Seperti nomor edisi buku resep: edisi 22 memakai daftar instruksi edisi 22, dan pembaca harus mengenal edisi itu. | 8 | Nomor edisi bukan mutu model dan bukan jumlah kolom. Dua berkas dengan opset yang sama bisa berisi model yang berbeda. Pembaca yang tidak mengenal edisi itu gagal membuka berkas, bukan menghasilkan tebakan yang hampir benar. |
 | inferensi | Memakai model yang sudah dilatih untuk menghitung tebakan pada catatan yang diberikan, tanpa mengubah model itu. | Seperti mengikuti kartu resep untuk satu piring: resepnya dipakai, bukan ditulis ulang. | 8 | Berhenti berlaku saat model dilatih ulang. Satu tebakan pada satu baris bukan nilai pada seluruh data uji. Inferensi tidak membuktikan tebakan itu tepat. |
+| tensor | PLACEHOLDER | PLACEHOLDER | 9a | PLACEHOLDER |
+| autograd | PLACEHOLDER | PLACEHOLDER | 9a | PLACEHOLDER |
+| gradien | PLACEHOLDER | PLACEHOLDER | 9a | PLACEHOLDER |
+| jaringan saraf | PLACEHOLDER | PLACEHOLDER | 9b | PLACEHOLDER |
+| putaran latihan | PLACEHOLDER | PLACEHOLDER | 9b | PLACEHOLDER |
+| fungsi aktivasi | PLACEHOLDER | PLACEHOLDER | 9b | PLACEHOLDER |
+| token | PLACEHOLDER | PLACEHOLDER | 10 | PLACEHOLDER |
+| embedding | PLACEHOLDER | PLACEHOLDER | 10 | PLACEHOLDER |
+| kemiripan vektor | PLACEHOLDER | PLACEHOLDER | 10 | PLACEHOLDER |
+| attention | PLACEHOLDER | PLACEHOLDER | 11a | PLACEHOLDER |
+| kueri, kunci, dan nilai | PLACEHOLDER | PLACEHOLDER | 11a | PLACEHOLDER |
+| Transformer | PLACEHOLDER | PLACEHOLDER | 11a | PLACEHOLDER |
+| model pra-latih | PLACEHOLDER | PLACEHOLDER | 11b | PLACEHOLDER |
+| penyelarasan | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
+| LoRA | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
+| adapter | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
+| GGUF | PLACEHOLDER | PLACEHOLDER | 13 | PLACEHOLDER |
+| penggabungan adapter | PLACEHOLDER | PLACEHOLDER | 13 | PLACEHOLDER |
+| peladen lokal | PLACEHOLDER | PLACEHOLDER | 13 | PLACEHOLDER |
+| potongan | PLACEHOLDER | PLACEHOLDER | 14a | PLACEHOLDER |
+| penyimpan vektor | PLACEHOLDER | PLACEHOLDER | 14a | PLACEHOLDER |
+| pengambilan | PLACEHOLDER | PLACEHOLDER | 14a | PLACEHOLDER |
+| RAG | PLACEHOLDER | PLACEHOLDER | 14b | PLACEHOLDER |
+| jawaban mengarang | PLACEHOLDER | PLACEHOLDER | 14b | PLACEHOLDER |
+| kutipan sumber | PLACEHOLDER | PLACEHOLDER | 14b | PLACEHOLDER |
+| pemanggilan alat | PLACEHOLDER | PLACEHOLDER | 15 | PLACEHOLDER |
+| loop agen | PLACEHOLDER | PLACEHOLDER | 15 | PLACEHOLDER |
+| injeksi prompt | PLACEHOLDER | PLACEHOLDER | 15 | PLACEHOLDER |
 
 Catatan pengenalan istilah: modul 1 memperkenalkan tiga istilah, yaitu venv, array, dan DataFrame. Notebook, Git, dan angka tetap SEED dijelaskan dengan bahasa biasa dan belum menjadi entri kamus. Modul 2 hanya menyebut ide overfitting dengan bahasa biasa ("model menghafal") tanpa menjadikannya istilah resmi, jadi hitungannya tetap tiga istilah. Overfitting menjadi istilah resmi di modul 3 dan diperdalam di modul evaluasi. Gambar garis yang dipelintir adalah untuk satu petunjuk. Modul 3 tidak memasang garis yang dipelintir itu. Data leakage diperkenalkan di modul 5, bersama cross-validation.
 
@@ -53,3 +81,7 @@ Catatan modul 6: bagian 6a memperkenalkan fitur, encoding, dan penskalaan. Bagia
 Modul 7 memperkenalkan tiga istilah: clustering, PCA, dan deteksi anomali. Nama alat pada kode dijelaskan satu kalimat di modul itu dan tidak ditambahkan sebagai entri baru.
 
 Modul 8 memperkenalkan tiga istilah: ONNX, opset, dan inferensi. Paket, pustaka, uv, indeks, probabilitas, float32, dan zipmap dijelaskan dengan satu kalimat dan belum menjadi entri kamus. Regresi logistik, Pipeline, data latih dan data uji, serta data leakage dirujuk sesuai arti modul sebelumnya, tanpa arti baru.
+
+Catatan Fase 2: baris setelah inferensi berstatus PLACEHOLDER. Kolom arti, perumpamaan, dan batas analogi berisi kata PLACEHOLDER karena materi belum ditulis. Pyra mengganti ketiga kolom itu saat modul ditulis. Nama dan modul pengenal dikunci sekarang.
+
+Modul 9a mengunci tensor, autograd, dan gradien. Modul 9b mengunci jaringan saraf, putaran latihan, dan fungsi aktivasi. PyTorch disebut sebagai nama alat, belum menjadi entri. Modul 10 mengunci token, embedding, dan kemiripan vektor. Modul 11a mengunci attention, kueri, kunci, dan nilai (satu entri karena satu ide), serta Transformer. Modul 11b mengunci model pra-latih dan menyisakan kuota dua istilah. Modul 12 mengunci penyelarasan, LoRA, dan adapter. Nama Inggris fine-tune menyusul sebagai sebutan penyelarasan, bukan entri kedua. Modul 13 mengunci GGUF, penggabungan adapter, dan peladen lokal. Ollama adalah nama alat peladen lokal, belum menjadi entri. Modul 14a mengunci potongan, penyimpan vektor, dan pengambilan. Modul 14b mengunci RAG, jawaban mengarang, dan kutipan sumber. Modul 15 mengunci pemanggilan alat, loop agen, dan injeksi prompt. Allowlist dijelaskan di aturan modul itu dan belum menjadi entri, karena kuota tiga sudah terpakai.
