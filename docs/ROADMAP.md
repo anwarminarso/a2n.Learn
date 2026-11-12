@@ -62,7 +62,7 @@ Aturan Fase 2 (keputusan Frieren):
 - Data hanya sintetis atau dataset publik dengan sumber dan lisensi jelas. Tanpa data asli perusahaan, termasuk yang sudah disamarkan.
 - Unduhan model hanya model kecil berlisensi Apache-2.0 atau MIT: revision HF dipin, safetensors saja, `trust_remote_code=False`. Ollama hanya bind ke `127.0.0.1`.
 - Tidak ada adapter, file GGUF, atau indeks di repo maupun HF.
-- Modul 13: gabungkan LoRA ke model dasar, konversi ke GGUF dengan llama.cpp, lalu import ke Ollama; pembandingnya model dasar lewat jalur konversi yang sama (Ollama Windows 0.40.14 belum bisa import safetensors).
+- Modul 13: gabungkan LoRA ke model dasar, konversi ke GGUF dengan llama.cpp, lalu import ke Ollama; pembandingnya model dasar lewat jalur konversi yang sama.
 - Modul 15 ditutup dengan proyek akhir RAG plus agen, ditambah bagian singkat .NET lewat HTTP seperti gaya modul 8. Agen hanya memakai tool dari allowlist read-only.
 - Merge diblokir hanya untuk sel siswa 16 baris atau lebih.
 - Satu SHA, satu laporan audit untuk semua modul. Kriteria berhenti: temuan BLOCK dan Medium nol; Low dan Info dicatat sebagai pertanyaan terbuka.

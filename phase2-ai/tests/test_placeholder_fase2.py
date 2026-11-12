@@ -10,7 +10,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 FASE2 = REPO / "phase2-ai"
 ISSUE = "https://github.com/anwarminarso/a2n.Learn/issues/{}"
-ROADMAP_SHA256 = "3debc57d06173192efff9d778d2372ff5f42ec21f4728d43f05ed97994a084ec"
+ROADMAP_SHA256 = "10b42cb0a032b603185318d7a5de31a21b6dffe22127568bd8deee324a5f23c9"
 TERLARANG = re.compile(
     "".join(["s", "m", "p"]) + "|" + "".join(["a", "n", "t", "a", "m"]),
     re.IGNORECASE,
@@ -361,12 +361,29 @@ def test_pin_llama_cpp_di_modul_13():
 
 
 def test_sandbox_menolak_path_traversal():
-    kriteria = _bagian(_readme(MODUL[6]), "Kriteria lulus")
-    latihan = _bagian(_readme(MODUL[6]), "Rencana latihan")
-    for bagian in (kriteria, latihan):
-        assert "../" in bagian
-        assert "path absolut" in bagian
-        assert "symlink" in bagian
+    teks = _readme(MODUL[6])
+    butir = [
+        baris
+        for baris in teks.splitlines()
+        if "../" in baris and "path absolut" in baris and "symlink" in baris
+    ]
+    assert len(butir) == 1
+    assert "sandbox" in butir[0]
+
+
+def test_jalur_gguf_hanya_modul_ini_pada_modul_13():
+    frasa = "Modul ini memakai jalur GGUF"
+    for modul in MODUL:
+        teks = _readme(modul)
+        if modul["nomor"] == "13":
+            assert frasa in teks
+        else:
+            assert frasa not in teks
+            assert "Modul 13 memakai jalur GGUF" in teks
+
+
+def test_modul_11_memuat_use_safetensors():
+    assert "use_safetensors=True" in _readme(MODUL[2])
 
 
 def test_pyproject_tanpa_paket_baru():
