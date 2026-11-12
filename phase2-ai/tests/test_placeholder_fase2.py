@@ -386,6 +386,27 @@ def test_modul_11_memuat_use_safetensors():
     assert "use_safetensors=True" in _readme(MODUL[2])
 
 
+def test_enam_modul_muat_safetensors_dan_allow_patterns():
+    nomor = {"10", "11", "12", "13", "14", "15"}
+    blok = None
+    for modul in MODUL:
+        if modul["nomor"] not in nomor:
+            continue
+        aturan = _bagian(_readme(modul), "Aturan")
+        assert "use_safetensors=True" in aturan
+        assert "allow_patterns" in aturan
+        butir = tuple(
+            baris
+            for baris in aturan.splitlines()
+            if "use_safetensors=True" in baris or "allow_patterns" in baris
+        )
+        assert len(butir) == 2, modul["nomor"]
+        if blok is None:
+            blok = butir
+        else:
+            assert butir == blok, modul["nomor"]
+
+
 def test_pyproject_tanpa_paket_baru():
     teks = (REPO / "pyproject.toml").read_text(encoding="utf-8")
     assert '"phase2-ai"' in teks
