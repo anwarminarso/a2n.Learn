@@ -1,4 +1,4 @@
-# Modul 11: Attention dan Transformer mini
+# Modul 11: Transformer
 
 **Status:** PLACEHOLDER
 
@@ -18,7 +18,7 @@ Tracking Fase 2: [#33](https://github.com/anwarminarso/a2n.Learn/issues/33).
 
 ## Prasyarat
 
-Modul sebelumnya: [Modul 10: Tokenisasi dan embedding](../modul-10-tokenisasi-embedding/).
+Modul sebelumnya: [Modul 10: Embedding dan tokenisasi](../modul-10-tokenisasi-embedding/).
 
 ## Mengapa modul ini
 
@@ -88,7 +88,7 @@ Opsional. Kandidat yang lebih besar pada GPU di MyLegion7i. Hasil dinilai dari l
 
 Semua id di bawah kandidat, bukan pilihan final. Revisi belum dipilih. Lisensi pada tabel register dibaca dari kartu model, sebelum unduhan bobot, dan dicek lagi pada revisi yang dipin sebelum unduh.
 
-- Kandidat mode cepat: `prajjwal1/bert-tiny`. Lisensi kartu model MIT.
+- Kandidat mode cepat: `google/bert_uncased_L-2_H-128_A-2`. Lisensi kartu model Apache-2.0. Berkas `model.safetensors` ada di siblings. `prajjwal1/bert-tiny` tidak dipakai: siblings tidak berisi berkas .safetensors.
 - Kandidat mode penuh: `distilbert/distilbert-base-uncased`. Lisensi kartu model Apache-2.0.
 - Keduanya model dasar. Kepala klasifikasi dilatih di materi. Placeholder tidak mengklaim model itu sudah bisa mengelompokkan teks.
 - Dataset: kalimat berlabel dari generator di repo.
@@ -103,5 +103,5 @@ Bagian ini adalah gate placeholder. Aturan yang sama berlaku saat materi ditulis
 - Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR. Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.
 - Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: belum dipin.
 - Pengecekan pakai ambang, misalnya loss turun minimal X, bukan angka persis.
-- Ollama mengikat hanya ke 127.0.0.1. Versi yang dipakai 0.40.14. Sejak v0.34.1, pembuatan GGUF dari safetensors memakai perkakas llama.cpp, bukan konverter di dalam Ollama (catatan rilis https://github.com/ollama/ollama/releases/tag/v0.34.1). Jalur yang diajarkan memakai skrip `convert_hf_to_gguf.py` pada llama.cpp tag `b12317`.
+- Ollama mengikat hanya ke 127.0.0.1. Versi referensi yang diuji: 0.40.14. Teramati pada Ollama 0.40.14 di Windows: impor safetensors gagal dengan pesan yang meminta runtime MLX. Ini catatan pengamatan pada versi itu. Jalur yang diajarkan memakai skrip `convert_hf_to_gguf.py` pada llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`.
 - Modul 15: tools hanya allowlist read-only di folder sandbox, tanpa shell bebas, tanpa akses jaringan internal.

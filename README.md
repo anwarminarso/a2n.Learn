@@ -27,13 +27,13 @@ Materi belum ditulis. Tujuh modul utuh. Issue mengikuti tabel di `docs/ROADMAP.m
 
 | # | Modul | Topik | Tingkat | Issue |
 |---|---|---|---|---|
-| 9 | [PyTorch](phase2-ai/modul-09-pytorch/) | tensor, autograd, dan jaringan saraf pertama | pro | [#26](https://github.com/anwarminarso/a2n.Learn/issues/26) |
-| 10 | [Tokenisasi dan embedding](phase2-ai/modul-10-tokenisasi-embedding/) | token, embedding, kemiripan vektor | pro | [#27](https://github.com/anwarminarso/a2n.Learn/issues/27) |
-| 11 | [Attention dan Transformer mini](phase2-ai/modul-11-attention-transformer/) | attention dari nol, lalu model kecil untuk klasifikasi teks | pro | [#28](https://github.com/anwarminarso/a2n.Learn/issues/28) |
-| 12 | [Fine-tune LoRA pada model kecil](phase2-ai/modul-12-lora/) | penyetelan halus LoRA, ukur sebelum dan sesudah | pro | [#29](https://github.com/anwarminarso/a2n.Learn/issues/29) |
-| 13 | [Model lokal lewat Ollama](phase2-ai/modul-13-model-lokal/) | merge LoRA, GGUF, impor Ollama, kontrol jalur sama | pro | [#30](https://github.com/anwarminarso/a2n.Learn/issues/30) |
-| 14 | [RAG](phase2-ai/modul-14-rag/) | potongan, penyimpan vektor, jawaban dengan sumber, evaluasi mengarang | pro | [#31](https://github.com/anwarminarso/a2n.Learn/issues/31) |
-| 15 | [Agen dan proyek akhir](phase2-ai/modul-15-agen/) | loop agen, proyek akhir RAG plus agen, panggilan .NET lewat HTTP | pro | [#32](https://github.com/anwarminarso/a2n.Learn/issues/32) |
+| 9 | [Dasar jaringan saraf dan PyTorch](phase2-ai/modul-09-pytorch/) | tensor, autograd, dan jaringan saraf pertama | pro | [#26](https://github.com/anwarminarso/a2n.Learn/issues/26) |
+| 10 | [Embedding dan tokenisasi](phase2-ai/modul-10-tokenisasi-embedding/) | token, embedding, kemiripan vektor | pro | [#27](https://github.com/anwarminarso/a2n.Learn/issues/27) |
+| 11 | [Transformer](phase2-ai/modul-11-attention-transformer/) | attention dari nol, lalu model kecil untuk klasifikasi teks | pro | [#28](https://github.com/anwarminarso/a2n.Learn/issues/28) |
+| 12 | [Fine-tune dengan LoRA](phase2-ai/modul-12-lora/) | penyetelan halus (fine-tune), ukur sebelum dan sesudah | pro | [#29](https://github.com/anwarminarso/a2n.Learn/issues/29) |
+| 13 | [Menjalankan model lokal dengan Ollama](phase2-ai/modul-13-model-lokal/) | merge LoRA, GGUF, impor Ollama, kontrol jalur sama | pro | [#30](https://github.com/anwarminarso/a2n.Learn/issues/30) |
+| 14 | [RAG (Retrieval-Augmented Generation)](phase2-ai/modul-14-rag/) | potongan, penyimpan vektor, jawaban dengan sumber, evaluasi mengarang | pro | [#31](https://github.com/anwarminarso/a2n.Learn/issues/31) |
+| 15 | [Agen dan proyek akhir Fase 2](phase2-ai/modul-15-agen/) | loop agen, proyek akhir RAG plus agen, panggilan .NET lewat HTTP | pro | [#32](https://github.com/anwarminarso/a2n.Learn/issues/32) |
 
 ## Susunan modul
 Setiap modul punya format sama: teori 1 halaman, notebook, kasus nyata, latihan + kunci, cek pemahaman. Detail di [docs/module-template.md](docs/module-template.md). Istilah dan perumpamaan dicatat di [docs/kamus-istilah.md](docs/kamus-istilah.md).

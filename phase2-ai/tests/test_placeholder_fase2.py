@@ -22,7 +22,7 @@ MODUL = (
     {
         "nomor": "9",
         "folder": "modul-09-pytorch",
-        "judul": "PyTorch",
+        "judul": "Dasar jaringan saraf dan PyTorch",
         "roadmap": "Dasar jaringan saraf dan PyTorch",
         "issue": 26,
         "tautan": ("phase1-ml/modul-08-proyek-akhir",),
@@ -34,7 +34,7 @@ MODUL = (
     {
         "nomor": "10",
         "folder": "modul-10-tokenisasi-embedding",
-        "judul": "Tokenisasi dan embedding",
+        "judul": "Embedding dan tokenisasi",
         "roadmap": "Embedding dan tokenisasi",
         "issue": 27,
         "tautan": ("modul-09-pytorch",),
@@ -43,7 +43,7 @@ MODUL = (
     {
         "nomor": "11",
         "folder": "modul-11-attention-transformer",
-        "judul": "Attention dan Transformer mini",
+        "judul": "Transformer",
         "roadmap": "Transformer",
         "issue": 28,
         "tautan": ("modul-10-tokenisasi-embedding",),
@@ -55,16 +55,16 @@ MODUL = (
     {
         "nomor": "12",
         "folder": "modul-12-lora",
-        "judul": "Fine-tune LoRA pada model kecil",
+        "judul": "Fine-tune dengan LoRA",
         "roadmap": "Fine-tune dengan LoRA",
         "issue": 29,
         "tautan": ("modul-11-attention-transformer",),
-        "sesi": (("penyetelan halus", "LoRA", "adapter"),),
+        "sesi": (("penyetelan halus (fine-tune)", "LoRA", "adapter"),),
     },
     {
         "nomor": "13",
         "folder": "modul-13-model-lokal",
-        "judul": "Model lokal lewat Ollama",
+        "judul": "Menjalankan model lokal dengan Ollama",
         "roadmap": "Menjalankan model lokal dengan Ollama",
         "issue": 30,
         "tautan": ("modul-12-lora",),
@@ -73,7 +73,7 @@ MODUL = (
     {
         "nomor": "14",
         "folder": "modul-14-rag",
-        "judul": "RAG",
+        "judul": "RAG (Retrieval-Augmented Generation)",
         "roadmap": "RAG (Retrieval-Augmented Generation)",
         "issue": 31,
         "tautan": ("modul-13-model-lokal", "modul-10-tokenisasi-embedding"),
@@ -85,7 +85,7 @@ MODUL = (
     {
         "nomor": "15",
         "folder": "modul-15-agen",
-        "judul": "Agen dan proyek akhir",
+        "judul": "Agen dan proyek akhir Fase 2",
         "roadmap": "Agen dan proyek akhir Fase 2",
         "issue": 32,
         "tautan": ("modul-14-rag", "modul-13-model-lokal", "modul-12-lora"),
@@ -169,6 +169,7 @@ def test_hanya_tujuh_modul_utuh():
 def test_readme_punya_bagian_wajib_dan_issue():
     for modul in MODUL:
         teks = _readme(modul)
+        assert modul["judul"] == modul["roadmap"]
         assert teks.startswith(f"# Modul {modul['nomor']}: {modul['judul']}\n")
         assert "**Status:** PLACEHOLDER" in teks
         assert "**Tingkat:** pro" in teks
@@ -296,7 +297,12 @@ def test_register_lisensi_hanya_apache_atau_mit():
     for baris_kandidat in baris:
         kolom = [k.strip() for k in baris_kandidat.strip().strip("|").split("|")]
         assert kolom[2] in LISENSI_BOLEH, kolom
-        assert kolom[3] == "belum dipin"
+        assert kolom[3].endswith(".safetensors"), kolom
+        assert kolom[4] == "belum dipin"
+        assert "bert-tiny" not in kolom[0]
+    assert "| 12, 13, 14, 15 |" in teks
+    assert "prajjwal1/bert-tiny" in teks
+    assert "tidak berisi berkas `.safetensors`" in teks
     assert "GPL" not in teks
     assert "CC-BY" not in teks
 
@@ -306,32 +312,60 @@ def test_data_readme_dan_gitignore():
     assert "termasuk yang sudah disamarkan" in data
     assert "Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face." in data
     abaikan = (REPO / ".gitignore").read_text(encoding="utf-8")
-    assert "data non-publik" not in abaikan
-    for pola in ("*.safetensors", "*.gguf", "*.pt", "*.pth", "*.faiss", "*.ann", "chroma.sqlite3"):
+    assert "Data non-publik dilarang sama sekali." in abaikan
+    assert "dari data non-publik" not in abaikan
+    for pola in (
+        "*.safetensors",
+        "*.gguf",
+        "*.pt",
+        "*.pth",
+        "*.faiss",
+        "*.npy",
+        "*.index",
+        "*.ann",
+        "chroma/",
+        "*.sqlite3",
+        "adapters/",
+        "outputs/",
+        "checkpoints/",
+    ):
         assert pola in abaikan
 
 
-def test_tindak_lanjut_audit_gerbang_dan_istilah():
-    for modul in MODUL:
-        assert "butuh runtime MLX" not in _readme(modul)
-    modul12 = _readme(MODUL[3])
-    assert "penyetelan halus" in modul12
-    assert "penyelarasan" not in modul12
-    assert "Alignment" in modul12
-    modul13 = _readme(MODUL[4])
-    assert "b12317" in modul13
-    assert "membuat ulang adapter" in modul13
-    assert "bukan gerbang PR" in modul13
-    assert "releases/tag/v0.34.1" in modul13
-    assert "tidak memakai jalur impor MLX" in modul13
+def test_penyelarasan_tidak_dipakai_untuk_fine_tune():
+    berkas = [
+        REPO / "README.md",
+        REPO / "docs" / "kamus-istilah.md",
+        REPO / "docs" / "lisensi-model.md",
+        REPO / "data" / "README.md",
+    ]
+    berkas.extend(FASE2.glob("modul-*/README.md"))
+    for path in berkas:
+        assert "penyelarasan" not in path.read_text(encoding="utf-8"), path
     kamus = (REPO / "docs" / "kamus-istilah.md").read_text(encoding="utf-8")
-    assert "paling banyak tiga istilah baru per sesi" in kamus
-    assert "penyelarasan" not in kamus
-    lisensi = (REPO / "docs" / "lisensi-model.md").read_text(encoding="utf-8")
-    assert "| 12, 13, 14, 15 |" in lisensi
-    modul15 = _readme(MODUL[6])
-    assert "modul-13-model-lokal" in modul15
-    assert "modul-12-lora" in modul15
+    assert "| penyetelan halus (fine-tune) |" in kamus
+    assert "maksimal tiga istilah baru per sesi" in kamus
+    assert "maksimal tiga istilah baru per modul" in kamus
+
+
+def test_pin_llama_cpp_di_modul_13():
+    teks = _readme(MODUL[4])
+    assert "ca89968a23a13e571a6b802a9891d22763153b61" in teks
+    assert "gguf-py" in teks
+    assert "membuat ulang adapter LoRA kecil" in teks
+    assert "bukan gerbang PR" in teks
+    assert "b12317" not in teks
+    assert "butuh runtime MLX" not in teks
+    assert "Teramati pada Ollama 0.40.14 di Windows" in teks
+
+
+def test_sandbox_menolak_path_traversal():
+    kriteria = _bagian(_readme(MODUL[6]), "Kriteria lulus")
+    latihan = _bagian(_readme(MODUL[6]), "Rencana latihan")
+    for bagian in (kriteria, latihan):
+        assert "../" in bagian
+        assert "path absolut" in bagian
+        assert "symlink" in bagian
 
 
 def test_pyproject_tanpa_paket_baru():
