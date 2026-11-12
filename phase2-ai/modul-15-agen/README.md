@@ -18,7 +18,7 @@ Tracking Fase 2: [#33](https://github.com/anwarminarso/a2n.Learn/issues/33).
 
 ## Prasyarat
 
-Modul sebelumnya: [Modul 14: RAG](../modul-14-rag/).
+Modul sebelumnya: [Modul 14: RAG](../modul-14-rag/). Di roadmap, modul ini bergantung pada modul 14. Peladen lokal dari [Modul 13: Model lokal lewat Ollama](../modul-13-model-lokal/) dan kandidat model dari [Modul 12: Fine-tune LoRA pada model kecil](../modul-12-lora/) dipakai lagi dengan arti yang sudah ada.
 
 ## Mengapa modul ini
 
@@ -106,5 +106,5 @@ Bagian ini adalah gate placeholder. Aturan yang sama berlaku saat materi ditulis
 - Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR. Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.
 - Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: belum dipin.
 - Pengecekan pakai ambang, misalnya loss turun minimal X, bukan angka persis.
-- Ollama mengikat hanya ke 127.0.0.1. Ollama Windows 0.40.14 tidak bisa mengimpor safetensors langsung karena butuh runtime MLX, jadi jalur GGUF lewat skrip llama.cpp `convert_hf_to_gguf.py` wajib.
+- Ollama mengikat hanya ke 127.0.0.1. Versi yang dipakai 0.40.14. Sejak v0.34.1, pembuatan GGUF dari safetensors memakai perkakas llama.cpp, bukan konverter di dalam Ollama (catatan rilis https://github.com/ollama/ollama/releases/tag/v0.34.1). Jalur yang diajarkan memakai skrip `convert_hf_to_gguf.py` pada llama.cpp tag `b12317`.
 - Modul 15: tools hanya allowlist read-only di folder sandbox, tanpa shell bebas, tanpa akses jaringan internal.

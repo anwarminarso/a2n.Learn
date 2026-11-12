@@ -23,8 +23,11 @@ bin/
 obj/
 
 # Bobot dan artefak model Fase 2.
-# Dataset, adapter, dan indeks dari data non-publik tidak masuk repo.
+# Adapter, berkas GGUF, bobot, dan indeks vektor tidak masuk repo sama sekali.
 *.safetensors
 *.gguf
 *.pt
 *.pth
+*.faiss
+*.ann
+chroma.sqlite3

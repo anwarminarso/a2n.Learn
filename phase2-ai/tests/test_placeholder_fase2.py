@@ -59,7 +59,7 @@ MODUL = (
         "roadmap": "Fine-tune dengan LoRA",
         "issue": 29,
         "tautan": ("modul-11-attention-transformer",),
-        "sesi": (("penyelarasan", "LoRA", "adapter"),),
+        "sesi": (("penyetelan halus", "LoRA", "adapter"),),
     },
     {
         "nomor": "13",
@@ -88,7 +88,7 @@ MODUL = (
         "judul": "Agen dan proyek akhir",
         "roadmap": "Agen dan proyek akhir Fase 2",
         "issue": 32,
-        "tautan": ("modul-14-rag",),
+        "tautan": ("modul-14-rag", "modul-13-model-lokal", "modul-12-lora"),
         "sesi": (
             ("pemanggilan alat", "loop agen", "injeksi prompt"),
             (),
@@ -306,8 +306,32 @@ def test_data_readme_dan_gitignore():
     assert "termasuk yang sudah disamarkan" in data
     assert "Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face." in data
     abaikan = (REPO / ".gitignore").read_text(encoding="utf-8")
-    for pola in ("*.safetensors", "*.gguf", "*.pt", "*.pth"):
+    assert "data non-publik" not in abaikan
+    for pola in ("*.safetensors", "*.gguf", "*.pt", "*.pth", "*.faiss", "*.ann", "chroma.sqlite3"):
         assert pola in abaikan
+
+
+def test_tindak_lanjut_audit_gerbang_dan_istilah():
+    for modul in MODUL:
+        assert "butuh runtime MLX" not in _readme(modul)
+    modul12 = _readme(MODUL[3])
+    assert "penyetelan halus" in modul12
+    assert "penyelarasan" not in modul12
+    assert "Alignment" in modul12
+    modul13 = _readme(MODUL[4])
+    assert "b12317" in modul13
+    assert "membuat ulang adapter" in modul13
+    assert "bukan gerbang PR" in modul13
+    assert "releases/tag/v0.34.1" in modul13
+    assert "tidak memakai jalur impor MLX" in modul13
+    kamus = (REPO / "docs" / "kamus-istilah.md").read_text(encoding="utf-8")
+    assert "paling banyak tiga istilah baru per sesi" in kamus
+    assert "penyelarasan" not in kamus
+    lisensi = (REPO / "docs" / "lisensi-model.md").read_text(encoding="utf-8")
+    assert "| 12, 13, 14, 15 |" in lisensi
+    modul15 = _readme(MODUL[6])
+    assert "modul-13-model-lokal" in modul15
+    assert "modul-12-lora" in modul15
 
 
 def test_pyproject_tanpa_paket_baru():

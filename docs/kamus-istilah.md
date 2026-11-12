@@ -1,6 +1,6 @@
 # Kamus istilah
 
-Satu istilah = satu arti, konsisten di semua modul. **Pyra** menulis entri baru saat membuat modul (maksimal tiga istilah baru per modul); **Squal** memeriksa konsistensi arti dan perumpamaan. Kolom yang masih kosong diisi Pyra. Baris Fase 2 yang bertuliskan PLACEHOLDER pada kolom arti, perumpamaan, dan batas analogi hanya mengunci nama. Ketiga kolom itu belum arti yang diajarkan.
+Satu istilah = satu arti, konsisten di semua modul. **Pyra** menulis entri baru saat membuat modul. Pada Fase 1, paling banyak tiga istilah baru per modul. Pada Fase 2, paling banyak tiga istilah baru per sesi di dalam modul yang utuh, jadi modul dengan dua sesi boleh punya enam istilah. **Squal** memeriksa konsistensi arti dan perumpamaan. Kolom yang masih kosong diisi Pyra. Baris Fase 2 yang bertuliskan PLACEHOLDER pada kolom arti, perumpamaan, dan batas analogi hanya mengunci nama. Ketiga kolom itu belum arti yang diajarkan.
 
 | Istilah | Arti (satu arti konsisten di semua modul) | Perumpamaan | Modul pengenal | Di mana perumpamaan berhenti berlaku |
 |---|---|---|---|---|
@@ -50,7 +50,7 @@ Satu istilah = satu arti, konsisten di semua modul. **Pyra** menulis entri baru 
 | kueri, kunci, dan nilai | PLACEHOLDER | PLACEHOLDER | 11 | PLACEHOLDER |
 | Transformer | PLACEHOLDER | PLACEHOLDER | 11 | PLACEHOLDER |
 | model pra-latih | PLACEHOLDER | PLACEHOLDER | 11 | PLACEHOLDER |
-| penyelarasan | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
+| penyetelan halus | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
 | LoRA | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
 | adapter | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
 | GGUF | PLACEHOLDER | PLACEHOLDER | 13 | PLACEHOLDER |
@@ -86,4 +86,4 @@ Catatan Fase 2: baris setelah inferensi berstatus PLACEHOLDER. Kolom arti, perum
 
 Keputusan tim: modul 9, 11, dan 14 utuh, tanpa folder berhuruf. Istilahnya dibagi sesi di README modul. Tiap sesi paling banyak tiga istilah baru.
 
-Modul 9 mengunci tensor, autograd, gradien, jaringan saraf, putaran latihan, dan fungsi aktivasi. PyTorch disebut sebagai nama alat, belum menjadi entri. Modul 10 mengunci token, embedding, dan kemiripan vektor. Modul 11 mengunci attention, kueri, kunci, dan nilai (satu entri karena satu ide), Transformer, dan model pra-latih. Sisa kuota sesi model pra-latih adalah dua istilah. Modul 12 mengunci penyelarasan, LoRA, dan adapter. Nama Inggris fine-tune menyusul sebagai sebutan penyelarasan, bukan entri kedua. Modul 13 mengunci GGUF, penggabungan adapter, dan peladen lokal. Ollama adalah nama alat peladen lokal, belum menjadi entri. Modul 14 mengunci potongan, penyimpan vektor, pengambilan, RAG, jawaban mengarang, dan kutipan sumber. Modul 15 mengunci pemanggilan alat, loop agen, dan injeksi prompt. Allowlist dijelaskan di aturan modul itu dan belum menjadi entri. Panggilan HTTP dari .NET memakai inferensi dari modul 8, bukan istilah baru.
+Modul 9 mengunci tensor, autograd, gradien, jaringan saraf, putaran latihan, dan fungsi aktivasi. PyTorch disebut sebagai nama alat, belum menjadi entri. Modul 10 mengunci token, embedding, dan kemiripan vektor. Modul 11 mengunci attention, kueri, kunci, dan nilai (satu entri karena satu ide), Transformer, dan model pra-latih. Sisa kuota sesi model pra-latih adalah dua istilah. Modul 12 mengunci penyetelan halus, LoRA, dan adapter. Nama Inggris fine-tune menyusul sebagai sebutan penyetelan halus, bukan entri kedua. Penyetelan halus berarti fine-tune pada data instruksi. Alignment belum menjadi entri. Modul 13 mengunci GGUF, penggabungan adapter, dan peladen lokal. Ollama adalah nama alat peladen lokal, belum menjadi entri. Modul 14 mengunci potongan, penyimpan vektor, pengambilan, RAG, jawaban mengarang, dan kutipan sumber. Modul 15 mengunci pemanggilan alat, loop agen, dan injeksi prompt. Allowlist dijelaskan di aturan modul itu dan belum menjadi entri. Panggilan HTTP dari .NET memakai inferensi dari modul 8, bukan istilah baru.

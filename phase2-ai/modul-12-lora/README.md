@@ -4,7 +4,7 @@
 
 **Tingkat:** pro
 
-**Tujuan belajar:** Pembaca bisa menyelaraskan model kecil dengan LoRA pada dataset instruksi kecil, lalu mengukur sebelum dan sesudah pada set uji yang sama.
+**Tujuan belajar:** Pembaca bisa menyetel halus model kecil dengan LoRA pada dataset instruksi kecil, lalu mengukur sebelum dan sesudah pada set uji yang sama.
 
 Isi materi belum ditulis. Halaman ini adalah rencana, bukan bahan ajar.
 
@@ -22,7 +22,7 @@ Modul sebelumnya: [Modul 11: Attention dan Transformer mini](../modul-11-attenti
 
 ## Mengapa modul ini
 
-Modul ini utuh, satu sesi. Penyelarasan, LoRA, dan adapter adalah tiga istilah. Fine-tune adalah sebutan bahasa Inggris untuk penyelarasan, bukan entri kamus kedua. Mengukur sebelum dan sesudah memakai set uji yang sama, bukan modul terpisah.
+Modul ini utuh, satu sesi. Penyetelan halus, LoRA, dan adapter adalah tiga istilah. Fine-tune adalah sebutan bahasa Inggris untuk penyetelan halus, bukan entri kamus kedua. Penyetelan halus di modul ini berarti fine-tune: melatih lagi model yang sudah ada pada data instruksi kecil. Alignment, yaitu menyesuaikan keluaran model dengan nilai manusia, adalah topik lain dan belum menjadi entri kamus. Mengukur sebelum dan sesudah memakai set uji yang sama, bukan modul terpisah.
 
 ## Istilah baru yang direncanakan
 
@@ -30,7 +30,7 @@ Paling banyak tiga istilah baru pada tiap sesi. Arti, perumpamaan, dan batas ana
 
 ### Sesi 1
 
-1. penyelarasan
+1. penyetelan halus
 2. LoRA
 3. adapter
 
@@ -97,5 +97,5 @@ Bagian ini adalah gate placeholder. Aturan yang sama berlaku saat materi ditulis
 - Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR. Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.
 - Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: belum dipin.
 - Pengecekan pakai ambang, misalnya loss turun minimal X, bukan angka persis.
-- Ollama mengikat hanya ke 127.0.0.1. Ollama Windows 0.40.14 tidak bisa mengimpor safetensors langsung karena butuh runtime MLX, jadi jalur GGUF lewat skrip llama.cpp `convert_hf_to_gguf.py` wajib.
+- Ollama mengikat hanya ke 127.0.0.1. Versi yang dipakai 0.40.14. Sejak v0.34.1, pembuatan GGUF dari safetensors memakai perkakas llama.cpp, bukan konverter di dalam Ollama (catatan rilis https://github.com/ollama/ollama/releases/tag/v0.34.1). Jalur yang diajarkan memakai skrip `convert_hf_to_gguf.py` pada llama.cpp tag `b12317`.
 - Modul 15: tools hanya allowlist read-only di folder sandbox, tanpa shell bebas, tanpa akses jaringan internal.
