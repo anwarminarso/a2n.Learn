@@ -55,7 +55,7 @@ Notebook, latihan, dan kunci belum dibuat.
 Sesi di dalam modul ini, bukan folder terpisah:
 
 - Sesi 1. Hitung attention dari nol pada matriks mini, lalu beri nama Transformer pada susunan kecil itu.
-- Sesi 2. Muat model pra-latih kecil untuk klasifikasi teks. Pin revisi, pakai safetensors, dan setel trust_remote_code=False.
+- Sesi 2. Muat model pra-latih kecil untuk klasifikasi teks. Pin revisi, muat dengan `use_safetensors=True`, dan setel trust_remote_code=False.
 - Ukur pada set uji kecil terhadap baseline kelas yang paling banyak, dengan ambang.
 
 ## Rencana latihan
@@ -72,7 +72,7 @@ Status bagian ini: DRAF. Angka ambang belum dipilih. Pengecekan memakai ambang, 
 
 - Jumlah satu baris bobot perhatian berada di sekitar 1, dengan selisih paling besar X. X belum dipilih.
 - Skor klasifikasi pada set uji melebihi baseline minimal X. X belum dipilih.
-- Berkas yang dimuat berformat safetensors, dan trust_remote_code=False. Lisensi dicek sebelum unduh.
+- Berkas yang dimuat memakai `use_safetensors=True`, dan trust_remote_code=False. Lisensi dicek sebelum unduh.
 
 ## Mode cepat dan mode penuh
 
@@ -88,7 +88,7 @@ Opsional. Kandidat yang lebih besar pada GPU di MyLegion7i. Hasil dinilai dari l
 
 Semua id di bawah kandidat, bukan pilihan final. Revisi belum dipilih. Lisensi pada tabel register dibaca dari kartu model, sebelum unduhan bobot, dan dicek lagi pada revisi yang dipin sebelum unduh.
 
-- Kandidat mode cepat: `google/bert_uncased_L-2_H-128_A-2`. Lisensi kartu model Apache-2.0. Berkas `model.safetensors` ada di siblings. `prajjwal1/bert-tiny` tidak dipakai: siblings tidak berisi berkas .safetensors.
+- Kandidat mode cepat: `google/bert_uncased_L-2_H-128_A-2`. Lisensi kartu model Apache-2.0. Berkas `model.safetensors` ada di siblings, dan repo ini juga berisi `pytorch_model.bin`. Muat dengan `use_safetensors=True` agar pemuat tidak jatuh ke format pickle. `prajjwal1/bert-tiny` tidak dipakai: siblings tidak berisi berkas .safetensors.
 - Kandidat mode penuh: `distilbert/distilbert-base-uncased`. Lisensi kartu model Apache-2.0.
 - Keduanya model dasar. Kepala klasifikasi dilatih di materi. Placeholder tidak mengklaim model itu sudah bisa mengelompokkan teks.
 - Dataset: kalimat berlabel dari generator di repo.
@@ -102,6 +102,7 @@ Bagian ini adalah gate placeholder. Aturan yang sama berlaku saat materi ditulis
 - Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face. Tidak ada file GGUF di repo.
 - Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR. Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.
 - Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: belum dipin.
+- Setiap model Hugging Face di Fase 2 dimuat dengan `use_safetensors=True`. Repo `google/bert_uncased_L-2_H-128_A-2` juga berisi `pytorch_model.bin`, jadi pemuat tidak boleh jatuh ke format pickle.
 - Pengecekan pakai ambang, misalnya loss turun minimal X, bukan angka persis.
-- Ollama mengikat hanya ke 127.0.0.1. Versi referensi yang diuji: 0.40.14. Modul ini memakai jalur GGUF: merge LoRA, lalu `convert_hf_to_gguf.py` pada llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor GGUF ke Ollama, dibanding kontrol lewat jalur yang sama.
+- Ollama mengikat hanya ke 127.0.0.1. Versi referensi yang diuji: 0.40.14. Modul 13 memakai jalur GGUF: merge LoRA, lalu `convert_hf_to_gguf.py` pada llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor GGUF ke Ollama, dibanding kontrol lewat jalur yang sama.
 - Modul 15: tools hanya allowlist read-only di folder sandbox, tanpa shell bebas, tanpa akses jaringan internal.
