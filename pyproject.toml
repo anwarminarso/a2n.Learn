@@ -33,5 +33,7 @@ testpaths = [
   "phase1-ml/modul-06b-pipeline",
   "phase1-ml/modul-07-tanpa-label",
   "phase1-ml/modul-08-proyek-akhir",
+  # Tes placeholder Fase 2 ada di phase2-ai/tests.
+  "phase2-ai",
 ]
 python_files = ["test_*.py"]

@@ -21,3 +21,21 @@ data/*
 .idea/
 bin/
 obj/
+
+# Bobot dan artefak model Fase 2.
+# Data non-publik dilarang sama sekali.
+# Adapter, berkas GGUF, bobot, dan indeks vektor tidak masuk repo sama sekali.
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.faiss
+*.npy
+*.index
+*.ann
+chroma/
+# Berkas sqlite3 ini untuk indeks vektor.
+*.sqlite3
+adapters/
+outputs/
+checkpoints/

@@ -6,3 +6,11 @@
 - File data mentah tidak di-commit (lihat `.gitignore`), kecuali salinan kecil data publik yang sudah disetujui.
 
 Salinan kecil data publik (pengecualian yang sudah disetujui Frieren atau mas Anwar, dengan sumber dan lisensi jelas) disimpan di `data/public/`; folder itu dikecualikan dari `.gitignore`, jadi tidak perlu `git add -f`.
+
+## Fase 2
+
+Placeholder di `phase2-ai/` menambah aturan berikut. Materi belum ditulis.
+
+- Data hanya sintetis atau dataset publik. Data asli perusahaan dilarang sama sekali, termasuk yang sudah disamarkan.
+- Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face. Tidak ada file GGUF di repo.
+- Unduhan model hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi di-pin. Hanya format safetensors. `trust_remote_code=False`. Register: [docs/lisensi-model.md](../docs/lisensi-model.md).
