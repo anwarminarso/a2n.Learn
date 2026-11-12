@@ -355,8 +355,9 @@ def test_pin_llama_cpp_di_modul_13():
     assert "membuat ulang adapter LoRA kecil" in teks
     assert "bukan gerbang PR" in teks
     assert "b12317" not in teks
-    assert "butuh runtime MLX" not in teks
-    assert "Teramati pada Ollama 0.40.14 di Windows" in teks
+    assert "jalur GGUF" in teks
+    assert "impor GGUF ke Ollama" in teks
+    assert "kontrol lewat jalur yang sama" in teks
 
 
 def test_sandbox_menolak_path_traversal():
