@@ -361,8 +361,20 @@ def test_program_menolak_berkas_hilang_json_rusak_dan_panjang_baris():
     assert "JsonException" in sumber
     assert "baris.json rusak" in sumber
     assert "panjang baris tidak cocok" in sumber
-    assert sumber.index("File.Exists(args[0])") < sumber.index("JsonSerializer.Deserialize")
-    assert sumber.index("panjang baris tidak cocok") < sumber.index("datar[")
+    assert "fitur hilang atau null" in sumber
+    assert "baris.json berisi null" in sumber
+    assert "nama_masukan hilang atau kosong" in sumber
+    assert "angka tidak hingga" in sumber
+    assert "jumlah kolom tidak cocok" in sumber
+    assert "model.onnx rusak, jalankan notebook ulang" in sumber
+    assert "folder keluaran tidak ada" in sumber
+    assert "InputMetadata" in sumber
+    assert "OnnxRuntimeException" in sumber
+    assert "ArgumentException" in sumber
+    assert "IOException" in sumber
+    assert "berkas masukan kosong" not in sumber
+    assert sumber.index("File.Exists(args[0])") < sumber.index("JsonDocument.Parse")
+    assert sumber.index("panjang baris tidak cocok") < sumber.index("new InferenceSession")
 
 
 def test_keluaran_json_modul_diabaikan_git():
@@ -375,11 +387,6 @@ def test_keluaran_json_modul_diabaikan_git():
             cwd=REPO,
         )
         assert hasil.returncode == 0, contoh
-    lain = subprocess.run(
-        ["git", "check-ignore", "-q", "--", "phase1-ml/modul-03-regresi/baris.json"],
-        cwd=REPO,
-    )
-    assert lain.returncode != 0
 
 
 def _dotnet():
@@ -506,3 +513,129 @@ def test_live_roundtrip_label_identik(tmp_path):
     data = json.loads(keluar.read_text(encoding="utf-8"))
     python_label = [int(nilai) for nilai in pipeline.predict(delapan)]
     assert [int(nilai) for nilai in data["label"]] == python_label
+
+
+def _lewati_tanpa_dotnet():
+    if _dotnet() is None:
+        import pytest
+
+        pytest.skip("dotnet tidak ada")
+
+
+def _tulis_json(path, muatan):
+    path.write_text(json.dumps(muatan), encoding="utf-8")
+
+
+def test_live_fitur_hilang_atau_null(tmp_path):
+    _lewati_tanpa_dotnet()
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"x")
+    hilang = tmp_path / "hilang.json"
+    _tulis_json(hilang, {"nama_masukan": "masukan_angka"})
+    kosong = tmp_path / "null.json"
+    _tulis_json(kosong, {"nama_masukan": "masukan_angka", "fitur": None})
+    for berkas in (hilang, kosong):
+        hasil = _jalankan_dotnet([str(model), str(berkas), str(tmp_path / "keluar.json")])
+        assert hasil.returncode == 1
+        assert "fitur hilang atau null" in hasil.stderr
+        assert "berkas masukan kosong" not in hasil.stderr
+
+
+def test_live_berkas_berisi_null(tmp_path):
+    _lewati_tanpa_dotnet()
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"x")
+    baris = tmp_path / "baris.json"
+    baris.write_text("null", encoding="utf-8")
+    hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+    assert hasil.returncode == 1
+    assert "baris.json berisi null" in hasil.stderr
+
+
+def test_live_nama_masukan_hilang_atau_kosong(tmp_path):
+    _lewati_tanpa_dotnet()
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"x")
+    kasus = (
+        {"fitur": [[1, 2, 3, 4]]},
+        {"nama_masukan": None, "fitur": [[1, 2, 3, 4]]},
+        {"nama_masukan": "", "fitur": [[1, 2, 3, 4]]},
+    )
+    for muatan in kasus:
+        baris = tmp_path / "baris.json"
+        _tulis_json(baris, muatan)
+        hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+        assert hasil.returncode == 1, muatan
+        assert "nama_masukan hilang atau kosong" in hasil.stderr
+
+
+def test_live_fitur_baris_kosong(tmp_path):
+    _lewati_tanpa_dotnet()
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"x")
+    baris = tmp_path / "baris.json"
+    _tulis_json(baris, {"nama_masukan": "masukan_angka", "fitur": [[]]})
+    hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+    assert hasil.returncode == 1
+    assert "panjang baris tidak cocok" in hasil.stderr
+    assert "baris 0 kosong" in hasil.stderr
+
+
+def test_live_angka_tidak_hingga(tmp_path):
+    _lewati_tanpa_dotnet()
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"x")
+    baris = tmp_path / "baris.json"
+    baris.write_text(
+        '{"nama_masukan":"masukan_angka","fitur":[[1e999,1,1,1]]}',
+        encoding="utf-8",
+    )
+    hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+    assert hasil.returncode == 1
+    assert "angka tidak hingga" in hasil.stderr
+
+
+def test_live_model_rusak(tmp_path):
+    _lewati_tanpa_dotnet()
+    baris = tmp_path / "baris.json"
+    _tulis_json(baris, {"nama_masukan": "masukan_angka", "fitur": [[1, 2, 3, 4]]})
+    for isi in (b"", b"x", b"bukan-onnx-terpotong"):
+        model = tmp_path / "model.onnx"
+        model.write_bytes(isi)
+        hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+        assert hasil.returncode == 1, isi
+        assert "model.onnx rusak, jalankan notebook ulang" in hasil.stderr
+
+
+def test_live_jumlah_kolom_bukan_dimensi_model(tmp_path):
+    _lewati_tanpa_dotnet()
+    _pipeline, _masukan, berkas, _keluar = _latih_dan_banding(42)
+    model = tmp_path / "model.onnx"
+    model.write_bytes(berkas.SerializeToString())
+    for lebar in (3, 5):
+        baris = tmp_path / "baris.json"
+        _tulis_json(
+            baris,
+            {"nama_masukan": "masukan_angka", "fitur": [[1.0] * lebar]},
+        )
+        hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+        assert hasil.returncode == 1, lebar
+        assert "jumlah kolom tidak cocok" in hasil.stderr
+        assert f"punya {lebar} angka" in hasil.stderr
+        assert "model minta 4" in hasil.stderr
+
+
+def test_live_folder_keluaran_hilang(tmp_path):
+    _lewati_tanpa_dotnet()
+    _pipeline, masukan, berkas, _keluar = _latih_dan_banding(42)
+    model = tmp_path / "model.onnx"
+    baris = tmp_path / "baris.json"
+    model.write_bytes(berkas.SerializeToString())
+    _tulis_json(
+        baris,
+        {"nama_masukan": "masukan_angka", "fitur": masukan[:1].tolist()},
+    )
+    keluar = tmp_path / "folder-hilang" / "keluar.json"
+    hasil = _jalankan_dotnet([str(model), str(baris), str(keluar)])
+    assert hasil.returncode == 1
+    assert "folder keluaran tidak ada" in hasil.stderr

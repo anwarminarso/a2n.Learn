@@ -8,126 +8,246 @@ using Microsoft.ML.OnnxRuntime.Tensors;
 
 if (args.Length != 3)
 {
-    Console.Error.WriteLine("pakai: PemanggilOnnx model.onnx baris.json keluar.json");
-    return 1;
+    return Gagal("pakai: PemanggilOnnx model.onnx baris.json keluar.json");
 }
 
 const string Petunjuk = "jalankan notebook dulu dan jalankan perintah dari folder modul 8";
 
 if (!File.Exists(args[0]))
 {
-    Console.Error.WriteLine($"berkas tidak ditemukan: {args[0]}; {Petunjuk}");
-    return 1;
+    return Gagal($"berkas tidak ditemukan: {args[0]}; {Petunjuk}");
 }
 
 if (!File.Exists(args[1]))
 {
-    Console.Error.WriteLine($"berkas tidak ditemukan: {args[1]}; {Petunjuk}");
-    return 1;
+    return Gagal($"berkas tidak ditemukan: {args[1]}; {Petunjuk}");
 }
 
-var opsi = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-Muatan? muatan;
+string teksJson;
 try
 {
-    muatan = JsonSerializer.Deserialize<Muatan>(File.ReadAllText(args[1]), opsi);
+    teksJson = File.ReadAllText(args[1]);
+}
+catch (IOException)
+{
+    return Gagal($"berkas tidak terbaca: {args[1]}");
+}
+
+JsonDocument dokumen;
+try
+{
+    dokumen = JsonDocument.Parse(teksJson);
 }
 catch (JsonException)
 {
-    Console.Error.WriteLine("baris.json rusak");
-    return 1;
+    return Gagal("baris.json rusak");
 }
 
-if (muatan is null || muatan.Fitur.Length == 0)
+using (dokumen)
 {
-    Console.Error.WriteLine("berkas masukan kosong");
-    return 1;
-}
-
-int baris = muatan.Fitur.Length;
-if (muatan.Fitur[0] is null)
-{
-    Console.Error.WriteLine("panjang baris tidak cocok: baris 0 kosong, kolom tidak ada");
-    return 1;
-}
-
-int kolom = muatan.Fitur[0].Length;
-for (int i = 0; i < baris; i++)
-{
-    int panjang = muatan.Fitur[i]?.Length ?? -1;
-    if (panjang != kolom)
+    JsonElement akar = dokumen.RootElement;
+    if (akar.ValueKind == JsonValueKind.Null)
     {
-        Console.Error.WriteLine(
-            $"panjang baris tidak cocok: baris {i} punya {Math.Max(panjang, 0)} angka, kolom {kolom}");
-        return 1;
+        return Gagal("baris.json berisi null");
     }
-}
 
-var datar = new float[baris * kolom];
-for (int i = 0; i < baris; i++)
-{
-    for (int j = 0; j < kolom; j++)
+    if (akar.ValueKind != JsonValueKind.Object)
     {
-        datar[(i * kolom) + j] = muatan.Fitur[i][j];
+        return Gagal("baris.json rusak");
     }
-}
 
-using var sesi = new InferenceSession(args[0]);
-var tensor = new DenseTensor<float>(datar, new[] { baris, kolom });
-var masukan = new List<NamedOnnxValue>
-{
-    NamedOnnxValue.CreateFromTensor(muatan.NamaMasukan, tensor),
-};
-
-long[]? label = null;
-float[][]? probabilitas = null;
-using (var hasil = sesi.Run(masukan))
-{
-    foreach (var item in hasil)
+    if (!Cari(akar, "nama_masukan", out JsonElement namaEl)
+        || namaEl.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined
+        || namaEl.ValueKind != JsonValueKind.String
+        || string.IsNullOrEmpty(namaEl.GetString()))
     {
-        if (item.Name == "label")
+        return Gagal("nama_masukan hilang atau kosong");
+    }
+
+    string namaMasukan = namaEl.GetString()!;
+
+    if (!Cari(akar, "fitur", out JsonElement fiturEl) || fiturEl.ValueKind == JsonValueKind.Null)
+    {
+        return Gagal("fitur hilang atau null");
+    }
+
+    if (fiturEl.ValueKind != JsonValueKind.Array || fiturEl.GetArrayLength() == 0)
+    {
+        return Gagal("fitur hilang atau null");
+    }
+
+    int baris = fiturEl.GetArrayLength();
+    int kolom = -1;
+    var datar = new List<float>();
+    int i = 0;
+    foreach (JsonElement barisEl in fiturEl.EnumerateArray())
+    {
+        if (barisEl.ValueKind == JsonValueKind.Null)
         {
-            label = item.Value switch
-            {
-                DenseTensor<long> panjang => panjang.ToArray(),
-                DenseTensor<int> pendek => pendek.Select(angka => (long)angka).ToArray(),
-                _ => throw new InvalidOperationException("tipe label tidak dikenal"),
-            };
+            return Gagal("fitur hilang atau null");
         }
-        else if (item.Name == "probabilities")
+
+        if (barisEl.ValueKind != JsonValueKind.Array)
         {
-            var tabel = (DenseTensor<float>)item.Value;
-            int nKelas = tabel.Dimensions[1];
-            probabilitas = new float[baris][];
-            for (int i = 0; i < baris; i++)
+            return Gagal("baris.json rusak");
+        }
+
+        int panjang = barisEl.GetArrayLength();
+        if (panjang == 0)
+        {
+            return Gagal($"panjang baris tidak cocok: baris {i} kosong, kolom tidak ada");
+        }
+
+        if (kolom < 0)
+        {
+            kolom = panjang;
+        }
+        else if (panjang != kolom)
+        {
+            return Gagal($"panjang baris tidak cocok: baris {i} punya {panjang} angka, kolom {kolom}");
+        }
+
+        foreach (JsonElement angkaEl in barisEl.EnumerateArray())
+        {
+            if (angkaEl.ValueKind != JsonValueKind.Number)
             {
-                probabilitas[i] = new float[nKelas];
-                for (int k = 0; k < nKelas; k++)
+                return Gagal("baris.json rusak");
+            }
+
+            double angka;
+            try
+            {
+                angka = angkaEl.GetDouble();
+            }
+            catch (FormatException)
+            {
+                return Gagal("angka tidak hingga");
+            }
+            catch (OverflowException)
+            {
+                return Gagal("angka tidak hingga");
+            }
+
+            float sempit = (float)angka;
+            if (!double.IsFinite(angka) || !float.IsFinite(sempit))
+            {
+                return Gagal("angka tidak hingga");
+            }
+
+            datar.Add(sempit);
+        }
+
+        i++;
+    }
+
+    string? folderKeluar = Path.GetDirectoryName(args[2]);
+    if (!string.IsNullOrEmpty(folderKeluar) && !Directory.Exists(folderKeluar))
+    {
+        return Gagal($"folder keluaran tidak ada: {folderKeluar}");
+    }
+
+    try
+    {
+        using var sesi = new InferenceSession(args[0]);
+        if (!sesi.InputMetadata.TryGetValue(namaMasukan, out NodeMetadata? meta))
+        {
+            return Gagal("nama_masukan tidak ada pada model");
+        }
+
+        int dimensi = 0;
+        foreach (int ukuran in meta.Dimensions)
+        {
+            if (ukuran > 0)
+            {
+                dimensi = ukuran;
+            }
+        }
+
+        if (dimensi > 0 && kolom != dimensi)
+        {
+            return Gagal($"jumlah kolom tidak cocok: baris punya {kolom} angka, model minta {dimensi}");
+        }
+
+        var tensor = new DenseTensor<float>(datar.ToArray(), new[] { baris, kolom });
+        var masukan = new List<NamedOnnxValue>
+        {
+            NamedOnnxValue.CreateFromTensor(namaMasukan, tensor),
+        };
+
+        long[]? label = null;
+        float[][]? probabilitas = null;
+        using (var hasil = sesi.Run(masukan))
+        {
+            foreach (var item in hasil)
+            {
+                if (item.Name == "label")
                 {
-                    probabilitas[i][k] = tabel[i, k];
+                    label = item.Value switch
+                    {
+                        DenseTensor<long> panjangLabel => panjangLabel.ToArray(),
+                        DenseTensor<int> pendek => pendek.Select(angka => (long)angka).ToArray(),
+                        _ => throw new InvalidOperationException("tipe label tidak dikenal"),
+                    };
+                }
+                else if (item.Name == "probabilities")
+                {
+                    var tabel = (DenseTensor<float>)item.Value;
+                    int nKelas = tabel.Dimensions[1];
+                    probabilitas = new float[baris][];
+                    for (int r = 0; r < baris; r++)
+                    {
+                        probabilitas[r] = new float[nKelas];
+                        for (int k = 0; k < nKelas; k++)
+                        {
+                            probabilitas[r][k] = tabel[r, k];
+                        }
+                    }
                 }
             }
         }
+
+        if (label is null || probabilitas is null)
+        {
+            return Gagal("keluaran ONNX tidak lengkap");
+        }
+
+        var teks = JsonSerializer.Serialize(new Keluar(label, probabilitas));
+        File.WriteAllText(args[2], teks);
+        return 0;
+    }
+    catch (OnnxRuntimeException)
+    {
+        return Gagal("model.onnx rusak, jalankan notebook ulang");
+    }
+    catch (ArgumentException)
+    {
+        return Gagal("masukan tidak cocok dengan model");
+    }
+    catch (IOException)
+    {
+        return Gagal($"folder keluaran tidak ada: {folderKeluar}");
     }
 }
 
-if (label is null || probabilitas is null)
+static int Gagal(string pesan)
 {
-    Console.Error.WriteLine("keluaran ONNX tidak lengkap");
+    Console.Error.WriteLine(pesan);
     return 1;
 }
 
-var teks = JsonSerializer.Serialize(new Keluar(label, probabilitas));
-File.WriteAllText(args[2], teks);
-return 0;
-
-sealed class Muatan
+static bool Cari(JsonElement akar, string nama, out JsonElement ketemu)
 {
-    [JsonPropertyName("nama_masukan")]
-    public string NamaMasukan { get; set; } = "";
+    foreach (JsonProperty properti in akar.EnumerateObject())
+    {
+        if (string.Equals(properti.Name, nama, StringComparison.OrdinalIgnoreCase))
+        {
+            ketemu = properti.Value;
+            return true;
+        }
+    }
 
-    [JsonPropertyName("fitur")]
-    public float[][] Fitur { get; set; } = [];
+    ketemu = default;
+    return false;
 }
 
 sealed record Keluar(
