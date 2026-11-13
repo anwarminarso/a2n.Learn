@@ -22,24 +22,37 @@ using var kirim = new StringContent(
     JsonSerializer.Serialize(new Pertanyaan(args[0])),
     Encoding.UTF8,
     "application/json");
-using var respons = await klien.PostAsync(Alamat, kirim);
-if (!respons.IsSuccessStatusCode)
+HttpResponseMessage respons;
+try
 {
-    Console.Error.WriteLine($"permintaan ditolak, kode {(int)respons.StatusCode}");
+    respons = await klien.PostAsync(Alamat, kirim);
+}
+catch (HttpRequestException)
+{
+    Console.Error.WriteLine("peladen belum jalan di 127.0.0.1:8765");
     return 1;
 }
 
-var isi = await respons.Content.ReadFromJsonAsync<Jawaban>();
-if (isi is null)
+using (respons)
 {
-    Console.Error.WriteLine("jawaban kosong");
-    return 1;
-}
+    if (!respons.IsSuccessStatusCode)
+    {
+        Console.Error.WriteLine($"permintaan ditolak, kode {(int)respons.StatusCode}");
+        return 1;
+    }
 
-bool lulus = isi.Status == "bersumber" && isi.Skor + 1e-9 >= Batas;
-Console.WriteLine(lulus ? "dalam_batas" : "di_bawah_batas");
-Console.WriteLine(isi.Sumber);
-return lulus ? 0 : 1;
+    var isi = await respons.Content.ReadFromJsonAsync<Jawaban>();
+    if (isi is null)
+    {
+        Console.Error.WriteLine("jawaban kosong");
+        return 1;
+    }
+
+    bool lulus = isi.Status == "bersumber" && isi.Skor + 1e-9 >= Batas;
+    Console.WriteLine(lulus ? "dalam_batas" : "di_bawah_batas");
+    Console.WriteLine(isi.Sumber);
+    return lulus ? 0 : 1;
+}
 
 sealed record Pertanyaan([property: JsonPropertyName("pertanyaan")] string Teks);
 
