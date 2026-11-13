@@ -400,14 +400,39 @@ def test_pin_llama_cpp_di_modul_13():
     teks = _readme(MODUL[4])
     assert "ca89968a23a13e571a6b802a9891d22763153b61" in teks
     assert "gguf-py" in teks
-    assert "requirements llama.cpp sendiri di venv terpisah" in teks
-    assert "bukan venv proyek, karena versi transformers berbeda" in teks
+    assert "transformers versi llama.cpp" in teks
+    assert "sentencepiece" in teks
+    assert "protobuf<5" in teks
+    assert "tidak ada di uv.lock" in teks
     assert "membuat ulang adapter LoRA kecil" in teks
     assert "bukan gerbang PR" in teks
     assert "b12317" not in teks
     assert "jalur GGUF" in teks
     assert "impor GGUF ke Ollama" in teks
     assert "kontrol lewat jalur yang sama" in teks
+
+
+def test_perintah_konversi_gguf_tanpa_uv_run_python():
+    teks = _readme(MODUL[4])
+    assert "python -m venv llama.cpp/.venv" in teks
+    assert "llama.cpp/.venv/bin/pip install -r llama.cpp/requirements.txt" in teks
+    assert "llama.cpp\\.venv\\Scripts\\pip" in teks
+    assert "llama.cpp\\.venv\\Scripts\\python" in teks
+    assert "A2N_UNDUH=1 uv run python" in teks
+    perintah = []
+    for mentah in teks.splitlines():
+        baris = mentah.strip()
+        menyentuh = (
+            "convert_hf_to_gguf.py" in baris
+            or "gguf-py" in baris
+            or "from gguf import" in baris
+        )
+        if menyentuh and baris.startswith(("uv ", "python ", "llama.cpp/", "PYTHONPATH=")):
+            perintah.append(baris)
+    assert len(perintah) == 3
+    for baris in perintah:
+        assert "uv run python" not in baris
+        assert "llama.cpp/.venv/bin/python" in baris
 
 
 def test_sandbox_menolak_path_traversal():
