@@ -32,7 +32,7 @@ Modul 9 sampai 15 sudah berisi materi mode cepat. Tujuh modul utuh. Issue mengik
 | 11 | [Transformer](phase2-ai/modul-11-attention-transformer/) | attention dari nol, lalu model kecil untuk klasifikasi teks | — | [#28](https://github.com/anwarminarso/a2n.Learn/issues/28) |
 | 12 | [Fine-tune dengan LoRA](phase2-ai/modul-12-lora/) | penyetelan halus (fine-tune), ukur sebelum dan sesudah | — | [#29](https://github.com/anwarminarso/a2n.Learn/issues/29) |
 | 13 | [Menjalankan model lokal dengan Ollama](phase2-ai/modul-13-model-lokal/) | merge LoRA, GGUF, impor Ollama, kontrol jalur sama | — | [#30](https://github.com/anwarminarso/a2n.Learn/issues/30) |
-| 14 | [RAG (Retrieval-Augmented Generation)](phase2-ai/modul-14-rag/) | potongan, penyimpan vektor, jawaban dengan sumber, evaluasi mengarang | — | [#31](https://github.com/anwarminarso/a2n.Learn/issues/31) |
+| 14 | [RAG (Retrieval-Augmented Generation)](phase2-ai/modul-14-rag/) | potongan, penyimpan vektor, jawaban dengan sumber, penolakan tanpa_sumber | — | [#31](https://github.com/anwarminarso/a2n.Learn/issues/31) |
 | 15 | [Agen dan proyek akhir Fase 2](phase2-ai/modul-15-agen/) | loop agen, proyek akhir RAG plus agen, panggilan .NET lewat HTTP | — | [#32](https://github.com/anwarminarso/a2n.Learn/issues/32) |
 
 ## Susunan modul

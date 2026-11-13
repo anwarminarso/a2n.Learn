@@ -2,7 +2,7 @@
 
 **Tingkat:** —
 
-**Tujuan belajar:** Pembaca bisa memotong teks, menyimpan vektornya, mengambil potongan yang dekat dengan pertanyaan, lalu menyusun jawaban yang menyebut sumber dan menilai jawaban mengarang.
+**Tujuan belajar:** Pembaca bisa memotong teks, menyimpan vektornya, mengambil potongan yang dekat dengan pertanyaan, lalu menyusun jawaban yang menyebut sumber. Istilah jawaban mengarang berarti sistem menolak menjawab bila sumber tidak cukup, dengan status `tanpa_sumber`.
 
 Materi mode cepat sudah bisa dijalankan di CPU, tanpa torch dan tanpa unduhan. Folder indeks dibuat saat notebook jalan dan tidak masuk repo.
 
@@ -86,7 +86,7 @@ Jawab dulu. Setelah itu buka `notebook.ipynb` dan jalankan dari sel pertama.
 
 Tiga berkas di `dokumen/`: `dapur.txt`, `kebun.txt`, dan `perpustakaan.txt`. Isinya teks sintetis yang ditulis untuk latihan ini. Bukan data asli perusahaan. Tidak ada unduhan data.
 
-Notebook membaca hanya berkas `.txt` di folder itu, memotong baris isinya, lalu menulis vektor ke `indeks/potongan.json`. Enam potongan tersimpan. Pertanyaan rak mengambil `perpustakaan.txt`. Pertanyaan kereta ditandai jawaban mengarang.
+Notebook membaca hanya berkas `.txt` di folder itu, memotong baris isinya, lalu menulis vektor ke `indeks/potongan.json`. Enam potongan tersimpan. Pertanyaan rak mengambil `perpustakaan.txt`. Pertanyaan kereta ditolak karena sumbernya tidak cukup. Statusnya `tanpa_sumber`.
 
 `skor_rak` 0.783885, melewati ambang `0.3`. `selisih_rak` 0.195568, melewati ambang `0.15`. `bagi_rak` 4, melewati ambang `2`.
 

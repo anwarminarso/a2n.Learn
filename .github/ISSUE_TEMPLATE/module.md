@@ -32,13 +32,13 @@ Pyra (penulis) · Ursa (uji jalan) · Squal (audit dok) · Frieren (review alur)
 - [ ] (f) bisa dibaca dan dikerjakan dalam SATU kali duduk: teori maksimal 1 halaman, notebook pendek
 - [ ] (g) Ursa PASS/FAIL hanya dari log mentah sesi yang benar-benar menjalankannya; Squal memberi verdict dokumentasi PASS / PASS BERSYARAT / BLOCK (bukan security); Frieren mereview alur belajar sebelum ke mas
 - [ ] (h) analogi tidak membuat penjelasan salah, dan batas berlakunya disebut
-- [ ] (i) maksimal tiga istilah baru, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
+- [ ] (i) maksimal tiga istilah baru per sesi, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
 - [ ] (j) bila modul menutup satu tingkat: ujian level dijalankan Ursa dan termasuk dalam PASS
 - [ ] (k) gaya bahasa ramah pemula: istilah baru dijelaskan dengan contoh sehari-hari dulu, satu sel kode = satu ide dengan komentar Indonesia, rumus hanya bila perlu dan selalu dengan contoh angka kecil
 
 ## Format wajib modul
 1. Cerita sehari-hari pembuka, maksimal satu layar.
-2. Maksimal **tiga istilah baru** per modul; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](../../docs/kamus-istilah.md).
+2. Maksimal **tiga istilah baru per sesi**; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](../../docs/kamus-istilah.md).
 3. "Coba sendiri dulu, baru kode".
 4. Bagian "Kesalahan yang paling sering terjadi".
 5. Cek pemahaman dengan kunci jawaban.
