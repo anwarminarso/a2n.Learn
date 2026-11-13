@@ -8,7 +8,9 @@ import http.client
 import importlib.util
 import inspect
 import json
+import socket
 import threading
+import time
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -239,3 +241,65 @@ def test_peladen_mati_bersih(monkeypatch):
         pass
     finally:
         conn.close()
+
+
+def test_badan_terpotong_tidak_menahan_berikutnya(monkeypatch):
+    modul = _muat()
+    assert modul.Penangan.timeout == 5
+    monkeypatch.setattr(modul.Penangan, "timeout", 0.5)
+    panggilan = []
+    _stub(monkeypatch, modul, panggilan)
+    with _hidup(modul) as server:
+        port = server.server_address[1]
+        soket = socket.create_connection(("127.0.0.1", port), timeout=3)
+        try:
+            soket.sendall(
+                b"POST /jawab HTTP/1.1\r\n"
+                b"Host: 127.0.0.1\r\n"
+                b"Content-Type: application/json\r\n"
+                b"Content-Length: 100\r\n"
+                b"\r\n"
+                b"{}"
+            )
+            mulai = time.monotonic()
+            badan = json.dumps({"pertanyaan": "kode rak buku cerita"}).encode("utf-8")
+            status, isi = _kirim(port, "POST", "/jawab", badan)
+            assert time.monotonic() - mulai < 3
+        finally:
+            soket.close()
+    hasil = json.loads(isi.decode("utf-8"))
+    assert status == 200
+    assert hasil["status"] == "bersumber"
+    assert hasil["sumber"] == "perpustakaan.txt"
+    assert hasil["skor"] == 0.9
+    assert [tanya for tanya, _muatan in panggilan] == ["kode rak buku cerita"]
+
+
+def test_chunked_tanpa_panjang_411(monkeypatch):
+    modul = _muat()
+    panggilan = []
+    _stub(monkeypatch, modul, panggilan)
+    with _hidup(modul) as server:
+        port = server.server_address[1]
+        isi_json = b'{"pertanyaan":"kode rak"}'
+        permintaan = (
+            b"POST /jawab HTTP/1.1\r\n"
+            b"Host: 127.0.0.1\r\n"
+            b"Content-Type: application/json\r\n"
+            b"Transfer-Encoding: chunked\r\n"
+            b"\r\n"
+            + f"{len(isi_json):x}\r\n".encode("ascii")
+            + isi_json
+            + b"\r\n0\r\n\r\n"
+        )
+        with socket.create_connection(("127.0.0.1", port), timeout=3) as soket:
+            soket.sendall(permintaan)
+            data = b""
+            while b"\r\n" not in data:
+                bagian = soket.recv(4096)
+                if not bagian:
+                    break
+                data += bagian
+    status = data.split(b"\r\n", 1)[0].decode("ascii")
+    assert status.split(" ")[1] == "411"
+    assert panggilan == []

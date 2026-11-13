@@ -55,6 +55,9 @@ def _ukuran_badan(header):
 
 
 class Penangan(BaseHTTPRequestHandler):
+    # Satu klien yang diam tidak boleh menahan klien berikutnya.
+    timeout = 5
+
     def _jalur(self):
         return self.path.split("?", 1)[0]
 

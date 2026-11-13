@@ -3,6 +3,8 @@
 // Mode cepat tidak menjalankan berkas ini. Alat agen tidak ada di sini.
 
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 if (args.Length != 1)
@@ -16,7 +18,17 @@ const double Batas = 0.3;
 
 using var klien = new HttpClient();
 klien.Timeout = TimeSpan.FromSeconds(5);
-using var respons = await klien.PostAsJsonAsync(Alamat, new Pertanyaan(args[0]));
+using var kirim = new StringContent(
+    JsonSerializer.Serialize(new Pertanyaan(args[0])),
+    Encoding.UTF8,
+    "application/json");
+using var respons = await klien.PostAsync(Alamat, kirim);
+if (!respons.IsSuccessStatusCode)
+{
+    Console.Error.WriteLine($"permintaan ditolak, kode {(int)respons.StatusCode}");
+    return 1;
+}
+
 var isi = await respons.Content.ReadFromJsonAsync<Jawaban>();
 if (isi is null)
 {
