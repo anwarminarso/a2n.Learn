@@ -186,7 +186,7 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan.
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Setiap sel siswa 16 baris atau lebih tidak dipakai.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Selisih gradien tangan dan autograd lebih kecil dari `0.00001`.
 - Fungsi kerugian pada data latih turun minimal `0.15`.

@@ -62,9 +62,9 @@ Mode cepat menyalin teks potongan. Mode penuh, bila jaringan dinyalakan, boleh m
 
 Soal yang tidak punya kartu ditolak, bukan dijawab dengan kartu yang kebetulan agak dekat. Nama teknisnya **jawaban mengarang**: sistem menolak menjawab karena sumbernya tidak cukup. Status pada keluaran adalah `tanpa_sumber`.
 
-Ada tiga ambang, sama dengan kriteria lulus: skor kosinus minimal `0.3`, selisih dengan peringkat kedua minimal `0.15`, dan token bersama minimal `2`. Soal tiket kereta punya token bersama `0` dan skor `0.000000`, jadi statusnya `tanpa_sumber`.
+Penolakan memakai dua aturan: skor di bawah `0.3`, atau token bersama di bawah `2`. Soal tiket kereta punya token bersama `0` dan skor `0.000000`, jadi statusnya `tanpa_sumber`. Selisih peringkat `0.15` adalah syarat contoh yang benar, pada assert notebook dan kriteria lulus, bukan aturan penolakan.
 
-**Batas analogi:** tanda ini bukan bukti seseorang berbohong. Ini tanda pengambilan tidak menemukan sumber yang cukup. Yang dicek ambang, bukan kalimat yang persis.
+**Batas analogi:** tanda ini bukan bukti seseorang berbohong. Ini tanda pengambilan tidak menemukan sumber yang cukup. Yang dicek untuk penolakan adalah skor dan token bersama, bukan kalimat yang persis.
 
 ### kutipan sumber
 
@@ -174,7 +174,7 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan 
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Setiap sel siswa 16 baris atau lebih tidak dipakai.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Minimal 1 dari 1 pertanyaan latihan mengambil potongan `perpustakaan.txt`.
 - Soal jebakan lulus bila statusnya `tanpa_sumber`.

@@ -124,7 +124,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertam
 
 1. Hanya `baca_berkas`. Pada keluaran, `hanya_baca ya`.
 2. Shell tidak ada di daftar alat. `status_injeksi` adalah `tolak`.
-3. HTTP ke `127.0.0.1`, batas `0.3`. Pada keluaran, `panggilan_dotnet bukan_gerbang`.
+3. HTTP ke `127.0.0.1`, batas `0.3`. Pada keluaran, `panggilan_dotnet cek_saja`.
 
 ## Sumber
 
@@ -169,7 +169,7 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan,
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Setiap sel siswa 16 baris atau lebih tidak dipakai.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Daftar alat hanya `baca_berkas`. Tidak ada alat tulis, shell, atau jaringan.
 - Path traversal ditolak: `../`, path absolut, dan symlink yang keluar dari folder sandbox.
@@ -235,7 +235,7 @@ sumber_proyek perpustakaan.txt
 kutipan_proyek Kode rak buku cerita adalah B-12.
 alamat 127.0.0.1
 batas 0.3
-panggilan_dotnet bukan_gerbang
+panggilan_dotnet cek_saja
 model HuggingFaceTB/SmolLM2-135M-Instruct
 kelas AutoModelForCausalLM
 revisi 12fd25f77366fa6b3b4b768ec3050bf629380bac

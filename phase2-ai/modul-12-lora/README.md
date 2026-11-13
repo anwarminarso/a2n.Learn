@@ -154,7 +154,7 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan 
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Setiap sel siswa 16 baris atau lebih tidak dipakai.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Pada set uji yang sama, kerugian sesudah lebih kecil, selisih minimal `0.15`. Jumlah salah pada set uji juga turun.
 - Bobot dasar tidak berubah. Adapter tidak masuk repo dan tidak di-push ke Hugging Face.

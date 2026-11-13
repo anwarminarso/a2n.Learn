@@ -226,8 +226,7 @@ def test_kriteria_dan_mode():
         else:
             assert "DRAF" in kriteria
             assert "belum dipilih" in kriteria
-        assert "sel siswa" in kriteria
-        assert "16 baris atau lebih" in kriteria
+        assert "Setiap sel di notebook siswa paling banyak 15 baris." in kriteria
         assert "### mode cepat" in mode
         assert "### mode penuh" in mode
         assert "CPU" in mode

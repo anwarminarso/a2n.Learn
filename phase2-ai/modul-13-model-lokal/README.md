@@ -209,7 +209,7 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan,
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Setiap sel siswa 16 baris atau lebih tidak dipakai.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Mode cepat membuat ulang adapter LoRA kecil di CPU, bukan mengambil berkas adapter dari repo. Kerugian pada set uji turun minimal `0.15`. Bobot dasar tidak berubah.
 - Sesudah digabung, model dengan LoRA dan kontrol tanpa LoRA sama-sama punya satu tensor pada mode cepat. Sebelum digabung, state model dengan LoRA memuat tiga entri, dan bentuk vektor gabungan sama dengan bobot dasar. Keduanya sama-sama lewat `convert_hf_to_gguf.py` pada commit `ca89968a23a13e571a6b802a9891d22763153b61` bila jalur sungguhan dijalankan. gguf-py membaca metadata dan jumlah tensor. Berkas GGUF tidak masuk repo. Beda skor pada satu baris uji minimal `0.5`.
@@ -270,7 +270,7 @@ beda_skor 4.504429
 skrip convert_hf_to_gguf.py
 commit ca89968
 alamat 127.0.0.1
-impor_ollama bukan_gerbang
+impor_ollama cek_saja
 model HuggingFaceTB/SmolLM2-135M-Instruct
 revisi 12fd25f77366fa6b3b4b768ec3050bf629380bac
 model_penuh Qwen/Qwen2.5-0.5B-Instruct

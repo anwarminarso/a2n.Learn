@@ -151,7 +151,7 @@ Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../do
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Setiap sel siswa 16 baris atau lebih tidak dipakai.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Selisih jumlah satu baris bobot perhatian dari 1 paling besar `0.000001`.
 - Salah klasifikasi pada data uji lebih kecil daripada baseline, selisih minimal 1.

@@ -138,7 +138,7 @@ Sel terakhir notebook menunjuk ke modul 11 dan modul 14 tanpa mengisi arti istil
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Setiap sel siswa 16 baris atau lebih tidak dipakai.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Selisih skor kemiripan pasangan dekat dan pasangan jauh minimal 0.3.
 - Mode cepat tidak mengunduh model. Bila mode penuh mengunduh, revisi yang dipin di register yang dipakai, dan lisensi sudah dicek sebelum unduh.
