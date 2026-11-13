@@ -5,6 +5,7 @@ Memeriksa tujuh modul utuh. docs/ROADMAP.md dikunci agar tetap sama dengan devel
 
 import hashlib
 import re
+import subprocess
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -105,7 +106,6 @@ KALIMAT_ATURAN = (
     "Lisensi dicek sebelum unduh",
     "trust_remote_code=False",
     "Hanya format safetensors",
-    "belum dipin",
     "127.0.0.1",
     "convert_hf_to_gguf.py",
     "allowlist read-only di folder sandbox",
@@ -171,7 +171,8 @@ def test_readme_punya_bagian_wajib_dan_issue():
         teks = _readme(modul)
         assert modul["judul"] == modul["roadmap"]
         assert teks.startswith(f"# Modul {modul['nomor']}: {modul['judul']}\n")
-        assert "**Tingkat:** pro" in teks
+        baris_tingkat = [b for b in teks.splitlines() if b.startswith("**Tingkat:**")]
+        assert baris_tingkat == ["**Tingkat:** —"]
         assert "**Tujuan belajar:**" in teks
         assert modul["roadmap"] in teks
         assert ISSUE.format(modul["issue"]) in teks
@@ -239,10 +240,9 @@ def test_aturan_gate():
     for modul in MODUL:
         aturan = _bagian(_readme(modul), "Aturan")
         for kalimat in KALIMAT_ATURAN:
-            if kalimat == "belum dipin" and modul["nomor"] in {"10", "11", "12", "13", "14", "15"}:
-                assert "revisi yang dipin" in aturan
-                continue
             assert kalimat in aturan, (modul["nomor"], kalimat)
+        assert "revisi yang dipin" in aturan
+        assert "belum dipin" not in _readme(modul)
 
 
 def test_isi_khusus_modul():
@@ -363,8 +363,21 @@ def test_data_readme_dan_gitignore():
         "adapters/",
         "outputs/",
         "checkpoints/",
+        "folder-gabungan/",
+        "folder-kontrol/",
+        "llama.cpp/",
     ):
-        assert pola in abaikan
+        assert pola in abaikan.splitlines()
+    for contoh in (
+        "folder-gabungan/config.json",
+        "folder-kontrol/tokenizer.json",
+        "llama.cpp/x",
+    ):
+        hasil = subprocess.run(
+            ["git", "check-ignore", "-q", "--", contoh],
+            cwd=REPO,
+        )
+        assert hasil.returncode == 0, contoh
 
 
 def test_penyelarasan_tidak_dipakai_untuk_fine_tune():
@@ -387,6 +400,8 @@ def test_pin_llama_cpp_di_modul_13():
     teks = _readme(MODUL[4])
     assert "ca89968a23a13e571a6b802a9891d22763153b61" in teks
     assert "gguf-py" in teks
+    assert "requirements llama.cpp sendiri di venv terpisah" in teks
+    assert "bukan venv proyek, karena versi transformers berbeda" in teks
     assert "membuat ulang adapter LoRA kecil" in teks
     assert "bukan gerbang PR" in teks
     assert "b12317" not in teks
@@ -447,7 +462,9 @@ def test_pyproject_torch_opsional_cpu():
 
     data = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
     bawaan = "\n".join(data["project"]["dependencies"])
-    assert '"phase2-ai"' in (REPO / "pyproject.toml").read_text(encoding="utf-8")
+    teks_proyek = (REPO / "pyproject.toml").read_text(encoding="utf-8")
+    assert '"phase2-ai"' in teks_proyek
+    assert "placeholder" not in teks_proyek.lower()
     for nama in ("torch", "peft", "transformers", "datasets"):
         assert nama not in bawaan
     grup = data["dependency-groups"]["torch"]

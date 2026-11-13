@@ -1,6 +1,6 @@
 # Modul 14: RAG (Retrieval-Augmented Generation)
 
-**Tingkat:** pro
+**Tingkat:** —
 
 **Tujuan belajar:** Pembaca bisa memotong teks, menyimpan vektornya, mengambil potongan yang dekat dengan pertanyaan, lalu menyusun jawaban yang menyebut sumber dan menilai jawaban mengarang.
 

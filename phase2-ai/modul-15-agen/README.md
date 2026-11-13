@@ -1,6 +1,6 @@
 # Modul 15: Agen dan proyek akhir Fase 2
 
-**Tingkat:** pro
+**Tingkat:** —
 
 **Tujuan belajar:** Pembaca bisa menjalankan loop agen yang hanya memanggil alat baca di allowlist, menutup Fase 2 dengan proyek kecil RAG plus agen, dan melihat bentuk panggilan .NET lewat HTTP ke 127.0.0.1.
 

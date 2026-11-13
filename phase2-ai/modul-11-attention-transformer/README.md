@@ -1,6 +1,6 @@
 # Modul 11: Transformer
 
-**Tingkat:** pro
+**Tingkat:** —
 
 **Tujuan belajar:** Pembaca bisa menghitung attention pada matriks mini, lalu memakai model kecil untuk klasifikasi teks. Revisi model yang diunduh dipin, dan bobot yang dimuat berformat safetensors.
 

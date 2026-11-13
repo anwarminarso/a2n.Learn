@@ -262,6 +262,23 @@ def test_sel_siswa_di_bawah_16_baris():
                 assert len(_sumber(cell).splitlines()) < 16, (folder, nama)
 
 
+def test_modul_13_menghitung_entri_state_tensor():
+    nb = _baca(FASE2 / "modul-13-model-lokal" / "notebook.ipynb")
+    sumber = [
+        _sumber(cell)
+        for cell in nb["cells"]
+        if cell["cell_type"] == "code" and "tensor_gabung" in _sumber(cell)
+    ]
+    assert len(sumber) == 1
+    teks = sumber[0]
+    assert len(teks.splitlines()) <= 15
+    assert "ndim" not in teks
+    assert "state_gabung" in teks
+    assert "state_kontrol" in teks
+    assert "len(state_gabung)" in teks
+    assert "len(state_kontrol)" in teks
+
+
 def test_sel_pertama_seed_dan_satu_ide():
     for folder in MODUL:
         for nama in NOTEBOOK:

@@ -215,6 +215,19 @@ def test_berkas_di_luar_allowlist_ditolak(tmp_path):
     assert hasil["teks"] == ""
 
 
+def test_pemanggil_menangkap_timeout_lima_detik():
+    sumber = (
+        FASE2 / "modul-15-agen" / "dotnet" / "PemanggilAgen" / "Program.cs"
+    ).read_text(encoding="utf-8")
+    assert "const int DetikTunggu = 5;" in sumber
+    assert "TimeSpan.FromSeconds(DetikTunggu)" in sumber
+    assert "catch (HttpRequestException)" in sumber
+    assert "catch (TaskCanceledException)" in sumber
+    assert "peladen belum jalan di 127.0.0.1:8765" in sumber
+    assert "peladen tidak menjawab dalam {DetikTunggu} detik" in sumber
+    assert "127.0.0.1:8765" in sumber
+
+
 def test_unduh_modul_baru_butuh_bendera(monkeypatch):
     import socket
     import sys
