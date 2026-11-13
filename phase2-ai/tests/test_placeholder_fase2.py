@@ -292,17 +292,27 @@ def test_register_lisensi_hanya_apache_atau_mit():
     teks = (REPO / "docs" / "lisensi-model.md").read_text(encoding="utf-8")
     assert "tanpa mengunduh bobot" in teks
     assert "sebelum unduh" in teks
+    assert "2026-11-13" in teks
     baris = [b for b in teks.splitlines() if b.startswith("| `")]
     assert len(baris) == 5
+    sha_terlihat = set()
     for baris_kandidat in baris:
-        kolom = [k.strip() for k in baris_kandidat.strip().strip("|").split("|")]
+        kolom = [k.strip().strip("`") for k in baris_kandidat.strip().strip("|").split("|")]
+        assert len(kolom) == 7, kolom
         assert kolom[2] in LISENSI_BOLEH, kolom
-        assert kolom[3].endswith(".safetensors"), kolom
-        assert kolom[4] == "belum dipin"
+        assert re.fullmatch(r"[0-9a-f]{40}", kolom[3]), kolom
+        assert kolom[4] == "2026-11-13"
+        assert kolom[5].endswith(".safetensors"), kolom
         assert "bert-tiny" not in kolom[0]
+        sha_terlihat.add(kolom[3])
+        assert f"SHA `{kolom[3]}`" in teks
+        assert f"- `{kolom[5]}`" in teks
+    assert len(sha_terlihat) == 5
     assert "| 12, 13, 14, 15 |" in teks
     assert "prajjwal1/bert-tiny" in teks
     assert "tidak berisi berkas `.safetensors`" in teks
+    assert "pytorch_model.bin" in teks
+    assert "training_args.bin" in teks
     assert "GPL" not in teks
     assert "CC-BY" not in teks
 
