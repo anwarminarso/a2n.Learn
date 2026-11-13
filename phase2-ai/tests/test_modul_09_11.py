@@ -371,6 +371,59 @@ def test_torch_backward_dan_lora_nyata():
     assert awal - float(rugi.detach()) > 0
 
 
+def test_pemuat_tanpa_bendera_tidak_menyentuh_jaringan(monkeypatch):
+    import socket
+    import sys
+    import types
+
+    monkeypatch.delenv("A2N_UNDUH", raising=False)
+    sentuh = {"n": 0}
+
+    def gagal(*_args, **_kwargs):
+        sentuh["n"] += 1
+        raise AssertionError("jaringan disentuh")
+
+    class SocketGagal:
+        def __init__(self, *_args, **_kwargs):
+            gagal()
+
+    monkeypatch.setattr(socket, "socket", SocketGagal)
+    monkeypatch.setattr(socket, "create_connection", gagal)
+    if "huggingface_hub" in sys.modules:
+        monkeypatch.setattr(sys.modules["huggingface_hub"], "snapshot_download", gagal)
+    else:
+        palsu = types.ModuleType("huggingface_hub")
+        palsu.snapshot_download = gagal
+        monkeypatch.setitem(sys.modules, "huggingface_hub", palsu)
+
+    def _panggil(folder, fungsi):
+        spec = importlib.util.spec_from_file_location(
+            "jaga_" + folder + "_" + fungsi, FASE2 / folder / "muat.py"
+        )
+        modul = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modul)
+        return getattr(modul, fungsi)
+
+    muat = _muat_hf()
+    with pytest.raises(RuntimeError, match="A2N_UNDUH"):
+        muat.muat_model("HuggingFaceTB/SmolLM2-135M-Instruct")
+    for folder, fungsi in (
+        ("modul-10-tokenisasi-embedding", "muat_embedding"),
+        ("modul-11-attention-transformer", "muat_bert_kecil"),
+        ("modul-11-attention-transformer", "muat_distilbert"),
+        ("modul-12-lora", "muat_smol"),
+        ("modul-12-lora", "muat_qwen"),
+        ("modul-13-model-lokal", "muat_dasar"),
+        ("modul-13-model-lokal", "muat_penuh"),
+        ("modul-14-rag", "muat_embedding"),
+        ("modul-14-rag", "muat_jawaban"),
+        ("modul-15-agen", "muat_agen"),
+    ):
+        with pytest.raises(RuntimeError, match="A2N_UNDUH"):
+            _panggil(folder, fungsi)()
+    assert sentuh["n"] == 0
+
+
 @pytest.mark.skipif(
     os.environ.get("A2N_UNDUH") != "1",
     reason="Uji jaringan dilewati secara bawaan. Set A2N_UNDUH=1 untuk menjalankannya.",
