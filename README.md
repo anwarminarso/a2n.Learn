@@ -4,7 +4,7 @@ Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk develop
 
 ## Peta fase
 - **Fase 1 – Machine Learning** (`phase1-ml/`): 8 modul yang dipecah menjadi 12 bagian. Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
-- **Fase 2 – Model AI** (`phase2-ai/`): 7 modul utuh. Modul 9 sampai 13 sudah berisi materi. Modul 14 dan 15 masih PLACEHOLDER. Issue #26 sampai #32, tracking [#33](https://github.com/anwarminarso/a2n.Learn/issues/33). Urutan ada di [docs/ROADMAP.md](docs/ROADMAP.md). Register model ada di [docs/lisensi-model.md](docs/lisensi-model.md).
+- **Fase 2 – Model AI** (`phase2-ai/`): 7 modul utuh. Modul 9 sampai 15 sudah berisi materi mode cepat. Issue #26 sampai #32, tracking [#33](https://github.com/anwarminarso/a2n.Learn/issues/33). Urutan ada di [docs/ROADMAP.md](docs/ROADMAP.md). Register model ada di [docs/lisensi-model.md](docs/lisensi-model.md).
 
 | # | Modul | Topik | Tingkat | Issue |
 |---|---|---|---|---|
@@ -23,7 +23,7 @@ Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk develop
 
 ### Fase 2
 
-Modul 9 sampai 13 sudah berisi materi mode cepat. Modul 14 dan 15 masih rencana. Tujuh modul utuh. Issue mengikuti tabel di `docs/ROADMAP.md`.
+Modul 9 sampai 15 sudah berisi materi mode cepat. Tujuh modul utuh. Issue mengikuti tabel di `docs/ROADMAP.md`.
 
 | # | Modul | Topik | Tingkat | Issue |
 |---|---|---|---|---|
@@ -38,7 +38,7 @@ Modul 9 sampai 13 sudah berisi materi mode cepat. Modul 14 dan 15 masih rencana.
 ## Susunan modul
 Setiap modul punya format sama: teori 1 halaman, notebook, kasus nyata, latihan + kunci, cek pemahaman. Detail di [docs/module-template.md](docs/module-template.md). Istilah dan perumpamaan dicatat di [docs/kamus-istilah.md](docs/kamus-istilah.md).
 
-Modul 9 sampai 13 punya notebook, latihan, dan kunci. Modul 14 dan 15 yang berstatus PLACEHOLDER baru berisi README rencana. Grup torch opsional, CPU saja, tidak ikut `uv sync` biasa: `uv sync --group torch`.
+Modul 9 sampai 15 punya notebook, latihan, dan kunci. Grup torch opsional, CPU saja, tidak ikut `uv sync` biasa: `uv sync --group torch`.
 
 ## Cara menjalankan
 Perintah dijalankan dari root repo (folder yang berisi `pyproject.toml` dan `uv.lock`):

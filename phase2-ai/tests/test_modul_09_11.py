@@ -1,4 +1,4 @@
-"""Tes materi modul 9 sampai 13.
+"""Tes materi modul 9 sampai 15.
 
 Mode cepat jalan di CPU tanpa jaringan dan tanpa torch. Uji unduhan dilewati
 secara bawaan. Uji torch dilewati kecuali A2N_TORCH=1.
@@ -22,6 +22,8 @@ MODUL = (
     "modul-11-attention-transformer",
     "modul-12-lora",
     "modul-13-model-lokal",
+    "modul-14-rag",
+    "modul-15-agen",
 )
 NOTEBOOK = ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb")
 SHA40 = re.compile(r"[0-9a-f]{40}")
@@ -186,6 +188,7 @@ def test_kelas_muat_causal_lm_tanpa_jaringan(monkeypatch):
     palsu_hub.snapshot_download = snapshot_download
     monkeypatch.setitem(sys.modules, "transformers", palsu_tf)
     monkeypatch.setitem(sys.modules, "huggingface_hub", palsu_hub)
+    monkeypatch.setenv("A2N_UNDUH", "1")
 
     def _panggil(folder, fungsi):
         spec = importlib.util.spec_from_file_location(
@@ -230,11 +233,18 @@ def test_kelas_muat_causal_lm_tanpa_jaringan(monkeypatch):
         ("modul-12-lora", "muat_qwen"),
         ("modul-13-model-lokal", "muat_dasar"),
         ("modul-13-model-lokal", "muat_penuh"),
+        ("modul-14-rag", "muat_jawaban"),
+        ("modul-15-agen", "muat_agen"),
     ):
         rekam.clear()
         _tokenizer, model = _panggil(folder, fungsi)
         assert model is AutoModelForCausalLM
         _cek_bendera(AutoModelForCausalLM)
+
+    rekam.clear()
+    _tokenizer, model = _panggil("modul-14-rag", "muat_embedding")
+    assert model is AutoModel
+    _cek_bendera(AutoModel)
 
 
 def test_sel_siswa_di_bawah_16_baris():
@@ -378,3 +388,6 @@ def test_unduh_model_opsional():
     _panggil("modul-11-attention-transformer", "muat_bert_kecil")
     _panggil("modul-12-lora", "muat_smol")
     _panggil("modul-13-model-lokal", "muat_dasar")
+    _panggil("modul-14-rag", "muat_embedding")
+    _panggil("modul-14-rag", "muat_jawaban")
+    _panggil("modul-15-agen", "muat_agen")

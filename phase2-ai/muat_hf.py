@@ -1,10 +1,10 @@
 """Konstanta unduhan Hugging Face untuk Fase 2.
 
 Mode cepat tidak memanggil muat_model. SHA di sini sama dengan
-docs/lisensi-model.md. Modul 12 dan 13 memakai muat_model dengan
-AutoModelForCausalLM. Modul 10 dan 11 memuat AutoModel sendiri.
-Modul 14 dan 15 masih placeholder; saat materinya ditulis, pemuatnya
-membaca REVISI yang sama.
+docs/lisensi-model.md. Modul 12, 13, 14, dan 15 memakai muat_model.
+Modul 14 membiarkan kelas kosong untuk embedding, jadi yang terpakai
+AutoModel. Modul 12, 13, 14, dan 15 mengirim AutoModelForCausalLM
+untuk model bahasa. Modul 10 dan 11 memuat AutoModel sendiri.
 """
 
 POLA_UNDUH = (
@@ -31,8 +31,9 @@ REVISI = {
 def muat_model(model_id, kelas=None):
     """Muat tokenizer dan model dari salinan lokal.
 
-    Bila kelas tidak diisi, yang dipakai AutoModel. Modul 12 dan 13
-    mengirim AutoModelForCausalLM supaya kepala bahasa ikut termuat.
+    Bila kelas tidak diisi, yang dipakai AutoModel. Modul 12, 13, 14,
+    dan 15 mengirim AutoModelForCausalLM supaya kepala bahasa ikut
+    termuat. Modul 14 membiarkan kelas kosong untuk model embedding.
     """
     from huggingface_hub import snapshot_download
     from transformers import AutoModel, AutoTokenizer

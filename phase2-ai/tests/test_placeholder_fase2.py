@@ -188,7 +188,7 @@ def test_readme_punya_bagian_wajib_dan_issue():
         ):
             assert judul in teks
         assert _sesi(teks) == modul["sesi"]
-        if modul["nomor"] in {"9", "10", "11", "12", "13"}:
+        if modul["nomor"] in {"9", "10", "11", "12", "13", "14", "15"}:
             assert "**Status:** PLACEHOLDER" not in teks
             assert "Notebook, latihan, dan kunci belum dibuat." not in teks
             for nama in ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb"):
@@ -219,7 +219,7 @@ def test_kriteria_dan_mode():
         teks = _readme(modul)
         kriteria = _bagian(teks, "Kriteria lulus")
         mode = _bagian(teks, "Mode cepat dan mode penuh")
-        if modul["nomor"] in {"9", "10", "11", "12", "13"}:
+        if modul["nomor"] in {"9", "10", "11", "12", "13", "14", "15"}:
             assert "DRAF" not in kriteria
             assert "belum dipilih" not in kriteria
         else:
@@ -239,7 +239,7 @@ def test_aturan_gate():
     for modul in MODUL:
         aturan = _bagian(_readme(modul), "Aturan")
         for kalimat in KALIMAT_ATURAN:
-            if kalimat == "belum dipin" and modul["nomor"] in {"10", "11", "12", "13"}:
+            if kalimat == "belum dipin" and modul["nomor"] in {"10", "11", "12", "13", "14", "15"}:
                 assert "revisi yang dipin" in aturan
                 continue
             assert kalimat in aturan, (modul["nomor"], kalimat)
@@ -272,7 +272,7 @@ def test_kamus_mengunci_nama_pada_modul_utuh():
         for nama in istilah:
             _judul, arti, perumpamaan, pengenal, batas = _kolom_kamus(kamus, nama)
             assert pengenal == modul["nomor"]
-            if modul["nomor"] in {"9", "10", "11", "12", "13"}:
+            if modul["nomor"] in {"9", "10", "11", "12", "13", "14", "15"}:
                 assert arti != "PLACEHOLDER"
                 assert perumpamaan != "PLACEHOLDER"
                 assert batas != "PLACEHOLDER"
@@ -280,7 +280,7 @@ def test_kamus_mengunci_nama_pada_modul_utuh():
             else:
                 assert arti == perumpamaan == batas == "PLACEHOLDER"
         jumlah = [b for b in kamus.splitlines() if f"| {modul['nomor']} |" in b and "PLACEHOLDER" in b]
-        if modul["nomor"] in {"9", "10", "11", "12", "13"}:
+        if modul["nomor"] in {"9", "10", "11", "12", "13", "14", "15"}:
             assert jumlah == []
         else:
             assert len(jumlah) == len(istilah)

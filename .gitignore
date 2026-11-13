@@ -34,6 +34,8 @@ obj/
 *.index
 *.ann
 chroma/
+# Indeks vektor modul 14. Dibangun saat notebook jalan, tidak di-commit.
+phase2-ai/modul-14-rag/indeks/
 # Berkas sqlite3 ini untuk indeks vektor.
 *.sqlite3
 adapters/
