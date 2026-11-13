@@ -4,6 +4,7 @@ Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 """
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -370,7 +371,9 @@ def test_program_menolak_berkas_hilang_json_rusak_dan_panjang_baris():
     assert "model.onnx rusak, jalankan notebook ulang" in sumber
     assert "folder keluaran tidak ada" in sumber
     assert "UnauthorizedAccessException" in sumber
+    assert "berkas tidak terbaca" in sumber
     assert "keluaran tidak bisa ditulis" in sumber
+    assert sumber.index("berkas tidak terbaca") < sumber.index("JsonDocument.Parse")
     assert "InputMetadata" in sumber
     assert "OnnxRuntimeException" in sumber
     assert "ArgumentException" in sumber
@@ -525,6 +528,13 @@ def _lewati_tanpa_dotnet():
         pytest.skip("dotnet tidak ada")
 
 
+def _lewati_izin_root():
+    if os.geteuid() == 0:
+        import pytest
+
+        pytest.skip("root mengabaikan chmod")
+
+
 def _tulis_json(path, muatan):
     path.write_text(json.dumps(muatan), encoding="utf-8")
 
@@ -649,6 +659,65 @@ def test_live_nama_masukan_bukan_nama_model(tmp_path):
     hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
     assert hasil.returncode == 1
     assert "nama_masukan tidak ada pada model" in hasil.stderr
+
+
+def _model_dan_baris(tmp_path):
+    _pipeline, masukan, berkas, _keluar = _latih_dan_banding(42)
+    model = tmp_path / "model.onnx"
+    baris = tmp_path / "baris.json"
+    model.write_bytes(berkas.SerializeToString())
+    _tulis_json(
+        baris,
+        {"nama_masukan": "masukan_angka", "fitur": masukan[:1].tolist()},
+    )
+    return model, baris
+
+
+def test_live_baris_tidak_bisa_dibaca(tmp_path):
+    _lewati_tanpa_dotnet()
+    _lewati_izin_root()
+    model, baris = _model_dan_baris(tmp_path)
+    baris.chmod(0)
+    try:
+        hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+        assert hasil.returncode == 1
+        assert "berkas tidak terbaca" in hasil.stderr
+        assert str(baris) in hasil.stderr
+    finally:
+        baris.chmod(0o644)
+
+
+def test_live_keluar_berkas_hanya_baca(tmp_path):
+    _lewati_tanpa_dotnet()
+    _lewati_izin_root()
+    model, baris = _model_dan_baris(tmp_path)
+    keluar = tmp_path / "keluar.json"
+    keluar.write_text("ada", encoding="utf-8")
+    keluar.chmod(0o444)
+    try:
+        hasil = _jalankan_dotnet([str(model), str(baris), str(keluar)])
+        assert hasil.returncode == 1
+        assert "keluaran tidak bisa ditulis" in hasil.stderr
+        assert str(keluar) in hasil.stderr
+    finally:
+        keluar.chmod(0o644)
+
+
+def test_live_folder_keluaran_hanya_baca(tmp_path):
+    _lewati_tanpa_dotnet()
+    _lewati_izin_root()
+    model, baris = _model_dan_baris(tmp_path)
+    folder = tmp_path / "keluar-ro"
+    folder.mkdir()
+    folder.chmod(0o555)
+    keluar = folder / "keluar.json"
+    try:
+        hasil = _jalankan_dotnet([str(model), str(baris), str(keluar)])
+        assert hasil.returncode == 1
+        assert "keluaran tidak bisa ditulis" in hasil.stderr
+        assert str(keluar) in hasil.stderr
+    finally:
+        folder.chmod(0o755)
 
 
 def test_live_keluaran_adalah_folder(tmp_path):

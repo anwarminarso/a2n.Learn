@@ -28,6 +28,10 @@ try
 {
     teksJson = File.ReadAllText(args[1]);
 }
+catch (UnauthorizedAccessException)
+{
+    return Gagal($"berkas tidak terbaca: {args[1]}");
+}
 catch (IOException)
 {
     return Gagal($"berkas tidak terbaca: {args[1]}");
