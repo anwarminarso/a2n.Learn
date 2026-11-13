@@ -1,8 +1,8 @@
 """Konstanta unduhan Hugging Face untuk Fase 2.
 
-Mode cepat tidak mengimpor berkas ini untuk mengunduh. SHA di sini sama dengan
-docs/lisensi-model.md. Modul 12 sampai 15 masih placeholder; saat materinya
-ditulis, pemuatnya membaca REVISI yang sama.
+Mode cepat tidak memanggil muat_model. SHA di sini sama dengan
+docs/lisensi-model.md. Modul 12 dan 13 memakai muat_model. Modul 14 dan 15
+masih placeholder; saat materinya ditulis, pemuatnya membaca REVISI yang sama.
 """
 
 POLA_UNDUH = (
@@ -24,3 +24,29 @@ REVISI = {
     "HuggingFaceTB/SmolLM2-135M-Instruct": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
     "Qwen/Qwen2.5-0.5B-Instruct": "7ae557604adf67be50417f59c2c2f167def9a775",
 }
+
+
+def muat_model(model_id):
+    from huggingface_hub import snapshot_download
+    from transformers import AutoModel, AutoTokenizer
+
+    revisi = REVISI[model_id]
+    folder = snapshot_download(
+        repo_id=model_id,
+        revision=revisi,
+        allow_patterns=POLA_UNDUH,
+    )
+    tokenizer = AutoTokenizer.from_pretrained(
+        folder,
+        revision=revisi,
+        trust_remote_code=False,
+        local_files_only=True,
+    )
+    model = AutoModel.from_pretrained(
+        folder,
+        revision=revisi,
+        use_safetensors=True,
+        trust_remote_code=False,
+        local_files_only=True,
+    )
+    return tokenizer, model

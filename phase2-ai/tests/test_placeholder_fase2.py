@@ -188,7 +188,7 @@ def test_readme_punya_bagian_wajib_dan_issue():
         ):
             assert judul in teks
         assert _sesi(teks) == modul["sesi"]
-        if modul["nomor"] in {"9", "10", "11"}:
+        if modul["nomor"] in {"9", "10", "11", "12", "13"}:
             assert "**Status:** PLACEHOLDER" not in teks
             assert "Notebook, latihan, dan kunci belum dibuat." not in teks
             for nama in ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb"):
@@ -219,7 +219,7 @@ def test_kriteria_dan_mode():
         teks = _readme(modul)
         kriteria = _bagian(teks, "Kriteria lulus")
         mode = _bagian(teks, "Mode cepat dan mode penuh")
-        if modul["nomor"] in {"9", "10", "11"}:
+        if modul["nomor"] in {"9", "10", "11", "12", "13"}:
             assert "DRAF" not in kriteria
             assert "belum dipilih" not in kriteria
         else:
@@ -239,7 +239,7 @@ def test_aturan_gate():
     for modul in MODUL:
         aturan = _bagian(_readme(modul), "Aturan")
         for kalimat in KALIMAT_ATURAN:
-            if kalimat == "belum dipin" and modul["nomor"] in {"10", "11"}:
+            if kalimat == "belum dipin" and modul["nomor"] in {"10", "11", "12", "13"}:
                 assert "revisi yang dipin" in aturan
                 continue
             assert kalimat in aturan, (modul["nomor"], kalimat)
@@ -272,7 +272,7 @@ def test_kamus_mengunci_nama_pada_modul_utuh():
         for nama in istilah:
             _judul, arti, perumpamaan, pengenal, batas = _kolom_kamus(kamus, nama)
             assert pengenal == modul["nomor"]
-            if modul["nomor"] in {"9", "10", "11"}:
+            if modul["nomor"] in {"9", "10", "11", "12", "13"}:
                 assert arti != "PLACEHOLDER"
                 assert perumpamaan != "PLACEHOLDER"
                 assert batas != "PLACEHOLDER"
@@ -280,7 +280,7 @@ def test_kamus_mengunci_nama_pada_modul_utuh():
             else:
                 assert arti == perumpamaan == batas == "PLACEHOLDER"
         jumlah = [b for b in kamus.splitlines() if f"| {modul['nomor']} |" in b and "PLACEHOLDER" in b]
-        if modul["nomor"] in {"9", "10", "11"}:
+        if modul["nomor"] in {"9", "10", "11", "12", "13"}:
             assert jumlah == []
         else:
             assert len(jumlah) == len(istilah)
@@ -442,11 +442,74 @@ def test_enam_modul_muat_safetensors_dan_allow_patterns():
             assert butir == blok, modul["nomor"]
 
 
-def test_pyproject_tanpa_paket_baru():
-    teks = (REPO / "pyproject.toml").read_text(encoding="utf-8")
-    assert '"phase2-ai"' in teks
-    for nama in ("torch", "transformers", "peft", "datasets"):
-        assert nama not in teks
+def test_pyproject_torch_opsional_cpu():
+    import tomllib
+
+    data = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
+    bawaan = "\n".join(data["project"]["dependencies"])
+    assert '"phase2-ai"' in (REPO / "pyproject.toml").read_text(encoding="utf-8")
+    for nama in ("torch", "peft", "transformers", "datasets"):
+        assert nama not in bawaan
+    grup = data["dependency-groups"]["torch"]
+    assert "torch>=2.6" in grup
+    assert "peft==0.21.2" in grup
+    indeks = data["tool"]["uv"]["index"]
+    assert len(indeks) == 1
+    assert indeks[0]["url"] == "https://download.pytorch.org/whl/cpu"
+    assert indeks[0]["explicit"] is True
+    sumber = data["tool"]["uv"]["sources"]
+    assert list(sumber) == ["torch"]
+    assert sumber["torch"]["index"] == indeks[0]["name"]
+    kunci = tomllib.loads((REPO / "uv.lock").read_text(encoding="utf-8"))
+    alamat = "https://download.pytorch.org/whl/cpu"
+    platform = set()
+    for paket in kunci["package"]:
+        registri = paket.get("source", {}).get("registry")
+        if registri == alamat:
+            assert paket["name"] == "torch"
+        if paket["name"].startswith("nvidia"):
+            raise AssertionError(paket["name"])
+    torch_paket = [p for p in kunci["package"] if p["name"] == "torch"]
+    assert torch_paket
+    for paket in torch_paket:
+        assert paket["source"]["registry"] == alamat
+        assert paket["version"] == "2.15.0" or paket["version"].startswith("2.15.0+")
+        assert paket["wheels"]
+        for roda in paket["wheels"]:
+            assert "/whl/cpu/" in roda["url"]
+            assert roda["hash"].startswith("sha256:")
+            url = roda["url"].lower()
+            assert "+cu" not in url and "cuda" not in url and "nvidia" not in url
+            if "macosx" in url and "cp314" in url:
+                platform.add("macos")
+            if "win_amd64" in url and "cp314" in url:
+                platform.add("windows")
+            if "manylinux" in url and "x86_64" in url and "cp314" in url:
+                platform.add("linux")
+    assert platform == {"linux", "windows", "macos"}
+    peft = next(p for p in kunci["package"] if p["name"] == "peft")
+    assert peft["version"] == "0.21.2"
+    assert peft["source"]["registry"] == "https://pypi.org/simple"
+    akar = next(p for p in kunci["package"] if p["name"] == "a2n-learn")
+    assert all(item["name"] not in {"torch", "peft"} for item in akar["dependencies"])
+
+
+def test_tanpa_weights_only_false():
+    jarum = "weights_only" + "=False"
+    jarum_spasi = "weights_only" + " = False"
+    for path in REPO.rglob("*"):
+        if not path.is_file() or path.suffix == ".pyc":
+            continue
+        if LEWATI.intersection(path.parts) or ".git" in path.parts:
+            continue
+        if path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif", ".onnx"}:
+            continue
+        try:
+            teks = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        assert jarum not in teks, path
+        assert jarum_spasi not in teks, path
 
 
 def test_tanpa_kata_terlarang():

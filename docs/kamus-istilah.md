@@ -50,12 +50,12 @@ Satu istilah = satu arti, konsisten di semua modul. **Pyra** menulis entri baru 
 | kueri, kunci, dan nilai | Tiga peran angka pada tiap token. Kueri bertanya, kunci menawarkan kecocokan, nilai adalah isi yang dijumlahkan setelah bobot dihitung. Satu entri karena satu ide. | Seperti di perpustakaan: pertanyaanmu dicocokkan dengan label rak, lalu kamu membawa isi buku sesuai kecocokan itu. | 11 | Yang dicocokkan adalah perkalian angka, bukan petugas yang paham pertanyaan. Label rak bukan arti kalimat. Isi yang dibawa masih vektor, bukan kalimat jawaban. |
 | Transformer | Susunan yang memakai attention untuk mencampur token, lalu lapisan kecil menghasilkan tebakan. | Seperti meja baca: setiap kartu kata boleh menoleh ke kartu lain sebelum kesimpulan diambil. | 11 | Mode cepat hanya satu blok attention pada matriks mini, bukan model obrolan besar. Menyusun blok itu tidak otomatis membuat klasifikasi benar. Model pra-latih yang besar juga memakai susunan ini, dan bobotnya tidak disalin ke repo. |
 | model pra-latih | Model yang bobotnya sudah dilatih pada data lain, lalu kita pakai atau latih lagi pada tugas kita. | Seperti adonan roti yang sudah diulen orang lain. Kita bisa memanggangnya untuk hidangan hari ini. | 11 | Adonan itu dilatih pada teks publik, bukan pada tugas klasifikasi modul ini. Kepala kelas yang dilatih di mode cepat mulai dari nol. Revisi dikunci dan yang dimuat hanya safetensors. Mode cepat tidak mengunduh adonan itu. |
-| penyetelan halus (fine-tune) | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
-| LoRA | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
-| adapter | PLACEHOLDER | PLACEHOLDER | 12 | PLACEHOLDER |
-| GGUF | PLACEHOLDER | PLACEHOLDER | 13 | PLACEHOLDER |
-| penggabungan adapter | PLACEHOLDER | PLACEHOLDER | 13 | PLACEHOLDER |
-| peladen lokal | PLACEHOLDER | PLACEHOLDER | 13 | PLACEHOLDER |
+| penyetelan halus (fine-tune) | Melatih lagi model yang sudah ada pada data tugas kita, tanpa memulai bobot dari nol. | Seperti menambah bumbu pada adonan yang sudah diulen orang lain, bukan mengaduk tepung dari awal. | 12 | Mode cepat hanya delapan puluh langkah pada model mini. Menyetel pada data latih tidak menilai data uji. Ini bukan menyesuaikan keluaran dengan nilai manusia. Topik itu belum menjadi entri. |
+| LoRA | Cara penyetelan halus yang hanya melatih dua kumpulan angka kecil. Perubahan bobot adalah hasil kali keduanya, dan pangkatnya rendah. | Seperti menempel catatan kecil pada resep yang sudah dicetak, bukan mencetak ulang seluruh buku resep. | 12 | Catatan kecil hanya menggeser resep pada arah yang pangkatnya rendah. Perubahan yang butuh banyak arah bebas tidak muat. Di mode cepat catatan itu satu vektor dan satu skalar, bukan model obrolan utuh. |
+| adapter | Kumpulan angka kecil hasil LoRA yang bisa dipasang pada model dasar. Bobot dasar tidak ikut disimpan di dalamnya. | Seperti stiker resep yang bisa dilepas, sementara buku resepnya tetap di rak. | 12 | Stiker tidak bisa dipakai tanpa buku resep yang sama. Modul ini tidak menyimpan stiker ke repo dan tidak mengunggahnya. Menyalin isi stiker ke dalam buku adalah penggabungan adapter di modul berikutnya. |
+| GGUF | Format berkas yang menyimpan model yang sudah digabung, supaya peladen lokal bisa membacanya. | Seperti menyalin resep ke kartu yang dipahami dapur rumah, bukan ke kertas aslinya. | 13 | Kartu itu bukan adapter dan bukan safetensors. Mode cepat menghitung jumlah tensor yang akan disalin. Konversi sungguhan memakai skrip pada commit yang dipin, dan berkas hasilnya tidak masuk repo. |
+| penggabungan adapter | Menambahkan perubahan LoRA ke bobot dasar sehingga hasilnya satu model utuh tanpa bagian terpisah. | Seperti menyalin isi stiker ke dalam resep, lalu membuang stikernya, supaya yang dibaca hanya satu lembar. | 13 | Setelah digabung, stiker tidak bisa dilepas dari lembar itu. Kontrol tanpa LoRA adalah resep yang tidak menerima isi stiker, tetapi melewati penyalinan format yang sama. Jumlah tensor tetap sama. Yang berubah adalah angkanya. |
+| peladen lokal | Program di komputer sendiri yang menjawab permintaan model, dan di modul ini hanya menerima sambungan dari 127.0.0.1. | Seperti jendela dapur yang hanya membuka ke dalam rumah, bukan ke jalan. | 13 | Alamat itu bukan janji jawaban benar. Mode cepat tidak menyalakan jendela itu. Ollama adalah nama alatnya, belum menjadi entri. Mengikat alamat lain tidak diajarkan. |
 | potongan | PLACEHOLDER | PLACEHOLDER | 14 | PLACEHOLDER |
 | penyimpan vektor | PLACEHOLDER | PLACEHOLDER | 14 | PLACEHOLDER |
 | pengambilan | PLACEHOLDER | PLACEHOLDER | 14 | PLACEHOLDER |
@@ -82,7 +82,7 @@ Modul 7 memperkenalkan tiga istilah: clustering, PCA, dan deteksi anomali. Nama 
 
 Modul 8 memperkenalkan tiga istilah: ONNX, opset, dan inferensi. Paket, pustaka, uv, indeks, probabilitas, float32, dan zipmap dijelaskan dengan satu kalimat dan belum menjadi entri kamus. Regresi logistik, Pipeline, data latih dan data uji, serta data leakage dirujuk sesuai arti modul sebelumnya, tanpa arti baru.
 
-Catatan Fase 2: baris modul 9, 10, dan 11 sudah diisi saat materi ditulis. Baris modul 12 sampai 15 masih PLACEHOLDER pada kolom arti, perumpamaan, dan batas analogi. Nama dan nomor modul tetap dikunci.
+Catatan Fase 2: baris modul 9 sampai 13 sudah diisi saat materi ditulis. Baris modul 14 dan 15 masih PLACEHOLDER pada kolom arti, perumpamaan, dan batas analogi. Nama dan nomor modul tetap dikunci.
 
 Keputusan tim: modul 9, 11, dan 14 utuh, tanpa folder berhuruf. Istilahnya dibagi sesi di README modul. Tiap sesi paling banyak tiga istilah baru.
 

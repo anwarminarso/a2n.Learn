@@ -12,7 +12,7 @@ Tidak ada kandidat di tabel yang lisensinya di luar Apache-2.0 atau MIT, dan tid
 
 Modul 9 tidak mengunduh model. Jaringannya ditulis di materi.
 
-README modul 12 sampai 15 masih placeholder. Kalimat status belum dipin di README itu belum diganti, karena isi modul itu belum ditulis. SHA pada tabel ini yang dipakai saat materi modul itu ditulis.
+README modul 12 dan 13 memakai SHA pada tabel ini. README modul 14 dan 15 masih placeholder. Kalimat status belum dipin di README itu belum diganti, karena isi modul itu belum ditulis.
 
 | Model | Modul | Lisensi | SHA revisi | Dicek | Safetensors | Pickle yang dikecualikan |
 |---|---|---|---|---|---|---|
