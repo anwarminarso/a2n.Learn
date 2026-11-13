@@ -26,17 +26,17 @@ Jaringan kecil belajar dengan cara yang mirip. Angka ditaruh di nampan. Kita lih
 
 ## Teori
 
-PyTorch adalah nama alat. Mode cepat memakai numpy, yang sudah ada sejak modul 1, supaya gerbang PR tidak memasang paket baru dan tidak mengunduh bobot. Nama langkahnya mengikuti PyTorch: tensor, langkah mundur, dan putaran latihan.
+PyTorch adalah nama alat. Mode cepat memakai numpy, yang sudah ada sejak modul 1, supaya tidak memasang paket baru dan tidak mengunduh bobot. Nama langkahnya mengikuti PyTorch: tensor, langkah mundur, dan putaran latihan.
 
 Jalur PyTorch nyata ada di sel akhir `notebook.ipynb`. Sel itu memakai `torch.tensor`, `backward`, dan jaringan kecil pada data iris yang sama, di CPU. Sel jalan hanya bila lingkungan `A2N_TORCH=1` dan paket torch sudah terpasang. Jika tidak, sel mencetak kalimat lewati. Pasang grup opsional dari root repo:
 
 ```bash
-uv sync --group torch
+uv sync --frozen --group torch
 ```
 
-`uv sync` biasa tidak memasang grup itu. Grup ini CPU saja, dari indeks resmi PyTorch. Gerbang PR tetap tanpa torch.
+`uv sync` biasa tidak memasang grup itu. Grup ini CPU saja, dari indeks resmi PyTorch. Mode cepat tetap tanpa torch.
 
-Fungsi kerugian pada latihan ini tetap rata-rata selisih yang dikuadratkan, seperti modul 3. Yang dikuadratkan sekarang adalah selisih antara tebakan peluang dan label 0 atau 1, bukan kilogram. Sigmoid, yaitu fungsi yang mengubah skor menjadi angka antara 0 dan 1, dijelaskan satu kalimat dan belum menjadi entri kamus.
+Klasifikasi biasanya memakai cross-entropy. Di modul ini dipakai rata-rata selisih yang dikuadratkan supaya hitungannya sederhana, seperti modul 3. Yang dikuadratkan sekarang adalah selisih antara tebakan peluang dan label 0 atau 1, bukan kilogram. Sigmoid, yaitu fungsi yang mengubah skor menjadi angka antara 0 dan 1, dijelaskan satu kalimat dan belum menjadi entri kamus.
 
 ### tensor
 
@@ -121,7 +121,7 @@ uv run pytest
 Jalur torch, bila ingin dicoba di CPU:
 
 ```bash
-uv sync --group torch
+uv sync --frozen --group torch
 ```
 
 Lalu jalankan notebook dengan `A2N_TORCH=1`. Tanpa itu, sel torch mencetak kalimat lewati.
@@ -186,7 +186,7 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan.
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Merge diblok bila ada sel siswa 16 baris atau lebih.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Selisih gradien tangan dan autograd lebih kecil dari `0.00001`.
 - Fungsi kerugian pada data latih turun minimal `0.15`.
@@ -196,7 +196,7 @@ Pengecekan memakai ambang, bukan angka persis.
 
 ### mode cepat
 
-Wajib lulus. Tensor dan jaringan sangat kecil, 80 putaran latihan, jalan di CPU, tanpa unduhan. Ini gerbang tiap PR. Kode mode cepat memakai numpy. Nama langkahnya mengikuti PyTorch. Gerbang tidak memasang grup torch, jadi sel torch mencetak kalimat lewati.
+Wajib lulus. Tensor dan jaringan sangat kecil, 80 putaran latihan, jalan di CPU, tanpa unduhan. Kode mode cepat memakai numpy. Nama langkahnya mengikuti PyTorch. Mode cepat tidak memasang grup torch, jadi sel torch mencetak kalimat lewati.
 
 ### mode penuh
 
@@ -250,12 +250,12 @@ salah_uji_baseline 13
 salah_uji_logistik 3
 jalur_torch lewati
 jalur_torch nyala
-lewati_tensor Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_mundur Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_jaringan Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_data Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_latih Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_hasil Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
+lewati_tensor Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_mundur Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_jaringan Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_data Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_latih Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_hasil Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
 bentuk_torch (3,)
 jumlah_torch 6.0
 gradien_torch 8.0

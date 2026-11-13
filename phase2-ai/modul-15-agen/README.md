@@ -4,7 +4,7 @@
 
 **Tujuan belajar:** Pembaca bisa menjalankan loop agen yang hanya memanggil alat baca di allowlist, menutup Fase 2 dengan proyek kecil RAG plus agen, dan melihat bentuk panggilan .NET lewat HTTP ke 127.0.0.1.
 
-Materi mode cepat sudah bisa dijalankan di CPU, tanpa torch, tanpa unduhan, dan tanpa jaringan. Program .NET bukan gerbang PR.
+Materi mode cepat sudah bisa dijalankan di CPU, tanpa torch, tanpa unduhan, dan tanpa jaringan. Program .NET tidak dijalankan pada mode cepat.
 
 Nama pada [docs/ROADMAP.md](../../docs/ROADMAP.md): Agen dan proyek akhir Fase 2.
 
@@ -68,7 +68,7 @@ Berkas di `sandbox/` sintetis. `catatan.txt` menyebut kunci biru. `jadwal.txt` b
 
 Proyek akhir: loop agen membaca `jadwal.txt`, lalu RAG dari modul 14 menjawab pertanyaan itu. Kutipan sumbernya `perpustakaan.txt`, kalimat `Kode rak buku cerita adalah B-12.` Skornya melewati ambang `0.3` dari modul 14.
 
-Bagian .NET mengikuti pola modul 8: program kecil, satu panggilan, dan satu batas yang tertulis. Panggilan itu HTTP ke `http://127.0.0.1:8765/jawab`. Batas skornya `0.3`. Ini inferensi dalam arti modul 8: aturan yang sudah ada dipakai untuk satu pertanyaan, tanpa melatih ulang. Urutannya: nyalakan `peladen.py` lebih dulu (ia hanya mengikat `127.0.0.1`; peladen memakai `jawab()` dari mode cepat modul 14, yaitu numpy, tanpa model dan tanpa transformers), lalu jalankan program .NET. Mode cepat tidak menyalakan peladen. Ollama, bila dipakai di luar gerbang, tetap hanya di `127.0.0.1`.
+Bagian .NET mengikuti pola modul 8: program kecil, satu panggilan, dan satu batas yang tertulis. Panggilan itu HTTP ke `http://127.0.0.1:8765/jawab`. Batas skornya `0.3`. Ini inferensi dalam arti modul 8: aturan yang sudah ada dipakai untuk satu pertanyaan, tanpa melatih ulang. Urutannya: nyalakan `peladen.py` lebih dulu (ia hanya mengikat `127.0.0.1`; peladen memakai `jawab()` dari mode cepat modul 14, yaitu numpy, tanpa model dan tanpa transformers), lalu jalankan program .NET. Mode cepat tidak menyalakan peladen. Ollama, bila dipakai di luar mode cepat, tetap hanya di `127.0.0.1`.
 
 ## Kesalahan yang paling sering terjadi
 
@@ -76,27 +76,27 @@ Bagian .NET mengikuti pola modul 8: program kecil, satu panggilan, dan satu bata
 2. Meminta nama berkas yang memuat `../`.
 3. Memakai path absolut.
 4. Mengikuti symlink yang keluar dari folder sandbox.
-5. Mengira program .NET adalah gerbang PR. Program itu contoh panggilan, dan peladennya tidak dinyalakan di mode cepat.
+5. Mengira program .NET wajib pada mode cepat. Program itu contoh panggilan, dan peladennya tidak dinyalakan di mode cepat.
 
 ## Cara menjalankan
 
-Perintah gerbang, dari root repo:
+Perintah dari root repo:
 
 ```bash
 uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
+Unduhan opsional. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
 uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
 
-Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini. `muat_agen()` mengirim `AutoModelForCausalLM`.
+Perintah itu butuh jaringan. Lingkungan yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini. `muat_agen()` mengirim `AutoModelForCausalLM`.
 
-Program .NET, juga bukan gerbang, membutuhkan SDK .NET 10. Jalankan peladen lebih dulu, baru program .NET.
+Program .NET, sebagai contoh panggilan, membutuhkan SDK .NET 10. Jalankan peladen lebih dulu, baru program .NET.
 
 Peladennya `phase2-ai/modul-15-agen/peladen.py`. Ia hanya mengikat `127.0.0.1` dan tidak membaca alamat dari argumen atau variabel lingkungan. Peladen memakai `jawab()` dari mode cepat modul 14 (numpy, tanpa model dan tanpa transformers). JSON yang dikirim peladen untuk jawaban berisi `status`, `skor`, `bagi`, `sumber`, dan `teks`. Mode cepat tidak menyalakan peladen ini.
 
@@ -124,7 +124,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertam
 
 1. Hanya `baca_berkas`. Pada keluaran, `hanya_baca ya`.
 2. Shell tidak ada di daftar alat. `status_injeksi` adalah `tolak`.
-3. HTTP ke `127.0.0.1`, batas `0.3`. Pada keluaran, `panggilan_dotnet bukan_gerbang`.
+3. HTTP ke `127.0.0.1`, batas `0.3`. Pada keluaran, `panggilan_dotnet cek_saja`.
 
 ## Sumber
 
@@ -169,23 +169,23 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan,
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Merge diblok bila ada sel siswa 16 baris atau lebih.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Daftar alat hanya `baca_berkas`. Tidak ada alat tulis, shell, atau jaringan.
 - Path traversal ditolak: `../`, path absolut, dan symlink yang keluar dari folder sandbox.
 - Satu panggilan baca `catatan.txt` di allowlist berhasil. Berkas di folder yang tidak ada di daftar ditolak.
 - Proyek akhir memakai RAG dan agen pada teks sintetis. Jawaban bersumber lulus bila skor minimal `0.3` dan token bersama minimal `2`.
-- Bagian .NET menyebut HTTP ke `127.0.0.1` dan batas `0.3`. Ini bukan gerbang PR.
+- Bagian .NET menyebut HTTP ke `127.0.0.1` dan batas `0.3`.
 
 ## Mode cepat dan mode penuh
 
 ### mode cepat
 
-Wajib lulus di CPU, tanpa torch, tanpa jaringan, dan tanpa peladen. Loop beberapa langkah memakai aturan tertulis. Proyek akhir menggabungkan baca sandbox dan RAG modul 14. Ini gerbang tiap PR.
+Wajib lulus di CPU, tanpa torch, tanpa jaringan, dan tanpa peladen. Loop beberapa langkah memakai aturan tertulis. Proyek akhir menggabungkan baca sandbox dan RAG modul 14.
 
 ### mode penuh
 
-Opsional. Bila loop memakai model untuk memilih alat, pakai `HuggingFaceTB/SmolLM2-135M-Instruct` lewat `AutoModelForCausalLM`, hanya bila `A2N_UNDUH=1`. GPU di MyLegion7i dipakai bila model itu memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
+Opsional. Bila loop memakai model untuk memilih alat, pakai `HuggingFaceTB/SmolLM2-135M-Instruct` lewat `AutoModelForCausalLM`, hanya bila `A2N_UNDUH=1`. GPU di MyLegion7i dipakai bila model itu memerlukannya. Hasil dinilai dari log mentah.
 
 ## Model dan dataset
 
@@ -235,7 +235,7 @@ sumber_proyek perpustakaan.txt
 kutipan_proyek Kode rak buku cerita adalah B-12.
 alamat 127.0.0.1
 batas 0.3
-panggilan_dotnet bukan_gerbang
+panggilan_dotnet cek_saja
 model HuggingFaceTB/SmolLM2-135M-Instruct
 kelas AutoModelForCausalLM
 revisi 12fd25f77366fa6b3b4b768ec3050bf629380bac

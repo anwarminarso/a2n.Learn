@@ -1,4 +1,4 @@
-# Modul 5b: Metrik penilaian
+# Modul 5b: Metrik penilaian dan ujian Intermediate
 
 **Tujuan belajar:** Membaca confusion matrix, memilih precision atau recall sesuai harga kesalahan, dan menutup tingkat intermediate dengan ujian singkat.
 
@@ -88,7 +88,17 @@ Hitung dengan tangan dulu. Jangan gulir ke kunci. Setelah itu buka `notebook.ipy
 
 ## Kasus nyata
 
-`fit` menghitung aturan dari data latih. `predict` menghasilkan tebakan. precision_score dan recall_score menghitung dua rasio dari tebakan. Nama fungsi ini bukan istilah tambahan. DecisionTreeClassifier menyusun aturan jika-maka. `make_classification` mengundi soal klasifikasi, sesuai dokumentasinya. `n_samples` adalah banyaknya baris. `n_features` adalah banyaknya kolom semuanya: kolom informatif, kolom redundan, kolom salinan, dan sisanya kolom acak yang tidak berguna. `n_informative` adalah banyaknya kolom informatif. Tiap kelas punya kelompok sebaran normal (simpangan baku 1) di sekitar sudut hypercube berdimensi sebanyak itu. Hypercube adalah kotak bersudut di beberapa dimensi, bukan istilah baru. Di dalam tiap kelompok, kolom informatif diundi dari sebaran normal baku (rata-rata 0, simpangan baku 1), lalu digabung secara linear, sebelum kelompok diletakkan di sudut hypercube. `n_redundant` adalah banyaknya kolom kombinasi linear acak dari kolom informatif. `n_repeated` adalah banyaknya kolom salinan, diambil acak dari kolom informatif dan redundan. `n_clusters_per_class` adalah banyaknya kelompok pada tiap kelas. `weights` adalah proporsi baris yang ditugaskan ke tiap kelas. Proporsi akhir tidak persis sama dengan `weights` bila `flip_y` bukan nol. `flip_y` adalah bagian baris yang kelasnya diundi ulang secara acak. `class_sep` mengalikan ukuran hypercube; panjang sisinya 2 kali `class_sep`. Makin besar, kelompok makin berjauhan dan soal makin mudah. `random_state` membuat undian pembuatan data ini berulang selama angkanya sama. Di notebook, `n_redundant` dan `n_repeated` bernilai nol.
+`fit` menghitung aturan dari data latih. `predict` menghasilkan tebakan. precision_score dan recall_score menghitung dua rasio dari tebakan. Nama fungsi ini bukan istilah tambahan. DecisionTreeClassifier menyusun aturan jika-maka. `make_classification` mengundi soal klasifikasi. Notebook dan ujian mengisi parameter berikut:
+
+- `n_samples=400`: banyak baris.
+- `n_features`: banyak kolom. Kasus utama 6, ujian 20.
+- `n_informative=3`: banyak kolom yang membedakan kelas.
+- `n_redundant=0` dan `n_repeated=0`: tidak ada kolom salinan.
+- `n_clusters_per_class=1`: satu kelompok untuk tiap kelas.
+- `weights=[0.85, 0.15]`: bagian baris yang ditargetkan untuk tiap kelas. Angka akhirnya bisa sedikit beda bila ada label yang ditukar.
+- `class_sep`: jarak antar kelompok. Makin besar, soal makin mudah. Kasus utama 1.1, ujian 1.3.
+- `flip_y`: bagian baris yang labelnya ditukar. Kasus utama 0.03, ujian 0.02.
+- `random_state=SEED`: undian yang sama berulang.
 
 Kasusnya alarm jemuran. Kelas positif adalah hujan. Sebagian besar jam tidak hujan. Baseline selalu menebak kelas yang paling banyak. Pohon dengan cabang dibatasi dibanding pohon tanpa batas. Precision, recall, dan empat kotak dihitung pada data uji.
 
@@ -115,7 +125,7 @@ Buka `notebook.ipynb` di folder ini, kerjakan `latihan.ipynb`, lalu bandingkan d
 
 Sel pertama setiap notebook berisi `SEED = 42`. Angka tetap itu dipakai pada setiap undian acak, lewat `random_state=SEED`, supaya hasil yang sama muncul setiap kali notebook diulang.
 
-CPU only. Nomor versi Python dan paket tercatat di `docs/CONTRIBUTING.md`.
+CPU only. Versi Python ada di `.python-version`. Versi paket ada di `uv.lock` di root repo.
 
 ## Cek pemahaman
 
@@ -209,7 +219,7 @@ Ini penutup tingkat intermediate: proyek mini plus pertanyaan. Bahan ada di `uji
 2. `ujian_recall_baseline 0.0`. Baseline tidak menemukan hujan.
 3. Precision pohon pendek pada data uji `ujian_precision 0.8`. Recall pohon pendek pada data uji `ujian_recall 0.631578947368421`.
 4. Pohon tanpa batas yang menghafal. Selisih skor data latih dan data uji pohon itu `ujian_selisih_dalam 0.10833333333333328`. Selisih pohon pendek `ujian_selisih_dangkal 0.04761904761904767`.
-5. Pohon pendek yang dilaporkan. Baris `ujian_model_dipilih dangkal`.
+5. Pohon pendek yang dilaporkan. Recall keduanya seri di 0.6316, jadi pemecah serinya akurasi data uji: pohon pendek 0.9167, pohon tanpa batas 0.8917. Selisih skor data latih dan data uji yang lebih kecil ikut menguatkan pilihan itu, sesuai soal 1 yang mengutamakan recall. Baris `ujian_model_dipilih dangkal`.
 6. Data leakage. Rata-rata yang boleh adalah rata-rata data latih. Baris `ujian_nama_kebocoran data leakage` dan `ujian_rata_boleh data latih`.
 
 Empat kotak, skor latih, dan skor uji ada pada baris di bawah. Angka ini disalin dari keluaran yang dijalankan, bukan ditulis tangan.

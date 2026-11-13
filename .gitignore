@@ -12,7 +12,7 @@ env/
 # Data mentah (kecuali README)
 data/*
 !data/README.md
-# Salinan kecil data publik (hanya dengan persetujuan Frieren atau mas Anwar)
+# Salinan kecil data publik (hanya dengan persetujuan pengelola materi)
 !data/public/
 # Model artefak & OS/IDE
 *.onnx
@@ -45,3 +45,7 @@ checkpoints/
 folder-gabungan/
 folder-kontrol/
 llama.cpp/
+
+# Keluaran program .NET modul 8. Terbentuk saat notebook dan perintah dijalankan.
+phase1-ml/modul-08-proyek-akhir/baris.json
+phase1-ml/modul-08-proyek-akhir/keluar.json

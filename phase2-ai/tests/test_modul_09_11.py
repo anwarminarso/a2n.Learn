@@ -262,21 +262,67 @@ def test_sel_siswa_di_bawah_16_baris():
                 assert len(_sumber(cell).splitlines()) < 16, (folder, nama)
 
 
-def test_modul_13_menghitung_entri_state_tensor():
-    nb = _baca(FASE2 / "modul-13-model-lokal" / "notebook.ipynb")
-    sumber = [
-        _sumber(cell)
-        for cell in nb["cells"]
-        if cell["cell_type"] == "code" and "tensor_gabung" in _sumber(cell)
+def test_sel_kunci_di_bawah_16_baris():
+    ketemu = False
+    for dasar in (REPO / "phase1-ml", FASE2):
+        for path in sorted(dasar.glob("modul-*/*-kunci.ipynb")):
+            ketemu = True
+            nb = _baca(path)
+            for cell in nb["cells"]:
+                if cell["cell_type"] != "code":
+                    continue
+                jumlah = len(_sumber(cell).splitlines())
+                assert jumlah < 16, (path, jumlah)
+    assert ketemu
+
+
+def test_modul_13_menjalankan_entri_state_dan_shape():
+    path = FASE2 / "modul-13-model-lokal" / "notebook.ipynb"
+    nb = _baca(path)
+    ruang = {"__name__": "__main__"}
+    keluaran = ""
+    ketemu = False
+    for nomor, cell in enumerate(nb["cells"]):
+        if cell["cell_type"] != "code":
+            continue
+        sumber = _sumber(cell)
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            exec(compile(sumber, f"{path.name}:{nomor}", "exec"), ruang)
+        if "state_sebelum" in sumber and "state_sesudah" in sumber:
+            assert len(sumber.splitlines()) <= 15
+            assert sumber.count("Satu ide:") == 1
+            keluaran = buf.getvalue()
+            ketemu = True
+            break
+    assert ketemu
+    assert len(ruang["state_sebelum"]) == 3
+    assert set(ruang["state_sebelum"]) == {"bobot", "a", "b"}
+    assert ruang["state_sebelum"]["bobot"] is ruang["W"]
+    assert ruang["state_sebelum"]["a"] is ruang["a"]
+    assert ruang["state_sebelum"]["b"] == ruang["b"]
+    assert len(ruang["state_sesudah"]) == 1
+    assert set(ruang["state_sesudah"]) == {"bobot"}
+    assert ruang["state_sesudah"]["bobot"] is ruang["W_gabung"]
+    assert ruang["W_gabung"].shape == ruang["W"].shape
+    assert len(ruang["state_kontrol"]) == 1
+    assert ruang["W_kontrol"].shape == ruang["W"].shape
+    assert "W_kontrol = W.copy()" in sumber
+    assert ruang["W_kontrol"] is not ruang["W"]
+    assert ruang["np"].allclose(ruang["W_kontrol"], ruang["W"])
+    assert ruang["np"].allclose(ruang["W_gabung"], ruang["W"] + ruang["b"] * ruang["a"])
+    assert ruang["cek_shape"](ruang["W_gabung"], ruang["W"]) == "ya"
+    assert ruang["cek_shape"](ruang["W_kontrol"], ruang["W"]) == "ya"
+    assert keluaran.splitlines() == [
+        "tensor_sebelum 3",
+        "tensor_sesudah 1",
+        "tensor_kontrol 1",
+        "shape_sama ya",
+        "shape_kontrol ya",
     ]
-    assert len(sumber) == 1
-    teks = sumber[0]
-    assert len(teks.splitlines()) <= 15
-    assert "ndim" not in teks
-    assert "state_gabung" in teks
-    assert "state_kontrol" in teks
-    assert "len(state_gabung)" in teks
-    assert "len(state_kontrol)" in teks
+    beda = ruang["np"].zeros(ruang["W"].shape[0] + 1)
+    assert beda.shape != ruang["W"].shape
+    assert ruang["cek_shape"](beda, ruang["W"]) == "tidak"
 
 
 def test_sel_pertama_seed_dan_satu_ide():

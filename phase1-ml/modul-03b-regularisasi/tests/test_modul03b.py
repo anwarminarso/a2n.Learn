@@ -34,7 +34,6 @@ KALIMAT_TEKNIS = {
     ),
     "intercept_": "intercept_ adalah nama tempat scikit-learn menyimpan bilangan geser.",
     "coef_": "coef_ adalah nama tempat scikit-learn menyimpan koefisien.",
-    "named_steps": "named_steps mengambil satu langkah Pipeline lewat namanya.",
     "fungsi kerugian": (
         "Fungsi kerugian adalah angka kesalahan yang diperkecil saat model belajar; "
         "pada regresi linear tanpa penalti, angka itu adalah jumlah kuadrat selisih "
@@ -66,7 +65,6 @@ KALIMAT_TEKNIS = {
         "simpangan bakunya satu, memakai rata-rata dan simpangan baku data yang "
         "dipelajari saat fit; transform memakai angka itu pada data lain."
     ),
-    "pipeline": "Pipeline adalah urutan langkah yang dipelajari bersama dari data yang masuk ke fit.",
     "pustaka": "Pustaka adalah kumpulan fungsi siap pakai yang dipanggil dari kode.",
     "array": "Array adalah kumpulan nilai sejenis dengan bentuk yang tetap, yang dihitung sekaligus.",
     "numpy": "NumPy adalah pustaka untuk hitungan pada array.",
@@ -373,7 +371,10 @@ def test_mutasi_hapus_skala_memicu_assert():
     for cell in _baca_notebook("notebook.ipynb")["cells"]:
         if cell["cell_type"] != "code":
             continue
-        src = _sumber(cell).replace('("skala", StandardScaler()),\n', "")
+        src = _sumber(cell).replace("StandardScaler().fit(X_latih)", "None")
+        for nama in ("skala_tanpa", "skala_ridge", "skala_nol", "skala_lasso"):
+            src = src.replace(f"{nama}.transform(X_latih)", "X_latih")
+            src = src.replace(f"{nama}.transform(X_uji)", "X_uji")
         try:
             exec(src, ruang, ruang)
         except AssertionError:
@@ -519,4 +520,4 @@ def test_kamus_tiga_istilah_modul_3b():
         assert batas
         assert f"Artinya: {arti[0].lower()}{arti[1:]}" in readme
     assert _kolom_kamus(kamus, "over" + "fitting")[3] == "3"
-    assert _kolom_kamus(kamus, "data " + "lea" + "kage")[3] == "5"
+    assert _kolom_kamus(kamus, "data " + "lea" + "kage")[3] == "5a"

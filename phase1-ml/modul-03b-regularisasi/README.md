@@ -1,4 +1,4 @@
-# Modul 3b: Regularisasi
+# Modul 3b: Regularisasi (Ridge dan Lasso)
 
 **Tujuan belajar:** Menahan angka pengali pada garis tebakan supaya tidak membesar hanya karena kebetulan satu kumpulan baris, lalu membedakan denda kuadrat dan denda nilai mutlak.
 
@@ -45,8 +45,6 @@ Rata-rata selisih mutlak adalah rata-rata jarak antara tebakan dan jawaban, jara
 alpha adalah angka yang mengalikan penalti; makin besar nilainya, makin kuat penalti itu.
 
 StandardScaler menggeser tiap petunjuk supaya rata-ratanya nol dan simpangan bakunya satu, memakai rata-rata dan simpangan baku data yang dipelajari saat fit; transform memakai angka itu pada data lain.
-
-Pipeline adalah urutan langkah yang dipelajari bersama dari data yang masuk ke fit.
 
 Pustaka adalah kumpulan fungsi siap pakai yang dipanggil dari kode.
 
@@ -152,7 +150,7 @@ DummyRegressor(strategy="mean") selalu menebak rata-rata jawaban data latih; str
 
 LinearRegression adalah regresi linear tanpa penalti pada fungsi kerugian.
 
-Pipeline memasang StandardScaler lalu model. Saat fit pada data latih, rata-rata dan simpangan baku dihitung dari data latih saja. Dokumentasi StandardScaler menyatakan simpangan baku itu setara `numpy.std(x, ddof=0)`, yaitu pembagi banyak baris. Kata bahasa Inggris "biased estimator" pada catatan itu adalah pembagi tersebut, bukan parameter `bias` pada `make_regression`.
+StandardScaler dipasang pada data latih, lalu model belajar dari hasil itu. Saat fit, rata-rata dan simpangan baku dihitung dari data latih saja. Dokumentasi StandardScaler menyatakan simpangan baku itu setara `numpy.std(x, ddof=0)`, yaitu pembagi banyak baris. Kata bahasa Inggris "biased estimator" pada catatan itu adalah pembagi tersebut, bukan parameter `bias` pada `make_regression`.
 
 alpha Ridge pada kasus adalah 5. alpha Lasso pada kasus adalah 0.5. Keduanya pilihan modul ini untuk satu perbandingan, bukan alpha terbaik untuk setiap data. Dokumentasi menyarankan `LinearRegression` bila tidak ingin penalti; `alpha=0` pada Ridge atau Lasso tidak disarankan.
 
@@ -164,7 +162,7 @@ Yang dibandingkan pada data uji: rata-rata selisih mutlak. Makin kecil, makin de
 2. Mengira penalti kuadrat membuat koefisien tepat nol. Pada kasus, jumlah koefisien Ridge yang tepat nol tercetak nol.
 3. Mengira koefisien Lasso yang nol pasti tak berguna untuk selamanya. Nol itu hasil penalti pada data ini.
 4. Memakai angka alpha yang sama seolah rumus Ridge dan Lasso identik. Pembagi pada bagian selisih kuadratnya berbeda.
-5. Menghitung rata-rata StandardScaler dari semua baris, termasuk data uji. Pipeline pada kasus belajar dari data latih saja.
+5. Menghitung rata-rata StandardScaler dari semua baris, termasuk data uji. StandardScaler pada kasus belajar dari data latih saja.
 6. Menyamakan parameter `bias` pada `make_regression` dengan catatan "biased estimator" pada StandardScaler. Yang pertama geseran tetap. Yang kedua pembagi simpangan baku.
 7. Mengisi `alpha=0` pada Ridge atau Lasso. Dokumentasi menyarankan LinearRegression bila tidak ada penalti.
 8. Mengulang notebook tanpa `random_state=SEED`, sehingga baris data uji berganti.
@@ -284,7 +282,6 @@ Nama l1 pada dokumentasi Lasso adalah sebutan untuk penalti nilai mutlak.
 - scikit-learn developers. `LinearRegression`. <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html> Halaman ini yang disarankan dokumentasi Ridge dan Lasso bila tidak ada penalti.
 - scikit-learn developers. `make_regression`. <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html> `n_samples`: "The number of samples." `n_features`: "The number of features." `n_informative`: "The number of informative features, i.e., the number of features used to build the linear model used to generate the output." `n_targets`: "By default, the output is a scalar." `bias`: "The bias term in the underlying linear model." `effective_rank` bila `None`: "The input set is well conditioned, centered and gaussian with unit variance." `tail_strength`: "if effective_rank is not None." `noise`: "The standard deviation of the gaussian noise applied to the output." `shuffle`: "Shuffle the samples and the features." `coef`: "If True, the coefficients of the underlying linear model are returned." `random_state` mengunci pembuatan data.
 - scikit-learn developers. `StandardScaler`. <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html> Rumus pada halaman itu: `z = (x - u) / s`. Kalimat pada halaman itu: "Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using `transform`." Catatan pada halaman itu: "We use a biased estimator for the standard deviation, equivalent to `numpy.std(x, ddof=0)`." Kalimat pada halaman yang sama: "For instance many elements used in the objective function of a learning algorithm (such as the RBF kernel of Support Vector Machines or the L1 and L2 regularizers of linear models) assume that all features are centered around 0 and have variance in the same order."
-- scikit-learn developers. `Pipeline`. <https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html> Kalimat pada `fit`: "Fit all the transformers one after the other and sequentially transform the data. Finally, fit the transformed data using the final estimator."
 - scikit-learn developers. `train_test_split`. <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html> Kalimat pada halaman itu: "Split arrays or matrices into random train and test subsets." Bila `train_size` juga `None`, `test_size` menjadi 0.25.
 - scikit-learn developers. `DummyRegressor`. <https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html> Kalimat untuk strategi `"mean"`: "always predicts the mean of the training set".
 - scikit-learn developers. `mean_absolute_error`. <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html> Kalimat pada halaman itu: "The mean absolute error is a non-negative floating point value, where best value is 0.0."

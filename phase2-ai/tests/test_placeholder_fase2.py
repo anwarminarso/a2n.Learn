@@ -11,7 +11,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 FASE2 = REPO / "phase2-ai"
 ISSUE = "https://github.com/anwarminarso/a2n.Learn/issues/{}"
-ROADMAP_SHA256 = "48d238af463cf95d530e6256751a56171190a4e37c075ad6a86f1644f2bdee15"
+ROADMAP_SHA256 = "a4553c3968c011c2f13a6c3a7c509e65cc4a3ef62573718143a86b0e4f09f4de"
 TERLARANG = re.compile(
     "".join(["s", "m", "p"]) + "|" + "".join(["a", "n", "t", "a", "m"]),
     re.IGNORECASE,
@@ -226,8 +226,7 @@ def test_kriteria_dan_mode():
         else:
             assert "DRAF" in kriteria
             assert "belum dipilih" in kriteria
-        assert "sel siswa" in kriteria
-        assert "16 baris atau lebih" in kriteria
+        assert "Setiap sel di notebook siswa paling banyak 15 baris." in kriteria
         assert "### mode cepat" in mode
         assert "### mode penuh" in mode
         assert "CPU" in mode
@@ -400,14 +399,40 @@ def test_pin_llama_cpp_di_modul_13():
     teks = _readme(MODUL[4])
     assert "ca89968a23a13e571a6b802a9891d22763153b61" in teks
     assert "gguf-py" in teks
-    assert "requirements llama.cpp sendiri di venv terpisah" in teks
-    assert "bukan venv proyek, karena versi transformers berbeda" in teks
+    assert "transformers versi llama.cpp" in teks
+    assert "sentencepiece" in teks
+    assert "protobuf<5" in teks
+    assert "tidak ada di uv.lock" in teks
     assert "membuat ulang adapter LoRA kecil" in teks
-    assert "bukan gerbang PR" in teks
+    assert "tidak dijalankan pada mode cepat" in teks
     assert "b12317" not in teks
     assert "jalur GGUF" in teks
     assert "impor GGUF ke Ollama" in teks
     assert "kontrol lewat jalur yang sama" in teks
+
+
+def test_perintah_konversi_gguf_tanpa_uv_run_python():
+    teks = _readme(MODUL[4])
+    assert "python -m venv llama.cpp/.venv" in teks
+    assert "llama.cpp/.venv/bin/pip install -r llama.cpp/requirements/requirements-convert_hf_to_gguf.txt" in teks
+    assert "tetap memasang torch" in teks
+    assert "llama.cpp\\.venv\\Scripts\\pip" in teks
+    assert "llama.cpp\\.venv\\Scripts\\python" in teks
+    assert "A2N_UNDUH=1 uv run python" in teks
+    perintah = []
+    for mentah in teks.splitlines():
+        baris = mentah.strip()
+        menyentuh = (
+            "convert_hf_to_gguf.py" in baris
+            or "gguf-py" in baris
+            or "from gguf import" in baris
+        )
+        if menyentuh and baris.startswith(("uv ", "python ", "llama.cpp/", "PYTHONPATH=")):
+            perintah.append(baris)
+    assert len(perintah) == 3
+    for baris in perintah:
+        assert "uv run python" not in baris
+        assert "llama.cpp/.venv/bin/python" in baris
 
 
 def test_sandbox_menolak_path_traversal():
@@ -527,6 +552,46 @@ def test_tanpa_weights_only_false():
             continue
         assert jarum not in teks, path
         assert jarum_spasi not in teks, path
+
+
+def test_teks_pembaca_tanpa_nama_tim():
+    nama = ("Frieren", "Ursa", "Squal", "Pyra", "Nova", "Lyra")
+    pola = re.compile(r"\b(" + "|".join(nama) + r")\b")
+    iris = re.compile(r"\bIris\b")
+    lewati = {
+        "docs/CONTRIBUTING.md",
+        "docs/module-template.md",
+        "docs/ROADMAP.md",
+    }
+    ketemu = False
+    for path in REPO.rglob("*"):
+        if not path.is_file():
+            continue
+        if any(bagian in path.parts for bagian in (".git", ".venv", "__pycache__", "obj", "bin")):
+            continue
+        if path.parts[0] == ".github" or (len(path.parts) > 1 and path.parts[-2] == ".github"):
+            continue
+        rel = path.relative_to(REPO).as_posix()
+        if rel in lewati or rel.startswith(".github/"):
+            continue
+        if path.name != "README.md" and path.suffix != ".ipynb" and rel != "docs/kamus-istilah.md":
+            continue
+        ketemu = True
+        for nomor, baris in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            assert pola.search(baris) is None, (rel, nomor, baris)
+            if iris.search(baris) and "plants" not in baris and "load_iris" not in baris:
+                raise AssertionError((rel, nomor, baris))
+    assert ketemu
+
+
+def test_notebook_tanpa_repr_html_sklearn():
+    ketemu = False
+    for path in REPO.rglob("*.ipynb"):
+        if any(bagian in path.parts for bagian in (".git", ".venv", ".ipynb_checkpoints")):
+            continue
+        ketemu = True
+        assert "sk-estimator" not in path.read_text(encoding="utf-8"), path
+    assert ketemu
 
 
 def test_tanpa_kata_terlarang():

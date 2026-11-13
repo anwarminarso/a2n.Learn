@@ -4,7 +4,7 @@
 
 **Tujuan belajar:** Pembaca bisa menggabungkan adapter ke model dasar, mengubah hasilnya menjadi GGUF, mengimpornya ke Ollama yang hanya mengikat 127.0.0.1, dan membandingkannya dengan kontrol tanpa LoRA yang melewati jalur konversi yang sama.
 
-Materi mode cepat sudah bisa dijalankan di CPU, tanpa torch dan tanpa unduhan. Impor ke Ollama bukan gerbang PR.
+Materi mode cepat sudah bisa dijalankan di CPU, tanpa torch dan tanpa unduhan. Impor ke Ollama tidak dijalankan pada mode cepat.
 
 Nama pada [docs/ROADMAP.md](../../docs/ROADMAP.md): Menjalankan model lokal dengan Ollama.
 
@@ -20,12 +20,12 @@ Modul sebelumnya: [Modul 12: Fine-tune dengan LoRA](../modul-12-lora/).
 
 Adapter dilarang masuk repo. Mode cepat membuat ulang adapter LoRA kecil langsung di modul ini: delapan puluh langkah, data sintetis, di CPU, tanpa torch. Lalu adapter itu digabung dan dibanding dengan kontrol tanpa LoRA.
 
-Cara memperoleh perkakas untuk jalur sungguhan, di luar gerbang:
+Cara memperoleh perkakas untuk jalur sungguhan, di luar mode cepat:
 
-- Grup torch, karena `convert_hf_to_gguf.py` pada commit ini mengimpor torch: `uv sync --frozen --group torch` dari root repo. Paket `transformers` hanya masuk lewat grup itu. Gerbang tidak memasang grup itu.
+- Grup torch, untuk langkah merge dan `save_pretrained` pada sketsa: `uv sync --frozen --group torch` dari root repo. Paket `transformers` proyek hanya masuk lewat grup itu. Mode cepat tidak memasang grup itu. Konversi GGUF tidak memakai grup ini.
 - llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`: `git clone https://github.com/ggml-org/llama.cpp` lalu `git checkout ca89968a23a13e571a6b802a9891d22763153b61`. Commit ini dicek 2026-11-12: ada `convert_hf_to_gguf.py` di akar dan paket gguf-py di folder `gguf-py`. Tidak disalin ke repo ini.
 - gguf-py dipakai dari checkout itu untuk membaca metadata dan jumlah tensor berkas GGUF.
-- Ollama 0.40.14 adalah versi referensi yang diuji untuk mode penuh. Berkas rilis ada di https://github.com/ollama/ollama/releases/tag/v0.40.14. Mesin gerbang PR tidak diasumsikan memasang Ollama.
+- Ollama 0.40.14 adalah versi referensi yang diuji untuk mode penuh. Berkas rilis ada di https://github.com/ollama/ollama/releases/tag/v0.40.14. Mode cepat tidak memasang Ollama.
 
 ## Cerita pembuka
 
@@ -35,7 +35,7 @@ Kamu menyalin isi stiker ke dalam resep, lalu membuang stikernya. Itu penggabung
 
 ## Teori
 
-Mode cepat memakai vektor empat angka, bukan berkas model. Jumlah tensor yang dihitung adalah satu vektor sesudah digabung, dan satu vektor untuk kontrol. Keduanya sama banyak. Yang beda adalah angkanya.
+Mode cepat memakai vektor empat angka, bukan berkas model. Sebelum digabung, state memuat bobot dasar dan adapter: tiga entri. Sesudah digabung tersisa satu vektor, sama seperti kontrol yang memang satu entri. Bentuk vektor tidak berubah, `shape_sama ya`. Yang beda adalah angkanya.
 
 ### GGUF
 
@@ -43,7 +43,7 @@ Kartu resep untuk dapur rumah, bukan kertas asal dari percetakan. Nama teknisnya
 
 Konversi sungguhan memakai `convert_hf_to_gguf.py` pada commit yang dipin. Jangan memakai pilihan unduh jarak jauh pada skrip itu, karena unduhan model hanya lewat `muat.py` dengan revisi yang dipin. Berkas GGUF tidak masuk repo.
 
-**Batas analogi:** kartu itu bukan adapter dan bukan safetensors. Mode cepat hanya menghitung jumlah tensor yang akan disalin. Mode cepat tidak menulis berkas GGUF.
+**Batas analogi:** kartu itu bukan adapter dan bukan safetensors. Mode cepat menghitung entri state sebelum dan sesudah digabung, lalu cek bentuk vektor. Mode cepat tidak menulis berkas GGUF.
 
 ### penggabungan adapter
 
@@ -51,7 +51,7 @@ Isi stiker disalin ke resep, lalu stikernya dibuang, supaya yang dibaca hanya sa
 
 Kontrol tanpa LoRA adalah resep yang tidak menerima isi stiker. Bentuknya tetap sama, jadi jalur konversi berikutnya sama.
 
-**Batas analogi:** setelah digabung, stiker tidak bisa dilepas dari lembar itu. Jumlah tensor tetap sama. Yang berubah adalah angkanya. Pada keluaran notebook, `beda_skor` 4.504429, melewati ambang `0.5`.
+**Batas analogi:** setelah digabung, stiker tidak bisa dilepas dari lembar itu. Entri state turun dari tiga menjadi satu, dan bentuk vektor tetap sama. Yang berubah adalah angkanya. Pada keluaran notebook, `beda_skor` 4.504429, melewati ambang `0.5`.
 
 ### peladen lokal
 
@@ -76,7 +76,7 @@ Berkas `Modelfile` untuk model yang sudah digabung hanya menunjuk berkas lokal:
 FROM ./gabungan.gguf
 ```
 
-Lalu `ollama create a2n-gabung -f Modelfile`. Ulangi dengan `kontrol.gguf` dan nama `a2n-kontrol`. Ajukan satu kalimat yang sama ke keduanya, lalu catat jawabannya. Impor ini bukan gerbang PR.
+Lalu `ollama create a2n-gabung -f Modelfile`. Ulangi dengan `kontrol.gguf` dan nama `a2n-kontrol`. Ajukan satu kalimat yang sama ke keduanya, lalu catat jawabannya. Impor ini tidak dijalankan pada mode cepat.
 
 **Batas analogi:** alamat itu bukan janji jawaban benar. Mode cepat tidak menyalakan jendela itu. Mengikat alamat lain tidak diajarkan.
 
@@ -104,17 +104,17 @@ Set uji sepuluh baris yang sama diukur sebelum dan sesudah adapter dibuat ulang.
 
 ## Cara menjalankan
 
-Perintah gerbang, dari root repo:
+Perintah dari root repo:
 
 ```bash
 uv sync --frozen
 uv run pytest
 ```
 
-Jalur GGUF sungguhan adalah sketsa opsional, belum diuji gerbang. Setelah gerbang lulus, dan hanya bila kamu memang ingin mencoba sketsa itu:
+Jalur GGUF sungguhan adalah sketsa opsional. Hanya bila kamu memang ingin mencoba sketsa itu:
 
 1. Dari root repo: `uv sync --frozen --group torch`. Paket `transformers` hanya masuk lewat grup torch.
-2. Contoh singkat di bawah menggabungkan LoRA lalu memanggil `save_pretrained`, sehingga ada `folder-gabungan` dan `folder-kontrol`. Ini bukan latihan LoRA sungguhan: tidak ada putaran latih. Sketsa ini belum diuji gerbang. Dari root repo, dengan interpreter venv proyek:
+2. Contoh singkat di bawah menggabungkan LoRA lalu memanggil `save_pretrained`, sehingga ada `folder-gabungan` dan `folder-kontrol`. Sketsa ini hanya menunjukkan alurnya. Tanpa latihan, matriks B pada LoRA tetap nol, jadi hasil gabungan sama dengan model dasar dan dengan `folder-kontrol`. Dari root repo, dengan interpreter venv proyek:
 
 ```bash
 A2N_UNDUH=1 uv run python - << 'PY'
@@ -136,30 +136,42 @@ tokenizer.save_pretrained("folder-gabungan")
 PY
 ```
 
-3. Checkout llama.cpp pada commit `ca89968a23a13e571a6b802a9891d22763153b61` ada di folder `llama.cpp/`. Jangan unduh model lewat pilihan jarak jauh pada skrip konversi. Perintah berikut dijalankan dari root repo dengan `uv run python`, bukan `python` polos:
+3. Checkout llama.cpp pada commit `ca89968a23a13e571a6b802a9891d22763153b61` ada di folder `llama.cpp/`. Jangan unduh model lewat pilihan jarak jauh pada skrip konversi. Konversi butuh transformers versi llama.cpp, sentencepiece, dan protobuf<5. Kebutuhan itu tidak ada di uv.lock proyek, jadi buat venv terpisah di dalam checkout, dari root repo. Berkas requirements itu tetap memasang torch, karena konversi memakainya. Venv ini bukan lingkungan tanpa torch.
 
 ```bash
-uv run python llama.cpp/convert_hf_to_gguf.py folder-gabungan --outfile gabungan.gguf --outtype f16
-uv run python llama.cpp/convert_hf_to_gguf.py folder-kontrol --outfile kontrol.gguf --outtype f16
-PYTHONPATH=llama.cpp/gguf-py uv run python -c "from gguf import GGUFReader; r=GGUFReader('gabungan.gguf'); print(len(r.tensors))"
+python -m venv llama.cpp/.venv
+llama.cpp/.venv/bin/pip install -r llama.cpp/requirements/requirements-convert_hf_to_gguf.txt
 ```
 
-Langkah konversi `convert_hf_to_gguf.py` memakai requirements llama.cpp sendiri di venv terpisah, bukan venv proyek, karena versi transformers berbeda.
+Di Windows, pada jendela perintah:
 
-4. Bandingkan jumlah tensor gabungan dan kontrol. Lalu impor ke Ollama yang hanya mengikat `127.0.0.1`, dengan satu kalimat yang sama. Ini bukan gerbang PR. Seluruh jalur GGUF sungguhan ini sketsa opsional, belum diuji gerbang.
+```bat
+python -m venv llama.cpp\.venv
+llama.cpp\.venv\Scripts\pip install -r llama.cpp\requirements\requirements-convert_hf_to_gguf.txt
+```
+
+Perintah konversi dan gguf-py memakai `llama.cpp/.venv/bin/python`. Di Windows, ganti interpreter itu dengan `llama.cpp\.venv\Scripts\python`. Langkah merge dan `save_pretrained` di atas tetap `uv run python`.
+
+```bash
+llama.cpp/.venv/bin/python llama.cpp/convert_hf_to_gguf.py folder-gabungan --outfile gabungan.gguf --outtype f16
+llama.cpp/.venv/bin/python llama.cpp/convert_hf_to_gguf.py folder-kontrol --outfile kontrol.gguf --outtype f16
+PYTHONPATH=llama.cpp/gguf-py llama.cpp/.venv/bin/python -c "from gguf import GGUFReader; r=GGUFReader('gabungan.gguf'); print(len(r.tensors))"
+```
+
+4. Bandingkan jumlah tensor gabungan dan kontrol. Lalu impor ke Ollama yang hanya mengikat `127.0.0.1`, dengan satu kalimat yang sama. Seluruh jalur GGUF sungguhan ini sketsa opsional.
 
 Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertama memuat satu ide.
 
 ## Cek pemahaman
 
 1. Apa beda bobot gabungan dan kontrol tanpa LoRA?
-2. Mengapa jumlah tensor keduanya sama?
+2. Mengapa jumlah entri sesudah digabung sama dengan kontrol?
 3. Alamat dengar Ollama yang diajarkan di modul ini apa?
 
 ## Kunci jawaban
 
 1. Kontrol adalah bobot dasar. Gabungan adalah bobot dasar ditambah catatan LoRA. Pada keluaran, `beda_skor` 4.504429.
-2. Catatan sudah disalin ke dalam bobot, jadi yang tersisa satu vektor, sama seperti kontrol. `jumlah_sama ya`.
+2. Catatan sudah disalin ke dalam bobot, jadi yang tersisa satu vektor, sama seperti kontrol. `tensor_sebelum 3`, `tensor_sesudah 1`, `tensor_kontrol 1`. Bentuknya tetap: `shape_sama ya`.
 3. `127.0.0.1`.
 
 ## Sumber
@@ -197,21 +209,21 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan,
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Merge diblok bila ada sel siswa 16 baris atau lebih.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Mode cepat membuat ulang adapter LoRA kecil di CPU, bukan mengambil berkas adapter dari repo. Kerugian pada set uji turun minimal `0.15`. Bobot dasar tidak berubah.
-- Model dengan LoRA dan kontrol tanpa LoRA sama-sama punya satu tensor pada mode cepat, dan sama-sama lewat `convert_hf_to_gguf.py` pada commit `ca89968a23a13e571a6b802a9891d22763153b61` bila jalur sungguhan dijalankan. gguf-py membaca metadata dan jumlah tensor. Berkas GGUF tidak masuk repo. Beda skor pada satu baris uji minimal `0.5`.
-- Impor kedua berkas GGUF ke Ollama 0.40.14 di `127.0.0.1`, lalu bandingkan jawaban dengan kontrol, adalah mode penuh. Impor ini bukan gerbang PR.
+- Sesudah digabung, model dengan LoRA dan kontrol tanpa LoRA sama-sama punya satu tensor pada mode cepat. Sebelum digabung, state model dengan LoRA memuat tiga entri, dan bentuk vektor gabungan sama dengan bobot dasar. Keduanya sama-sama lewat `convert_hf_to_gguf.py` pada commit `ca89968a23a13e571a6b802a9891d22763153b61` bila jalur sungguhan dijalankan. gguf-py membaca metadata dan jumlah tensor. Berkas GGUF tidak masuk repo. Beda skor pada satu baris uji minimal `0.5`.
+- Impor kedua berkas GGUF ke Ollama 0.40.14 di `127.0.0.1`, lalu bandingkan jawaban dengan kontrol, adalah mode penuh. Impor ini tidak dijalankan pada mode cepat.
 
 ## Mode cepat dan mode penuh
 
 ### mode cepat
 
-Wajib lulus di CPU, tanpa torch dan tanpa jaringan. Buat ulang adapter LoRA kecil, gabungkan, bandingkan dengan kontrol tanpa LoRA, lalu catat jumlah tensor yang sama. Nama skrip `convert_hf_to_gguf.py` dan alamat `127.0.0.1` dicetak, tidak dijalankan. Ini gerbang tiap PR.
+Wajib lulus di CPU, tanpa torch dan tanpa jaringan. Buat ulang adapter LoRA kecil, gabungkan, bandingkan dengan kontrol tanpa LoRA, lalu catat entri state sebelum dan sesudah serta bentuk vektor yang sama. Nama skrip `convert_hf_to_gguf.py` dan alamat `127.0.0.1` dicetak, tidak dijalankan.
 
 ### mode penuh
 
-Sketsa opsional, belum diuji gerbang. Konversi sungguhan ke GGUF pada commit llama.cpp `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor ke Ollama 0.40.14 yang hanya mengikat `127.0.0.1`, untuk model dengan LoRA dan untuk kontrol tanpa LoRA. GPU di MyLegion7i dipakai bila penggabungan model besar memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
+Sketsa opsional. Konversi sungguhan ke GGUF pada commit llama.cpp `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor ke Ollama 0.40.14 yang hanya mengikat `127.0.0.1`, untuk model dengan LoRA dan untuk kontrol tanpa LoRA. GPU di MyLegion7i dipakai bila penggabungan model besar memerlukannya. Hasil dinilai dari log mentah.
 
 ## Model dan dataset
 
@@ -247,16 +259,18 @@ kerugian_uji_sebelum 0.246913
 kerugian_uji_sesudah 0.050404
 selisih_uji 0.196509
 bobot_tetap ya
-tensor_gabung 1
+tensor_sebelum 3
+tensor_sesudah 1
 tensor_kontrol 1
-jumlah_sama ya
+shape_sama ya
+shape_kontrol ya
 skor_gabung -4.496645
 skor_kontrol 0.007784
 beda_skor 4.504429
 skrip convert_hf_to_gguf.py
 commit ca89968
 alamat 127.0.0.1
-impor_ollama bukan_gerbang
+impor_ollama cek_saja
 model HuggingFaceTB/SmolLM2-135M-Instruct
 revisi 12fd25f77366fa6b3b4b768ec3050bf629380bac
 model_penuh Qwen/Qwen2.5-0.5B-Instruct

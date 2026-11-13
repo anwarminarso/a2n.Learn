@@ -2,7 +2,7 @@
 
 **Tingkat:** —
 
-**Tujuan belajar:** Pembaca bisa memotong teks, menyimpan vektornya, mengambil potongan yang dekat dengan pertanyaan, lalu menyusun jawaban yang menyebut sumber dan menilai jawaban mengarang.
+**Tujuan belajar:** Pembaca bisa memotong teks, menyimpan vektornya, mengambil potongan yang dekat dengan pertanyaan, lalu menyusun jawaban yang menyebut sumber. Istilah jawaban mengarang berarti sistem menolak menjawab bila sumber tidak cukup, dengan status `tanpa_sumber`.
 
 Materi mode cepat sudah bisa dijalankan di CPU, tanpa torch dan tanpa unduhan. Folder indeks dibuat saat notebook jalan dan tidak masuk repo.
 
@@ -54,17 +54,17 @@ Kedekatan diukur dengan kemiripan vektor dari modul 10, yaitu kosinus. Selain it
 
 Buka kartu dulu, baru jawab dari kartu itu. Nama teknisnya **RAG**: cara menjawab dengan mengambil potongan dulu, lalu menyusun jawaban dari potongan itu.
 
-Mode cepat menyalin teks potongan. Mode penuh, bila jaringan dinyalakan, boleh memakai model bahasa. Gerbang tidak menyalakan unduhan itu.
+Mode cepat menyalin teks potongan. Mode penuh, bila jaringan dinyalakan, boleh memakai model bahasa. Mode cepat tidak menyalakan unduhan itu.
 
 **Batas analogi:** membuka kartu tidak menjamin kalimat jawaban sama persis dengan kartu. Mode penuh yang memakai model tetap bisa menambah kata yang tidak ada di kartu.
 
 ### jawaban mengarang
 
-Soal yang tidak punya kartu ditandai, bukan dijawab dengan kartu yang kebetulan agak dekat. Nama teknisnya **jawaban mengarang**: jawaban yang tidak ditopang potongan sumber, atau tanda bahwa pertanyaan tidak punya sumber yang cukup di dokumen.
+Soal yang tidak punya kartu ditolak, bukan dijawab dengan kartu yang kebetulan agak dekat. Nama teknisnya **jawaban mengarang**: sistem menolak menjawab karena sumbernya tidak cukup. Status pada keluaran adalah `tanpa_sumber`.
 
-Ambangnya dua: skor kosinus minimal `0.3`, dan token bersama minimal `2`. Soal tiket kereta punya token bersama `0` dan skor `0.000000`, jadi statusnya `jawaban_mengarang`.
+Penolakan memakai dua aturan: skor di bawah `0.3`, atau token bersama di bawah `2`. Soal tiket kereta punya token bersama `0` dan skor `0.000000`, jadi statusnya `tanpa_sumber`. Selisih peringkat `0.15` adalah syarat contoh yang benar, pada assert notebook dan kriteria lulus, bukan aturan penolakan.
 
-**Batas analogi:** tanda ini bukan bukti seseorang berbohong. Ini tanda pengambilan tidak menemukan sumber yang cukup. Yang dicek ambang, bukan kalimat yang persis.
+**Batas analogi:** tanda ini bukan bukti seseorang berbohong. Ini tanda pengambilan tidak menemukan sumber yang cukup. Yang dicek untuk penolakan adalah skor dan token bersama, bukan kalimat yang persis.
 
 ### kutipan sumber
 
@@ -86,7 +86,7 @@ Jawab dulu. Setelah itu buka `notebook.ipynb` dan jalankan dari sel pertama.
 
 Tiga berkas di `dokumen/`: `dapur.txt`, `kebun.txt`, dan `perpustakaan.txt`. Isinya teks sintetis yang ditulis untuk latihan ini. Bukan data asli perusahaan. Tidak ada unduhan data.
 
-Notebook membaca hanya berkas `.txt` di folder itu, memotong baris isinya, lalu menulis vektor ke `indeks/potongan.json`. Enam potongan tersimpan. Pertanyaan rak mengambil `perpustakaan.txt`. Pertanyaan kereta ditandai jawaban mengarang.
+Notebook membaca hanya berkas `.txt` di folder itu, memotong baris isinya, lalu menulis vektor ke `indeks/potongan.json`. Enam potongan tersimpan. Pertanyaan rak mengambil `perpustakaan.txt`. Pertanyaan kereta ditolak karena sumbernya tidak cukup. Statusnya `tanpa_sumber`.
 
 `skor_rak` 0.783885, melewati ambang `0.3`. `selisih_rak` 0.195568, melewati ambang `0.15`. `bagi_rak` 4, melewati ambang `2`.
 
@@ -95,26 +95,26 @@ Notebook membaca hanya berkas `.txt` di folder itu, memotong baris isinya, lalu 
 1. Folder `indeks/` ikut di-commit. Folder itu dibangun saat notebook jalan dan ada di `.gitignore`.
 2. Mengambil teks dari luar folder `dokumen/`. Potongan hanya boleh dari berkas yang ada di repo.
 3. Menjawab soal jebakan dengan potongan yang kebetulan dekat, padahal token bersamanya nol.
-4. Mengunduh model di gerbang PR. Unduhan hanya bila `A2N_UNDUH=1`.
+4. Mengunduh model padahal mode cepat tidak mengunduh. Unduhan hanya bila `A2N_UNDUH=1`.
 5. Menulis angka di laporan dari ingatan. Salin dari keluaran notebook.
 
 ## Cara menjalankan
 
-Perintah gerbang, dari root repo:
+Perintah dari root repo:
 
 ```bash
 uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
+Unduhan opsional. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
 uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
 
-Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini. `muat_embedding()` memakai kelas bawaan, yaitu `AutoModel`. `muat_jawaban()` mengirim `AutoModelForCausalLM`.
+Perintah itu butuh jaringan. Lingkungan yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini. `muat_embedding()` memakai kelas bawaan, yaitu `AutoModel`. `muat_jawaban()` mengirim `AutoModelForCausalLM`.
 
 Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertama memuat satu ide.
 
@@ -127,7 +127,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertam
 ## Kunci jawaban
 
 1. Per baris isi. Baris yang diawali `Catatan:` tidak ikut.
-2. Token bersamanya `0` dan skornya `0.000000`, di bawah ambang. Statusnya `jawaban_mengarang`.
+2. Token bersamanya `0` dan skornya `0.000000`, di bawah ambang. Statusnya `tanpa_sumber`.
 3. `perpustakaan.txt`. `skor_rak` 0.783885. Kutipannya `Kode rak buku cerita adalah B-12.`
 
 ## Sumber
@@ -168,16 +168,16 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan 
 ## Rencana latihan
 
 - Satu pertanyaan yang petunjuknya ada di satu potongan. Pengambilan mengembalikan `perpustakaan.txt`.
-- Satu soal jebakan yang sumbernya tidak ada. Statusnya `jawaban_mengarang`.
+- Satu soal jebakan yang sumbernya tidak ada. Statusnya `tanpa_sumber`.
 
 ## Kriteria lulus
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Merge diblok bila ada sel siswa 16 baris atau lebih.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Minimal 1 dari 1 pertanyaan latihan mengambil potongan `perpustakaan.txt`.
-- Soal jebakan lulus bila statusnya `jawaban_mengarang`.
+- Soal jebakan lulus bila statusnya `tanpa_sumber`.
 - Skor soal bersumber minimal `0.3`. Selisih dengan peringkat kedua minimal `0.15`. Token bersama minimal `2`.
 - Indeks vektor tidak masuk repo dan tidak di-push ke Hugging Face.
 
@@ -185,11 +185,11 @@ Pengecekan memakai ambang, bukan angka persis.
 
 ### mode cepat
 
-Wajib lulus di CPU, tanpa torch dan tanpa jaringan. Tiga berkas sintetis, vektor numpy dengan `SEED`, indeks di folder `indeks/`. Ini gerbang tiap PR.
+Wajib lulus di CPU, tanpa torch dan tanpa jaringan. Tiga berkas sintetis, vektor numpy dengan `SEED`, indeks di folder `indeks/`.
 
 ### mode penuh
 
-Opsional. Embedding `sentence-transformers/all-MiniLM-L6-v2` lewat `AutoModel`, dan model jawaban `HuggingFaceTB/SmolLM2-135M-Instruct` lewat `AutoModelForCausalLM`, hanya bila `A2N_UNDUH=1`. GPU di MyLegion7i dipakai bila model jawaban memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
+Opsional. Embedding `sentence-transformers/all-MiniLM-L6-v2` lewat `AutoModel`, dan model jawaban `HuggingFaceTB/SmolLM2-135M-Instruct` lewat `AutoModelForCausalLM`, hanya bila `A2N_UNDUH=1`. GPU di MyLegion7i dipakai bila model jawaban memerlukannya. Hasil dinilai dari log mentah.
 
 ## Model dan dataset
 
@@ -227,7 +227,7 @@ sumber_rak perpustakaan.txt
 skor_rak 0.783885
 bagi_rak 4
 kutipan_rak Kode rak buku cerita adalah B-12.
-status_jebakan jawaban_mengarang
+status_jebakan tanpa_sumber
 skor_jebakan 0.000000
 bagi_jebakan 0
 selisih_rak 0.195568
@@ -240,5 +240,5 @@ revisi_jawaban 12fd25f77366fa6b3b4b768ec3050bf629380bac
 unduh False
 status_rak_latihan bersumber
 sumber_rak_latihan perpustakaan.txt
-status_jebakan_latihan jawaban_mengarang
+status_jebakan_latihan tanpa_sumber
 ```

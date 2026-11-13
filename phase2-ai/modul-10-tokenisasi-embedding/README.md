@@ -58,7 +58,7 @@ Jawab dulu. Lalu buka `notebook.ipynb` dari sel pertama.
 
 Tiga kalimat sintetis ditulis langsung di notebook. Tidak ada unduhan data. Bukan data asli perusahaan.
 
-Mode cepat tidak memanggil model Hugging Face. Mode penuh, bila jaringan dinyalakan dengan `A2N_UNDUH=1`, memuat `sentence-transformers/all-MiniLM-L6-v2` pada revisi `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`. Pemuatnya ada di `muat.py`. Argumennya `revision=revisi`, `use_safetensors=True`, `trust_remote_code=False`, dan `allow_patterns` yang sama dengan bagian Aturan. Gerbang PR tidak menyalakan unduhan itu.
+Mode cepat tidak memanggil model Hugging Face. Mode penuh, bila jaringan dinyalakan dengan `A2N_UNDUH=1`, memuat `sentence-transformers/all-MiniLM-L6-v2` pada revisi `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`. Pemuatnya ada di `muat.py`. Argumennya `revision=revisi`, `use_safetensors=True`, `trust_remote_code=False`, dan `allow_patterns` yang sama dengan bagian Aturan. Mode cepat tidak menyalakan unduhan itu.
 
 Vektor mode penuh, bila diunduh, tetap perlu dirata-rata dari token. Berkas pooling di repo model tidak ikut diunduh, karena pola unduh hanya mengizinkan bobot safetensors, config, dan tokenizer. Mode cepat tidak bergantung pada berkas itu.
 
@@ -67,7 +67,7 @@ Vektor mode penuh, bila diunduh, tetap perlu dirata-rata dari token. Berkas pool
 1. Huruf besar dibiarkan, jadi "Kucing" dan "kucing" menjadi dua token. Notebook menulis huruf kecil dulu.
 2. Skor jauh yang masih positif dianggap gagal. Yang dicek adalah selisih dengan skor dekat, minimal 0.3.
 3. Peta acak dianggap sudah tahu arti kata. Peta ini hanya undian yang dikunci SEED.
-4. Mode penuh dijalankan di gerbang PR. Gerbang tidak punya jaringan. Unduhan hanya bila `A2N_UNDUH=1`.
+4. Mode penuh tidak dijalankan pada mode cepat, karena mode cepat tidak punya jaringan. Unduhan hanya bila `A2N_UNDUH=1`.
 5. Angka di laporan ditulis dari ingatan. Salin dari keluaran notebook.
 
 ## Cara menjalankan
@@ -79,14 +79,14 @@ uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
+Unduhan opsional. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
 uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
 
-Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini.
+Perintah itu butuh jaringan. Lingkungan yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini.
 
 ## Cek pemahaman
 
@@ -138,7 +138,7 @@ Sel terakhir notebook menunjuk ke modul 11 dan modul 14 tanpa mengisi arti istil
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Merge diblok bila ada sel siswa 16 baris atau lebih.
+- Setiap sel di notebook siswa paling banyak 15 baris.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Selisih skor kemiripan pasangan dekat dan pasangan jauh minimal 0.3.
 - Mode cepat tidak mengunduh model. Bila mode penuh mengunduh, revisi yang dipin di register yang dipakai, dan lisensi sudah dicek sebelum unduh.
@@ -151,7 +151,7 @@ Wajib lulus. Beberapa kalimat sintetis, vektor kecil dari generator di notebook,
 
 ### mode penuh
 
-Opsional. `sentence-transformers/all-MiniLM-L6-v2` pada revisi yang dipin, di GPU MyLegion7i bila mesin itu memakainya. Hasil dinilai dari log mentah. Bukan gerbang PR.
+Opsional. `sentence-transformers/all-MiniLM-L6-v2` pada revisi yang dipin, di GPU MyLegion7i bila mesin itu memakainya. Hasil dinilai dari log mentah.
 
 ## Model dan dataset
 

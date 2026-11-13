@@ -105,7 +105,7 @@ def test_parameter_generator_mengikuti_dokumentasi():
         teks = path.read_text(encoding="utf-8")
         for frasa in FRASA_SALAH:
             assert frasa not in teks, (path, frasa)
-    for nama in ("README.md", *NOTEBOOKS):
+    for nama in NOTEBOOKS:
         teks = (ROOT / nama).read_text(encoding="utf-8").replace("`", "")
         if "make_classification" not in teks:
             continue
@@ -118,6 +118,21 @@ def test_parameter_generator_mengikuti_dokumentasi():
             "kolom acak yang tidak berguna",
         ):
             assert frasa in teks, (nama, frasa)
+    readme_kasus = (ROOT / "README.md").read_text(encoding="utf-8")
+    for jargon in ("hypercube", "kombinasi linear"):
+        assert jargon not in readme_kasus
+    for parameter in (
+        "n_samples",
+        "n_features",
+        "n_informative",
+        "n_redundant=0",
+        "n_repeated=0",
+        "n_clusters_per_class=1",
+        "class_sep",
+        "flip_y",
+        "random_state=SEED",
+    ):
+        assert parameter in readme_kasus
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     notebook = _sumber_semua("notebook.ipynb")
     for frasa in ("standard_normal", "simpangan baku 1", "sebelum 2", "Generator NumPy"):
@@ -365,7 +380,7 @@ def test_kamus_istilah_modul():
     akhir = kamus.index("| recall |")
     akhir = kamus.index("\n", akhir)
     assert "\n\n" not in kamus[awal:akhir]
-    for istilah, modul in (("data leakage", "5"), ("cross-validation", "5a")):
+    for istilah, modul in (("data leakage", "5a"), ("cross-validation", "5a")):
         baris = [b for b in kamus.splitlines() if b.startswith(f"| {istilah} |")]
         assert len(baris) == 1, istilah
         kolom = [k.strip() for k in baris[0].strip().strip("|").split("|")]
