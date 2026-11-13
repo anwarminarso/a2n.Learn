@@ -5,6 +5,8 @@ Nilai yang dicek dihitung ulang di sini, bukan disalin dari ingatan.
 
 import json
 import re
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -337,3 +339,170 @@ def test_program_dotnet_menyebut_keluaran_onnx():
     assert '"label"' in sumber
     assert '"probabilities"' in sumber
     assert "nama_masukan" in sumber
+
+
+def _sumber_pemanggil():
+    return (ROOT / "dotnet" / "PemanggilOnnx" / "Program.cs").read_text(encoding="utf-8")
+
+
+def test_readme_dotnet_dijalankan_dari_folder_modul():
+    teks = (ROOT / "README.md").read_text(encoding="utf-8")
+    perintah = "dotnet run --project dotnet/PemanggilOnnx -- model.onnx baris.json keluar.json"
+    assert teks.count(perintah) == 2
+    assert "phase1-ml/modul-08-proyek-akhir/dotnet/PemanggilOnnx" not in teks
+    assert "Dari folder modul ini" in teks
+
+
+def test_program_menolak_berkas_hilang_json_rusak_dan_panjang_baris():
+    sumber = _sumber_pemanggil()
+    assert "File.Exists(args[0])" in sumber
+    assert "File.Exists(args[1])" in sumber
+    assert "berkas tidak ditemukan:" in sumber
+    assert "JsonException" in sumber
+    assert "baris.json rusak" in sumber
+    assert "panjang baris tidak cocok" in sumber
+    assert sumber.index("File.Exists(args[0])") < sumber.index("JsonSerializer.Deserialize")
+    assert sumber.index("panjang baris tidak cocok") < sumber.index("datar[")
+
+
+def test_keluaran_json_modul_diabaikan_git():
+    for contoh in (
+        "phase1-ml/modul-08-proyek-akhir/baris.json",
+        "phase1-ml/modul-08-proyek-akhir/keluar.json",
+    ):
+        hasil = subprocess.run(
+            ["git", "check-ignore", "-q", "--", contoh],
+            cwd=REPO,
+        )
+        assert hasil.returncode == 0, contoh
+    lain = subprocess.run(
+        ["git", "check-ignore", "-q", "--", "phase1-ml/modul-03-regresi/baris.json"],
+        cwd=REPO,
+    )
+    assert lain.returncode != 0
+
+
+def _dotnet():
+    kandidat = shutil.which("dotnet")
+    if kandidat:
+        return kandidat
+    rumah = Path.home() / ".dotnet" / "dotnet"
+    if rumah.is_file():
+        return str(rumah)
+    return None
+
+
+def _jalankan_dotnet(argumen):
+    return subprocess.run(
+        [
+            _dotnet(),
+            "run",
+            "--project",
+            str(ROOT / "dotnet" / "PemanggilOnnx"),
+            "--",
+            *argumen,
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def test_live_model_hilang(tmp_path):
+    if _dotnet() is None:
+        import pytest
+
+        pytest.skip("dotnet tidak ada")
+    baris = tmp_path / "baris.json"
+    baris.write_text('{"nama_masukan":"masukan_angka","fitur":[[1,2,3,4]]}', encoding="utf-8")
+    hasil = _jalankan_dotnet(
+        [str(tmp_path / "tidak-ada.onnx"), str(baris), str(tmp_path / "keluar.json")]
+    )
+    assert hasil.returncode == 1
+    assert "berkas tidak ditemukan" in hasil.stderr
+    assert "tidak-ada.onnx" in hasil.stderr
+
+
+def test_live_baris_hilang(tmp_path):
+    if _dotnet() is None:
+        import pytest
+
+        pytest.skip("dotnet tidak ada")
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"bukan-onnx")
+    hasil = _jalankan_dotnet(
+        [str(model), str(tmp_path / "baris.json"), str(tmp_path / "keluar.json")]
+    )
+    assert hasil.returncode == 1
+    assert "berkas tidak ditemukan" in hasil.stderr
+    assert "baris.json" in hasil.stderr
+
+
+def test_live_folder_tidak_ada(tmp_path):
+    if _dotnet() is None:
+        import pytest
+
+        pytest.skip("dotnet tidak ada")
+    hilang = tmp_path / "folder-tidak-ada" / "model.onnx"
+    baris = tmp_path / "baris.json"
+    baris.write_text('{"nama_masukan":"masukan_angka","fitur":[[1,2,3,4]]}', encoding="utf-8")
+    hasil = _jalankan_dotnet([str(hilang), str(baris), str(tmp_path / "keluar.json")])
+    assert hasil.returncode == 1
+    assert "berkas tidak ditemukan" in hasil.stderr
+    assert "folder-tidak-ada" in hasil.stderr
+
+
+def test_live_json_rusak(tmp_path):
+    if _dotnet() is None:
+        import pytest
+
+        pytest.skip("dotnet tidak ada")
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"bukan-onnx")
+    baris = tmp_path / "baris.json"
+    baris.write_text("{", encoding="utf-8")
+    hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+    assert hasil.returncode == 1
+    assert "baris.json rusak" in hasil.stderr
+
+
+def test_live_panjang_baris_tidak_cocok(tmp_path):
+    if _dotnet() is None:
+        import pytest
+
+        pytest.skip("dotnet tidak ada")
+    model = tmp_path / "model.onnx"
+    model.write_bytes(b"bukan-onnx")
+    baris = tmp_path / "baris.json"
+    baris.write_text(
+        '{"nama_masukan":"masukan_angka","fitur":[[1,2,3,4],[5,6]]}',
+        encoding="utf-8",
+    )
+    hasil = _jalankan_dotnet([str(model), str(baris), str(tmp_path / "keluar.json")])
+    assert hasil.returncode == 1
+    assert "panjang baris tidak cocok" in hasil.stderr
+    assert "IndexOutOfRangeException" not in hasil.stderr
+    assert "IndexOutOfRangeException" not in hasil.stdout
+
+
+def test_live_roundtrip_label_identik(tmp_path):
+    if _dotnet() is None:
+        import pytest
+
+        pytest.skip("dotnet tidak ada")
+    pipeline, masukan, berkas, _keluar = _latih_dan_banding(42)
+    delapan = masukan[:8]
+    model = tmp_path / "model.onnx"
+    baris = tmp_path / "baris.json"
+    keluar = tmp_path / "keluar.json"
+    model.write_bytes(berkas.SerializeToString())
+    baris.write_text(
+        json.dumps({"nama_masukan": "masukan_angka", "fitur": delapan.tolist()}),
+        encoding="utf-8",
+    )
+    hasil = _jalankan_dotnet([str(model), str(baris), str(keluar)])
+    assert hasil.returncode == 0, hasil.stderr
+    data = json.loads(keluar.read_text(encoding="utf-8"))
+    python_label = [int(nilai) for nilai in pipeline.predict(delapan)]
+    assert [int(nilai) for nilai in data["label"]] == python_label

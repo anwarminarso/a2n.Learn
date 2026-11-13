@@ -12,8 +12,32 @@ if (args.Length != 3)
     return 1;
 }
 
+const string Petunjuk = "jalankan notebook dulu dan jalankan perintah dari folder modul 8";
+
+if (!File.Exists(args[0]))
+{
+    Console.Error.WriteLine($"berkas tidak ditemukan: {args[0]}; {Petunjuk}");
+    return 1;
+}
+
+if (!File.Exists(args[1]))
+{
+    Console.Error.WriteLine($"berkas tidak ditemukan: {args[1]}; {Petunjuk}");
+    return 1;
+}
+
 var opsi = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-var muatan = JsonSerializer.Deserialize<Muatan>(File.ReadAllText(args[1]), opsi);
+Muatan? muatan;
+try
+{
+    muatan = JsonSerializer.Deserialize<Muatan>(File.ReadAllText(args[1]), opsi);
+}
+catch (JsonException)
+{
+    Console.Error.WriteLine("baris.json rusak");
+    return 1;
+}
+
 if (muatan is null || muatan.Fitur.Length == 0)
 {
     Console.Error.WriteLine("berkas masukan kosong");
@@ -21,7 +45,24 @@ if (muatan is null || muatan.Fitur.Length == 0)
 }
 
 int baris = muatan.Fitur.Length;
+if (muatan.Fitur[0] is null)
+{
+    Console.Error.WriteLine("panjang baris tidak cocok: baris 0 kosong, kolom tidak ada");
+    return 1;
+}
+
 int kolom = muatan.Fitur[0].Length;
+for (int i = 0; i < baris; i++)
+{
+    int panjang = muatan.Fitur[i]?.Length ?? -1;
+    if (panjang != kolom)
+    {
+        Console.Error.WriteLine(
+            $"panjang baris tidak cocok: baris {i} punya {Math.Max(panjang, 0)} angka, kolom {kolom}");
+        return 1;
+    }
+}
+
 var datar = new float[baris * kolom];
 for (int i = 0; i < baris; i++)
 {
