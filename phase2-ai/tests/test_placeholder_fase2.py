@@ -171,7 +171,6 @@ def test_readme_punya_bagian_wajib_dan_issue():
         teks = _readme(modul)
         assert modul["judul"] == modul["roadmap"]
         assert teks.startswith(f"# Modul {modul['nomor']}: {modul['judul']}\n")
-        assert "**Status:** PLACEHOLDER" in teks
         assert "**Tingkat:** pro" in teks
         assert "**Tujuan belajar:**" in teks
         assert modul["roadmap"] in teks
@@ -188,8 +187,18 @@ def test_readme_punya_bagian_wajib_dan_issue():
             "## Aturan",
         ):
             assert judul in teks
-        assert "Notebook, latihan, dan kunci belum dibuat." in teks
         assert _sesi(teks) == modul["sesi"]
+        if modul["nomor"] in {"9", "10", "11"}:
+            assert "**Status:** PLACEHOLDER" not in teks
+            assert "Notebook, latihan, dan kunci belum dibuat." not in teks
+            for nama in ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb"):
+                assert (FASE2 / modul["folder"] / nama).is_file()
+            assert "## Cerita pembuka" in teks
+            assert "## Coba sendiri dulu, baru kode" in teks
+            assert "## Keluaran mode cepat" in teks
+        else:
+            assert "**Status:** PLACEHOLDER" in teks
+            assert "Notebook, latihan, dan kunci belum dibuat." in teks
         for sesi in modul["sesi"]:
             assert len(sesi) <= 3
 
@@ -210,8 +219,12 @@ def test_kriteria_dan_mode():
         teks = _readme(modul)
         kriteria = _bagian(teks, "Kriteria lulus")
         mode = _bagian(teks, "Mode cepat dan mode penuh")
-        assert "DRAF" in kriteria
-        assert "belum dipilih" in kriteria
+        if modul["nomor"] in {"9", "10", "11"}:
+            assert "DRAF" not in kriteria
+            assert "belum dipilih" not in kriteria
+        else:
+            assert "DRAF" in kriteria
+            assert "belum dipilih" in kriteria
         assert "sel siswa" in kriteria
         assert "16 baris atau lebih" in kriteria
         assert "### mode cepat" in mode
@@ -226,6 +239,9 @@ def test_aturan_gate():
     for modul in MODUL:
         aturan = _bagian(_readme(modul), "Aturan")
         for kalimat in KALIMAT_ATURAN:
+            if kalimat == "belum dipin" and modul["nomor"] in {"10", "11"}:
+                assert "revisi yang dipin" in aturan
+                continue
             assert kalimat in aturan, (modul["nomor"], kalimat)
 
 
@@ -255,10 +271,19 @@ def test_kamus_mengunci_nama_pada_modul_utuh():
         istilah = [nama for sesi in modul["sesi"] for nama in sesi]
         for nama in istilah:
             _judul, arti, perumpamaan, pengenal, batas = _kolom_kamus(kamus, nama)
-            assert arti == perumpamaan == batas == "PLACEHOLDER"
             assert pengenal == modul["nomor"]
+            if modul["nomor"] in {"9", "10", "11"}:
+                assert arti != "PLACEHOLDER"
+                assert perumpamaan != "PLACEHOLDER"
+                assert batas != "PLACEHOLDER"
+                assert "PLACEHOLDER" not in arti
+            else:
+                assert arti == perumpamaan == batas == "PLACEHOLDER"
         jumlah = [b for b in kamus.splitlines() if f"| {modul['nomor']} |" in b and "PLACEHOLDER" in b]
-        assert len(jumlah) == len(istilah)
+        if modul["nomor"] in {"9", "10", "11"}:
+            assert jumlah == []
+        else:
+            assert len(jumlah) == len(istilah)
     assert "9a" not in kamus
     assert "14a" not in kamus
     indeks = [i for i, b in enumerate(kamus.splitlines()) if b.startswith("|")]
@@ -425,11 +450,16 @@ def test_pyproject_tanpa_paket_baru():
 
 
 def test_tanpa_kata_terlarang():
-    for path in _berkas_dokumen():
+    for path in REPO.rglob("*"):
         if not path.is_file() or path.suffix == ".pyc":
             continue
-        if LEWATI.intersection(path.parts):
+        if LEWATI.intersection(path.parts) or ".git" in path.parts:
             continue
-        teks = path.read_text(encoding="utf-8")
+        if path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif", ".onnx"}:
+            continue
+        try:
+            teks = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
         assert TERLARANG.search(teks) is None, path
         assert TERLARANG.search(path.name) is None, path

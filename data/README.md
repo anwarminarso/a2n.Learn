@@ -9,7 +9,7 @@ Salinan kecil data publik (pengecualian yang sudah disetujui Frieren atau mas An
 
 ## Fase 2
 
-Placeholder di `phase2-ai/` menambah aturan berikut. Materi belum ditulis.
+Modul 9 sampai 11 sudah ditulis. Modul 12 sampai 15 masih placeholder. Aturan berikut tetap berlaku.
 
 - Data hanya sintetis atau dataset publik. Data asli perusahaan dilarang sama sekali, termasuk yang sudah disamarkan.
 - Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face. Tidak ada file GGUF di repo.

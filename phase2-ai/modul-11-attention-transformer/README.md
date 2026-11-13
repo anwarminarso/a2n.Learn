@@ -1,12 +1,10 @@
 # Modul 11: Transformer
 
-**Status:** PLACEHOLDER
-
 **Tingkat:** pro
 
-**Tujuan belajar:** Pembaca bisa menghitung attention pada matriks mini, lalu memakai model kecil siap pakai untuk klasifikasi teks, dengan revisi yang dipin dan format safetensors.
+**Tujuan belajar:** Pembaca bisa menghitung attention pada matriks mini, lalu memakai model kecil untuk klasifikasi teks. Revisi model yang diunduh dipin, dan bobot yang dimuat berformat safetensors.
 
-Isi materi belum ditulis. Halaman ini adalah rencana, bukan bahan ajar.
+Materi mode cepat sudah bisa dijalankan di CPU, tanpa unduhan.
 
 Nama pada [docs/ROADMAP.md](../../docs/ROADMAP.md): Transformer.
 
@@ -18,15 +16,108 @@ Tracking Fase 2: [#33](https://github.com/anwarminarso/a2n.Learn/issues/33).
 
 ## Prasyarat
 
-Modul sebelumnya: [Modul 10: Embedding dan tokenisasi](../modul-10-tokenisasi-embedding/).
+Modul sebelumnya: [Modul 10: Embedding dan tokenisasi](../modul-10-tokenisasi-embedding/). Token dan embedding dipakai lagi dengan arti yang sudah ada.
 
-## Mengapa modul ini
+## Cerita pembuka
 
-Keputusan tim mengunci modul ini utuh, tanpa folder a/b. Sesi pertama menghitung attention dari nol. Kueri, kunci, dan nilai satu entri karena satu ide. Sesi kedua memakai model pra-latih untuk klasifikasi teks. Kuota sesi kedua masih dua istilah.
+Kamu membaca satu kata di tengah kalimat, lalu menoleh ke kata lain. Perhatianmu terbagi. Seluruh bagian itu, kalau dijumlahkan, habis menjadi satu. Tidak ada sisa perhatian yang mengambang, dan tidak ada bagian yang minus.
+
+Rumus attention melakukan hal yang mirip pada angka, bukan pada niat orang. Modul ini menghitungnya pada matriks mini, lalu melatih model kecil pada delapan kalimat sintetis. Model yang bobotnya sudah dilatih orang lain disiapkan untuk mode penuh, dan gerbang PR tidak mengunduhnya.
+
+## Teori
+
+Softmax, yaitu fungsi yang mengubah skor menjadi bobot positif yang berjumlah satu, dijelaskan satu kalimat dan belum menjadi entri kamus. Delapan kalimat dan labelnya ditulis di notebook. Bukan data asli perusahaan.
+
+### attention
+
+Tiga token punya kueri dan kunci berukuran dua. Skornya perkalian, dibagi akar dua, lalu softmax. Jumlah satu baris bobot dibanding 1. Selisih terbesar pada keluaran adalah 0. Nama teknisnya **attention**: bobot yang menunjukkan seberapa besar satu token menoleh ke token lain. Jumlah bobot pada satu baris dekat ke 1.
+
+**Batas analogi:** bobot ini hasil rumus, bukan niat manusia. Menoleh bukan berarti memahami. Satu baris yang jumlahnya 1 tidak membuktikan tebakan kelas benar.
+
+### kueri, kunci, dan nilai
+
+Tiga peran pada tiap token, satu ide. Kueri bertanya, kunci menawarkan kecocokan, nilai adalah isi yang dijumlahkan setelah bobot ada. Pada notebook, nilai `v` dikalikan bobot menjadi `campuran` berbentuk `(3, 2)`. Nama teknisnya **kueri, kunci, dan nilai**.
+
+Bayangkan perpustakaan: pertanyaanmu dicocokkan dengan label rak, lalu kamu membawa isi buku sesuai kecocokan itu.
+
+**Batas analogi:** yang dicocokkan adalah perkalian angka, bukan petugas yang paham pertanyaan. Label rak bukan arti kalimat. Isi yang dibawa masih vektor, bukan kalimat jawaban.
+
+### Transformer
+
+Susunan kecil di mode cepat adalah satu blok attention, lalu model klasifikasi yang memakai kantung token. Nama teknisnya **Transformer**: susunan yang memakai attention untuk mencampur token, lalu lapisan kecil menghasilkan tebakan.
+
+**Batas analogi:** satu blok pada matriks mini bukan model obrolan besar. Menyusun blok itu tidak otomatis membuat klasifikasi benar. Model pra-latih yang besar juga Transformer, tetapi bobotnya tidak disalin ke repo ini.
+
+### model pra-latih
+
+Adonan roti yang sudah diulen orang lain bisa dipanggang untuk hidangan hari ini. Nama teknisnya **model pra-latih**: model yang bobotnya sudah dilatih pada data lain, lalu kita pakai atau latih lagi.
+
+Mode penuh memakai `google/bert_uncased_L-2_H-128_A-2` pada revisi `30b0a37ccaaa32f332884b96992754e246e48c5f`. Mode opsional yang lebih besar memakai `distilbert/distilbert-base-uncased` pada revisi `12040accade4e8a0f71eabdb258fecc2e7e948be`. Keduanya model dasar. Kepala klasifikasi di mode cepat dilatih di notebook, dari bobot nol, bukan dari kartu model. Placeholder lama tidak mengklaim model itu sudah bisa mengelompokkan teks, dan materi ini juga tidak mengklaimnya untuk mode cepat.
+
+`prajjwal1/bert-tiny` tidak dipakai. `siblings` reponya tidak berisi berkas `.safetensors`.
+
+**Batas analogi:** adonan itu dilatih pada teks publik, bukan pada delapan kalimat modul ini. Kepala kelas yang kita latih di mode cepat mulai dari nol. Kita mengunci revisi dan hanya memuat safetensors. Mode cepat tidak mengunduh adonan itu, karena gerbang PR tidak punya jaringan.
+
+## Coba sendiri dulu, baru kode
+
+Satu baris bobot `0.2`, `0.3`, dan `0.5`. Jumlahnya berapa?
+
+Jawab dulu. Lalu jalankan `notebook.ipynb` dari sel pertama.
+
+## Kasus nyata
+
+Delapan kalimat sintetis: empat tentang kucing (label 1) dan empat tentang cuaca (label 0). Lima baris menjadi data latih, indeks `0, 1, 3, 4, 6`. Tiga baris menjadi data uji, indeks `2, 5, 7`. Tidak ada unduhan. Bukan data asli perusahaan.
+
+Baseline data uji selalu menebak label 1, karena label 1 lebih banyak di data latih. Salah baseline pada data uji adalah 2. Model kecil setelah 30 langkah salah 0. Selisihnya 2, melewati ambang 1.
+
+Fungsi kerugian di awal 0.25, karena tebakan awal 0.5 pada label 0 atau 1. Setelah 30 langkah, fungsi kerugian pada data latih 0.008027.
+
+Pemuat mode penuh ada di `muat.py`. Setiap panggilan mengirim `revision` dari register, `use_safetensors=True`, `trust_remote_code=False`, dan `allow_patterns` pada bagian Aturan. Panggilannya tidak dijalankan saat `A2N_UNDUH` mati.
+
+## Kesalahan yang paling sering terjadi
+
+1. Jumlah baris bobot yang 0.6 dianggap cukup dekat ke 1. Ambang modul ini `0.000001`. Latihan yang jumlahnya 0.6 ditolak.
+2. Baseline dihitung dari data uji, bukan dari data latih. Notebook memakai kelas yang paling banyak di data latih.
+3. Mode cepat dianggap mengunduh BERT kecil. Gerbang tidak mengunduh. BERT kecil adalah mode penuh.
+4. `prajjwal1/bert-tiny` dipakai karena kartunya bertulis MIT. Berkas safetensors-nya tidak ada, jadi id itu ditolak.
+5. Angka di laporan ditulis dari ingatan. Salin dari keluaran notebook.
+
+## Cara menjalankan
+
+Dari root repo:
+
+```bash
+uv sync --frozen
+uv run pytest
+```
+
+Unduhan opsional bukan gerbang, dan butuh paket yang tidak dipasang lingkungan gerbang:
+
+```bash
+A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
+```
+
+## Cek pemahaman
+
+1. Mengapa jumlah satu baris bobot perhatian dekat ke 1?
+2. Kueri, kunci, dan nilai satu entri atau tiga entri?
+3. Pada keluaran, salah uji model lebih kecil daripada baseline minimal 1, atau tidak?
+
+## Kunci jawaban
+
+1. Softmax membuat bobot positif yang dijumlahkan menjadi satu. Selisih pada matriks mini adalah 0.
+2. Satu entri, karena tiga peran itu satu ide.
+3. Lebih kecil. `salah_uji_model` 0 dan `salah_uji_baseline` 2. Selisihnya 2.
+
+## Sumber
+
+- Vaswani, Ashish, dkk. *Attention Is All You Need*. <https://arxiv.org/abs/1706.03762>
+- Hugging Face. `from_pretrained`. <https://huggingface.co/docs/transformers/main/en/main_classes/model#transformers.PreTrainedModel.from_pretrained>
+- Hugging Face. *BERT*. <https://huggingface.co/docs/transformers/model_doc/bert>
 
 ## Istilah baru yang direncanakan
 
-Paling banyak tiga istilah baru pada tiap sesi. Arti, perumpamaan, dan batas analogi belum ditulis. Baris kamus berstatus PLACEHOLDER. Modul ini tidak dipecah menjadi folder berhuruf.
+Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Sesi kedua hanya satu istilah. Sisa kuota tidak diisi.
 
 ### Sesi 1
 
@@ -40,70 +131,80 @@ Paling banyak tiga istilah baru pada tiap sesi. Arti, perumpamaan, dan batas ana
 
 ## Garis besar bagian
 
-Urutan yang akan ditulis, belum diisi:
-
-1. Cerita pembuka sehari-hari, maksimal satu layar.
-2. Teori, dengan istilah sesi yang sedang dibaca.
+1. Cerita pembuka.
+2. Teori attention, lalu model pra-latih.
 3. Coba sendiri dulu, baru kode.
-4. Kasus pada data yang diizinkan di bagian Aturan.
+4. Delapan kalimat sintetis dan baseline.
 5. Kesalahan yang paling sering terjadi.
 6. Cek pemahaman dengan kunci jawaban.
-7. Sumber resmi. Kutipan ditambahkan saat materi ditulis, bukan di placeholder ini.
-
-Notebook, latihan, dan kunci belum dibuat.
-
-Sesi di dalam modul ini, bukan folder terpisah:
-
-- Sesi 1. Hitung attention dari nol pada matriks mini, lalu beri nama Transformer pada susunan kecil itu.
-- Sesi 2. Muat model pra-latih kecil untuk klasifikasi teks. Pin revisi, muat dengan `use_safetensors=True`, dan setel trust_remote_code=False.
-- Ukur pada set uji kecil terhadap baseline kelas yang paling banyak, dengan ambang.
+7. Sumber resmi.
 
 ## Rencana latihan
 
-- Pada matriks sangat kecil, periksa bahwa jumlah satu baris bobot perhatian dekat ke 1, dalam ambang.
-- Pada beberapa kalimat berlabel dari generator di repo, bandingkan model kecil dengan baseline. Selisih minimal X belum dipilih.
+- Jumlahkan baris `0.2`, `0.3`, `0.5`.
+- Tolak baris `0.2`, `0.2`, `0.2` karena jumlahnya jauh dari 1.
 
 ## Kriteria lulus
 
-Status bagian ini: DRAF. Angka ambang belum dipilih. Pengecekan memakai ambang, bukan angka persis.
+Pengecekan memakai ambang, bukan angka persis.
 
 - Merge diblok bila ada sel siswa 16 baris atau lebih.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
-
-- Jumlah satu baris bobot perhatian berada di sekitar 1, dengan selisih paling besar X. X belum dipilih.
-- Skor klasifikasi pada set uji melebihi baseline minimal X. X belum dipilih.
-- Berkas yang dimuat memakai `use_safetensors=True`, dan trust_remote_code=False. Lisensi dicek sebelum unduh.
+- Selisih jumlah satu baris bobot perhatian dari 1 paling besar `0.000001`.
+- Salah klasifikasi pada data uji lebih kecil daripada baseline, selisih minimal 1.
+- Berkas yang dimuat memakai `use_safetensors=True`, dan trust_remote_code=False. Lisensi dicek sebelum unduh. Revisi yang dipin ada di register.
 
 ## Mode cepat dan mode penuh
 
 ### mode cepat
 
-Wajib lulus. Matriks mini tanpa unduhan, lalu model sangat kecil untuk beberapa langkah, jalan di CPU.
+Wajib lulus. Matriks mini tanpa unduhan, lalu model sangat kecil untuk 30 langkah, jalan di CPU. Ini gerbang tiap PR.
 
 ### mode penuh
 
-Opsional. Kandidat yang lebih besar pada GPU di MyLegion7i. Hasil dinilai dari log mentah.
+Opsional. `google/bert_uncased_L-2_H-128_A-2` pada revisi yang dipin. Model yang lebih besar, `distilbert/distilbert-base-uncased`, juga opsional. GPU di MyLegion7i dipakai bila mesin itu memakainya. Hasil dinilai dari log mentah. Bukan gerbang PR.
 
 ## Model dan dataset kandidat
 
-Semua id di bawah kandidat, bukan pilihan final. Revisi belum dipilih. Lisensi pada tabel register dibaca dari kartu model, sebelum unduhan bobot, dan dicek lagi pada revisi yang dipin sebelum unduh.
-
-- Kandidat mode cepat: `google/bert_uncased_L-2_H-128_A-2`. Lisensi kartu model Apache-2.0. Berkas `model.safetensors` ada di siblings, dan repo ini juga berisi `pytorch_model.bin`. Muat dengan `use_safetensors=True` agar pemuat tidak jatuh ke format pickle. `prajjwal1/bert-tiny` tidak dipakai: siblings tidak berisi berkas .safetensors.
-- Kandidat mode penuh: `distilbert/distilbert-base-uncased`. Lisensi kartu model Apache-2.0.
-- Keduanya model dasar. Kepala klasifikasi dilatih di materi. Placeholder tidak mengklaim model itu sudah bisa mengelompokkan teks.
-- Dataset: kalimat berlabel dari generator di repo.
-- Status pin: belum dipin. Revisi belum dipilih, jadi lisensi dicek lagi sebelum unduh.
+- Mode penuh: `google/bert_uncased_L-2_H-128_A-2`. Lisensi Apache-2.0. SHA `30b0a37ccaaa32f332884b96992754e246e48c5f`, dicek 2026-11-13. Berkas `model.safetensors` ada. Repo ini juga berisi pickle `pytorch_model.bin`. Muat dengan `use_safetensors=True` agar pemuat tidak jatuh ke format pickle.
+- Opsional yang lebih besar: `distilbert/distilbert-base-uncased`. Lisensi Apache-2.0. SHA `12040accade4e8a0f71eabdb258fecc2e7e948be`. Berkas `model.safetensors` ada. Repo ini juga berisi `pytorch_model.bin`.
+- `prajjwal1/bert-tiny` tidak dipakai: siblings tidak berisi berkas .safetensors.
+- Keduanya model dasar. Kepala klasifikasi mode cepat dilatih di materi, dari nol.
+- Dataset: kalimat berlabel yang ditulis di notebook.
+- Register: [docs/lisensi-model.md](../../docs/lisensi-model.md).
 
 ## Aturan
 
-Bagian ini adalah gate placeholder. Aturan yang sama berlaku saat materi ditulis.
+Aturan ini tetap berlaku pada materi yang sudah ditulis.
 
 - Data hanya sintetis atau dataset publik. Data asli perusahaan dilarang sama sekali, termasuk yang sudah disamarkan.
 - Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face. Tidak ada file GGUF di repo.
 - Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR. Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.
-- Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: belum dipin.
+- Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: revisi yang dipin ada di register.
 - Setiap model Hugging Face dimuat dengan `use_safetensors=True` dan `trust_remote_code=False`.
 - Unduhan dibatasi lewat `allow_patterns` hanya ke `*.safetensors`, `config.json`, `generation_config.json`, dan berkas tokenizer (`tokenizer.json`, `tokenizer_config.json`, `special_tokens_map.json`, `vocab.txt`, `merges.txt`, `vocab.json`). Beberapa repo yang dipakai juga berisi berkas pickle seperti `pytorch_model.bin` atau `training_args.bin`.
 - Pengecekan pakai ambang, misalnya loss turun minimal X, bukan angka persis.
 - Ollama mengikat hanya ke 127.0.0.1. Versi referensi yang diuji: 0.40.14. Modul 13 memakai jalur GGUF: merge LoRA, lalu `convert_hf_to_gguf.py` pada llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor GGUF ke Ollama, dibanding kontrol lewat jalur yang sama.
 - Modul 15: tools hanya allowlist read-only di folder sandbox, tanpa shell bebas, tanpa akses jaringan internal.
+
+## Keluaran mode cepat
+
+Angka di bawah disalin dari keluaran `notebook.ipynb` dan `latihan-kunci.ipynb`.
+
+```
+selisih_jumlah 0.0
+bentuk_campuran (3, 2)
+banyak 8
+kolom 16
+kerugian_awal 0.25
+kerugian_akhir 0.008027
+salah_uji_model 0
+salah_uji_baseline 2
+model_penuh google/bert_uncased_L-2_H-128_A-2
+revisi_penuh 30b0a37ccaaa32f332884b96992754e246e48c5f
+model_opsional distilbert/distilbert-base-uncased
+revisi_opsional 12040accade4e8a0f71eabdb258fecc2e7e948be
+unduh False
+jumlah_baris 1.0
+jumlah_salah 0.6
+```
