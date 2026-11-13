@@ -150,9 +150,26 @@ using (dokumen)
         return Gagal($"folder keluaran tidak ada: {folderKeluar}");
     }
 
+    InferenceSession sesi;
     try
     {
-        using var sesi = new InferenceSession(args[0]);
+        sesi = new InferenceSession(args[0]);
+    }
+    catch (OnnxRuntimeException)
+    {
+        return Gagal("model.onnx rusak atau tidak terbaca, jalankan notebook ulang");
+    }
+    catch (UnauthorizedAccessException)
+    {
+        return Gagal("model.onnx rusak atau tidak terbaca, jalankan notebook ulang");
+    }
+    catch (IOException)
+    {
+        return Gagal("model.onnx rusak atau tidak terbaca, jalankan notebook ulang");
+    }
+
+    using (sesi)
+    {
         if (!sesi.InputMetadata.TryGetValue(namaMasukan, out NodeMetadata? meta))
         {
             return Gagal("nama_masukan tidak ada pada model");
@@ -172,42 +189,61 @@ using (dokumen)
             return Gagal($"jumlah kolom tidak cocok: baris punya {kolom} angka, model minta {dimensi}");
         }
 
-        var tensor = new DenseTensor<float>(datar.ToArray(), new[] { baris, kolom });
-        var masukan = new List<NamedOnnxValue>
-        {
-            NamedOnnxValue.CreateFromTensor(namaMasukan, tensor),
-        };
-
         long[]? label = null;
         float[][]? probabilitas = null;
-        using (var hasil = sesi.Run(masukan))
+        try
         {
-            foreach (var item in hasil)
+            var tensor = new DenseTensor<float>(datar.ToArray(), new[] { baris, kolom });
+            var masukan = new List<NamedOnnxValue>
             {
-                if (item.Name == "label")
+                NamedOnnxValue.CreateFromTensor(namaMasukan, tensor),
+            };
+            using var hasil = sesi.Run(masukan);
+            try
+            {
+                foreach (var item in hasil)
                 {
-                    label = item.Value switch
+                    if (item.Name == "label")
                     {
-                        DenseTensor<long> panjangLabel => panjangLabel.ToArray(),
-                        DenseTensor<int> pendek => pendek.Select(angka => (long)angka).ToArray(),
-                        _ => throw new InvalidOperationException("tipe label tidak dikenal"),
-                    };
-                }
-                else if (item.Name == "probabilities")
-                {
-                    var tabel = (DenseTensor<float>)item.Value;
-                    int nKelas = tabel.Dimensions[1];
-                    probabilitas = new float[baris][];
-                    for (int r = 0; r < baris; r++)
-                    {
-                        probabilitas[r] = new float[nKelas];
-                        for (int k = 0; k < nKelas; k++)
+                        label = item.Value switch
                         {
-                            probabilitas[r][k] = tabel[r, k];
+                            DenseTensor<long> panjangLabel => panjangLabel.ToArray(),
+                            DenseTensor<int> pendek => pendek.Select(angka => (long)angka).ToArray(),
+                            _ => throw new InvalidOperationException("tipe label tidak dikenal"),
+                        };
+                    }
+                    else if (item.Name == "probabilities")
+                    {
+                        var tabel = (DenseTensor<float>)item.Value;
+                        int nKelas = tabel.Dimensions[1];
+                        probabilitas = new float[baris][];
+                        for (int r = 0; r < baris; r++)
+                        {
+                            probabilitas[r] = new float[nKelas];
+                            for (int k = 0; k < nKelas; k++)
+                            {
+                                probabilitas[r][k] = tabel[r, k];
+                            }
                         }
                     }
                 }
             }
+            catch (InvalidOperationException)
+            {
+                return Gagal("keluaran ONNX tidak dikenal");
+            }
+            catch (InvalidCastException)
+            {
+                return Gagal("keluaran ONNX tidak dikenal");
+            }
+        }
+        catch (OnnxRuntimeException ex)
+        {
+            return Gagal("masukan tidak cocok dengan model: " + ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return Gagal("masukan tidak cocok dengan model: " + ex.Message);
         }
 
         if (label is null || probabilitas is null)
@@ -230,18 +266,6 @@ using (dokumen)
         }
 
         return 0;
-    }
-    catch (OnnxRuntimeException)
-    {
-        return Gagal("model.onnx rusak, jalankan notebook ulang");
-    }
-    catch (ArgumentException)
-    {
-        return Gagal("masukan tidak cocok dengan model");
-    }
-    catch (IOException)
-    {
-        return Gagal($"folder keluaran tidak ada: {folderKeluar}");
     }
 }
 
