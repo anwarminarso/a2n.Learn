@@ -26,7 +26,7 @@ Lalu petugas mengambil satu map yang memang ada di daftar. Kalimat di map itu di
 
 ## Teori
 
-Folder `sandbox/` menyimpan berkas teks sintetis. Bukan data asli perusahaan. Allowlist di kode hanya `catatan.txt` dan `jadwal.txt`. `samping.txt` ada di folder yang sama, tetapi tidak ada di daftar, jadi permintaan bacanya ditolak.
+Folder `sandbox/` menyimpan berkas teks sintetis. Bukan data asli perusahaan. Allowlist di kode hanya `catatan.txt` dan `jadwal.txt`. `samping.txt` ada di folder yang sama, tetapi tidak ada di daftar, jadi permintaan bacanya ditolak. Sandbox ini menganggap isi folder tidak berubah selama agen berjalan.
 
 ### pemanggilan alat
 
@@ -68,7 +68,7 @@ Berkas di `sandbox/` sintetis. `catatan.txt` menyebut kunci biru. `jadwal.txt` b
 
 Proyek akhir: loop agen membaca `jadwal.txt`, lalu RAG dari modul 14 menjawab pertanyaan itu. Kutipan sumbernya `perpustakaan.txt`, kalimat `Kode rak buku cerita adalah B-12.` Skornya melewati ambang `0.3` dari modul 14.
 
-Bagian .NET mengikuti pola modul 8: program kecil, satu panggilan, dan satu batas yang tertulis. Panggilan itu HTTP ke `http://127.0.0.1:8765/jawab`. Batas skornya `0.3`. Ini inferensi dalam arti modul 8: aturan yang sudah ada dipakai untuk satu pertanyaan, tanpa melatih ulang. Mode cepat tidak menyalakan peladen. Ollama, bila dipakai di luar gerbang, tetap hanya di `127.0.0.1`.
+Bagian .NET mengikuti pola modul 8: program kecil, satu panggilan, dan satu batas yang tertulis. Panggilan itu HTTP ke `http://127.0.0.1:8765/jawab`. Batas skornya `0.3`. Ini inferensi dalam arti modul 8: aturan yang sudah ada dipakai untuk satu pertanyaan, tanpa melatih ulang. Urutannya: nyalakan `peladen.py` lebih dulu (ia hanya mengikat `127.0.0.1`; jawaban sungguhan butuh model modul 14 yang diunduh dengan `A2N_UNDUH=1`), lalu jalankan program .NET. Mode cepat tidak menyalakan peladen. Ollama, bila dipakai di luar gerbang, tetap hanya di `127.0.0.1`.
 
 ## Kesalahan yang paling sering terjadi
 
@@ -95,13 +95,21 @@ A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 
 Perintah itu butuh jaringan dan paket `transformers` serta `huggingface_hub`, yang tidak dipasang lingkungan gerbang. `muat_agen()` mengirim `AutoModelForCausalLM`.
 
-Program .NET, juga bukan gerbang, membutuhkan SDK .NET 10:
+Program .NET, juga bukan gerbang, membutuhkan SDK .NET 10. Jalankan peladen lebih dulu, baru program .NET.
+
+Peladennya `phase2-ai/modul-15-agen/peladen.py`. Ia hanya mengikat `127.0.0.1` dan tidak membaca alamat dari argumen atau variabel lingkungan. Peladen memanggil `jawab()` dari modul 14, lalu mengembalikan JSON dengan `status`, `sumber`, dan `skor`. Jawaban sungguhan butuh model modul 14 yang sudah diunduh dengan `A2N_UNDUH=1`. Mode cepat tidak menyalakan peladen ini.
+
+```bash
+uv run python phase2-ai/modul-15-agen/peladen.py
+```
+
+Biarkan perintah itu terbuka. Di terminal lain:
 
 ```bash
 dotnet run --project phase2-ai/modul-15-agen/dotnet/PemanggilAgen -- "kode rak buku cerita"
 ```
 
-Perintah itu mengetuk `127.0.0.1` saja. Mode cepat tidak menjalankan perintah itu, dan tidak memasang alat `dotnet`.
+Perintah .NET mengetuk `http://127.0.0.1:8765/jawab` saja. Mode cepat tidak menjalankan perintah itu, dan tidak memasang alat `dotnet`.
 
 Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertama memuat satu ide.
 
