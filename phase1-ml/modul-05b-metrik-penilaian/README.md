@@ -125,7 +125,7 @@ Buka `notebook.ipynb` di folder ini, kerjakan `latihan.ipynb`, lalu bandingkan d
 
 Sel pertama setiap notebook berisi `SEED = 42`. Angka tetap itu dipakai pada setiap undian acak, lewat `random_state=SEED`, supaya hasil yang sama muncul setiap kali notebook diulang.
 
-CPU only. Nomor versi Python dan paket tercatat di `uv.lock` di root repo.
+CPU only. Versi Python ada di `.python-version`. Versi paket ada di `uv.lock` di root repo.
 
 ## Cek pemahaman
 
@@ -219,7 +219,7 @@ Ini penutup tingkat intermediate: proyek mini plus pertanyaan. Bahan ada di `uji
 2. `ujian_recall_baseline 0.0`. Baseline tidak menemukan hujan.
 3. Precision pohon pendek pada data uji `ujian_precision 0.8`. Recall pohon pendek pada data uji `ujian_recall 0.631578947368421`.
 4. Pohon tanpa batas yang menghafal. Selisih skor data latih dan data uji pohon itu `ujian_selisih_dalam 0.10833333333333328`. Selisih pohon pendek `ujian_selisih_dangkal 0.04761904761904767`.
-5. Pohon pendek yang dilaporkan, karena selisih skor data latih dan data ujinya lebih kecil daripada pohon tanpa batas. Baris `ujian_model_dipilih dangkal`.
+5. Pohon pendek yang dilaporkan. Recall keduanya seri di 0.6316, jadi pemecah serinya akurasi data uji: pohon pendek 0.9167, pohon tanpa batas 0.8917. Selisih skor data latih dan data uji yang lebih kecil ikut menguatkan pilihan itu, sesuai soal 1 yang mengutamakan recall. Baris `ujian_model_dipilih dangkal`.
 6. Data leakage. Rata-rata yang boleh adalah rata-rata data latih. Baris `ujian_nama_kebocoran data leakage` dan `ujian_rata_boleh data latih`.
 
 Empat kotak, skor latih, dan skor uji ada pada baris di bawah. Angka ini disalin dari keluaran yang dijalankan, bukan ditulis tangan.
