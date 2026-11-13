@@ -1,6 +1,6 @@
 # Modul 12: Fine-tune dengan LoRA
 
-**Tingkat:** pro
+**Tingkat:** —
 
 **Tujuan belajar:** Pembaca bisa melakukan penyetelan halus (fine-tune) pada model kecil dengan LoRA, lalu mengukur sebelum dan sesudah pada set uji yang sama.
 

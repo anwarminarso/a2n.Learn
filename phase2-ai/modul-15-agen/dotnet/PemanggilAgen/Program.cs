@@ -15,9 +15,10 @@ if (args.Length != 1)
 
 const string Alamat = "http://127.0.0.1:8765/jawab";
 const double Batas = 0.3;
+const int DetikTunggu = 5;
 
 using var klien = new HttpClient();
-klien.Timeout = TimeSpan.FromSeconds(5);
+klien.Timeout = TimeSpan.FromSeconds(DetikTunggu);
 using var kirim = new StringContent(
     JsonSerializer.Serialize(new Pertanyaan(args[0])),
     Encoding.UTF8,
@@ -30,6 +31,11 @@ try
 catch (HttpRequestException)
 {
     Console.Error.WriteLine("peladen belum jalan di 127.0.0.1:8765");
+    return 1;
+}
+catch (TaskCanceledException)
+{
+    Console.Error.WriteLine($"peladen tidak menjawab dalam {DetikTunggu} detik di 127.0.0.1:8765");
     return 1;
 }
 

@@ -1,6 +1,6 @@
 # Modul 13: Menjalankan model lokal dengan Ollama
 
-**Tingkat:** pro
+**Tingkat:** —
 
 **Tujuan belajar:** Pembaca bisa menggabungkan adapter ke model dasar, mengubah hasilnya menjadi GGUF, mengimpornya ke Ollama yang hanya mengikat 127.0.0.1, dan membandingkannya dengan kontrol tanpa LoRA yang melewati jalur konversi yang sama.
 
@@ -143,6 +143,8 @@ uv run python llama.cpp/convert_hf_to_gguf.py folder-gabungan --outfile gabungan
 uv run python llama.cpp/convert_hf_to_gguf.py folder-kontrol --outfile kontrol.gguf --outtype f16
 PYTHONPATH=llama.cpp/gguf-py uv run python -c "from gguf import GGUFReader; r=GGUFReader('gabungan.gguf'); print(len(r.tensors))"
 ```
+
+Langkah konversi `convert_hf_to_gguf.py` memakai requirements llama.cpp sendiri di venv terpisah, bukan venv proyek, karena versi transformers berbeda.
 
 4. Bandingkan jumlah tensor gabungan dan kontrol. Lalu impor ke Ollama yang hanya mengikat `127.0.0.1`, dengan satu kalimat yang sama. Ini bukan gerbang PR. Seluruh jalur GGUF sungguhan ini sketsa opsional, belum diuji gerbang.
 

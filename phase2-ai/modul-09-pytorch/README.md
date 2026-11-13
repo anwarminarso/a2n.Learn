@@ -1,6 +1,6 @@
 # Modul 9: Dasar jaringan saraf dan PyTorch
 
-**Tingkat:** pro
+**Tingkat:** —
 
 **Tujuan belajar:** Pembaca bisa menyimpan angka dalam tensor, memeriksa gradien yang dihitung otomatis, lalu melatih jaringan saraf pertama dan membandingkannya dengan model Fase 1 pada data yang sama.
 
@@ -207,7 +207,7 @@ Opsional. Notebook bisa menjalankan sel torch di CPU bila `A2N_TORCH=1`. Lebih b
 - Model Hugging Face: tidak ada. Jaringan ditulis di materi.
 - Dataset: iris bawaan scikit-learn, supaya sama dengan kasus Fase 1. Bukan unduhan. Bukan data asli perusahaan.
 - Pembanding: regresi logistik, arti dari modul 4a, pada data yang sama.
-- Status pin: belum dipin, karena tidak ada id yang diunduh.
+- Status pin: modul ini tidak mengunduh model. Revisi model Fase 2 ada di `muat_hf.REVISI`.
 - Lisensi kartu model tidak berlaku di modul ini. Register: [docs/lisensi-model.md](../../docs/lisensi-model.md).
 
 ## Aturan
@@ -217,7 +217,7 @@ Aturan ini tetap berlaku pada materi yang sudah ditulis.
 - Data hanya sintetis atau dataset publik. Data asli perusahaan dilarang sama sekali, termasuk yang sudah disamarkan.
 - Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face. Tidak ada file GGUF di repo.
 - Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR. Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.
-- Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: belum dipin.
+- Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: revisi yang dipin ada di `muat_hf.REVISI`.
 - Pengecekan pakai ambang, misalnya loss turun minimal X, bukan angka persis.
 - Ollama mengikat hanya ke 127.0.0.1. Versi referensi yang diuji: 0.40.14. Modul 13 memakai jalur GGUF: merge LoRA, lalu `convert_hf_to_gguf.py` pada llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor GGUF ke Ollama, dibanding kontrol lewat jalur yang sama.
 - Modul 15: tools hanya allowlist read-only di folder sandbox, tanpa shell bebas, tanpa akses jaringan internal.

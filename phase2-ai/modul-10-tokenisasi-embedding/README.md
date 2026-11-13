@@ -1,6 +1,6 @@
 # Modul 10: Embedding dan tokenisasi
 
-**Tingkat:** pro
+**Tingkat:** —
 
 **Tujuan belajar:** Pembaca bisa mengubah teks menjadi token lalu vektor, dan membandingkan kemiripan dua teks. Modul ini menjembatani ke modul 11 dan modul 14.
 

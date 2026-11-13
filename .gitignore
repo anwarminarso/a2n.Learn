@@ -41,3 +41,7 @@ phase2-ai/modul-14-rag/indeks/
 adapters/
 outputs/
 checkpoints/
+# Keluaran sketsa GGUF modul 13 yang dijalankan dari root repo.
+folder-gabungan/
+folder-kontrol/
+llama.cpp/
