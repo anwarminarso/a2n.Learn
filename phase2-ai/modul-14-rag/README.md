@@ -1,12 +1,10 @@
 # Modul 14: RAG (Retrieval-Augmented Generation)
 
-**Status:** PLACEHOLDER
-
 **Tingkat:** pro
 
 **Tujuan belajar:** Pembaca bisa memotong teks, menyimpan vektornya, mengambil potongan yang dekat dengan pertanyaan, lalu menyusun jawaban yang menyebut sumber dan menilai jawaban mengarang.
 
-Isi materi belum ditulis. Halaman ini adalah rencana, bukan bahan ajar.
+Materi mode cepat sudah bisa dijalankan di CPU, tanpa torch dan tanpa unduhan. Folder indeks dibuat saat notebook jalan dan tidak masuk repo.
 
 Nama pada [docs/ROADMAP.md](../../docs/ROADMAP.md): RAG (Retrieval-Augmented Generation).
 
@@ -20,13 +18,127 @@ Tracking Fase 2: [#33](https://github.com/anwarminarso/a2n.Learn/issues/33).
 
 Modul sebelumnya pada urutan belajar: [Modul 13: Menjalankan model lokal dengan Ollama](../modul-13-model-lokal/). Embedding dari [Modul 10: Embedding dan tokenisasi](../modul-10-tokenisasi-embedding/) dipakai lagi dengan arti yang sudah ada. Di roadmap, modul ini bergantung pada modul 10 dan modul 13.
 
-## Mengapa modul ini
+## Cerita pembuka
 
-Keputusan tim mengunci modul ini utuh, tanpa folder a/b. Sesi pertama: potongan, penyimpan vektor, dan pengambilan. Sesi kedua: RAG, jawaban mengarang, dan kutipan sumber. Evaluasi ada di sesi kedua, bukan modul terpisah.
+Di laci ada tiga kartu: rak buku, resep dapur, dan jadwal siram kebun. Seseorang bertanya, "kode rak buku cerita". Kamu tidak menjawab dari ingatan. Kamu mencari kartu yang arahnya paling mirip, lalu menulis nomor kartunya di bawah jawaban.
+
+Kalau pertanyaannya tentang harga tiket kereta, dan tidak ada kartunya, kamu bilang catatannya tidak membahas soal itu.
+
+## Teori
+
+Teks latihan ada di folder `dokumen/`. Tiap berkas diawali catatan bahwa isinya teks sintetis. Bukan data asli perusahaan. Mode cepat memotong per baris, membuat vektor dengan `SEED`, lalu menyimpan hasilnya di folder `indeks/`.
+
+### potongan
+
+Satu baris isi pada kartu. Baris catatan di awal berkas tidak ikut. Nama teknisnya **potongan**: sepotong teks pendek dari dokumen yang lebih panjang, supaya tiap ide bisa dicari sendiri.
+
+**Batas analogi:** gunting ini tidak mengubah arti kalimat. Kartu yang terlalu pendek bisa kehilangan siapa yang melakukan apa. Mode cepat memotong per baris, bukan per token model sungguhan.
+
+### penyimpan vektor
+
+Laci yang menyimpan koordinat tiap kartu dan nama berkas asalnya. Nama teknisnya **penyimpan vektor**: tempat menyimpan vektor tiap potongan beserta nama sumbernya. Nama lain untuk tempat ini adalah indeks embedding.
+
+Pada mode cepat, vektor tiap kata diundi dengan `SEED`, lalu vektor kalimat adalah rata-ratanya. Kata yang sama mendapat vektor yang sama. Berkas `potongan.json` ditulis ke folder `indeks/`. Folder itu ada di `.gitignore`.
+
+**Batas analogi:** laci ini bukan model dan bukan jawaban. Indeks dibangun saat notebook jalan dan tidak masuk repo. Koordinat mode cepat bukan vektor model yang diunduh.
+
+### pengambilan
+
+Memilih kartu yang arahnya paling dekat dengan pertanyaan. Nama teknisnya **pengambilan**: memilih potongan yang vektornya paling dekat dengan pertanyaan.
+
+Kedekatan diukur dengan kemiripan vektor dari modul 10, yaitu kosinus. Selain itu dihitung token yang sama antara pertanyaan dan potongan.
+
+**Batas analogi:** dekat di peta bukan berarti isinya menjawab pertanyaan. Bila token bersama kurang dari ambang, kedekatan itu tidak dipakai sebagai sumber.
+
+### RAG
+
+Buka kartu dulu, baru jawab dari kartu itu. Nama teknisnya **RAG**: cara menjawab dengan mengambil potongan dulu, lalu menyusun jawaban dari potongan itu.
+
+Mode cepat menyalin teks potongan. Mode penuh, bila jaringan dinyalakan, boleh memakai model bahasa. Gerbang tidak menyalakan unduhan itu.
+
+**Batas analogi:** membuka kartu tidak menjamin kalimat jawaban sama persis dengan kartu. Mode penuh yang memakai model tetap bisa menambah kata yang tidak ada di kartu.
+
+### jawaban mengarang
+
+Soal yang tidak punya kartu ditandai, bukan dijawab dengan kartu yang kebetulan agak dekat. Nama teknisnya **jawaban mengarang**: jawaban yang tidak ditopang potongan sumber, atau tanda bahwa pertanyaan tidak punya sumber yang cukup di dokumen.
+
+Ambangnya dua: skor kosinus minimal `0.3`, dan token bersama minimal `2`. Soal tiket kereta punya token bersama `0` dan skor `0.000000`, jadi statusnya `jawaban_mengarang`.
+
+**Batas analogi:** tanda ini bukan bukti seseorang berbohong. Ini tanda pengambilan tidak menemukan sumber yang cukup. Yang dicek ambang, bukan kalimat yang persis.
+
+### kutipan sumber
+
+Nomor kartu yang ditulis di bawah jawaban: nama berkas dan teks potongannya. Nama teknisnya **kutipan sumber**: nama berkas dan teks potongan yang dipakai untuk menopang jawaban.
+
+Pada keluaran, `sumber_rak` adalah `perpustakaan.txt` dan `kutipan_rak` adalah `Kode rak buku cerita adalah B-12.`
+
+**Batas analogi:** nomor kartu menunjukkan asal teks, bukan kebenaran di luar dokumen. Kutipan yang salah pilih tetap sebuah kutipan. Mode cepat menempelkan teks potongan, bukan ringkasan model.
+
+## Coba sendiri dulu, baru kode
+
+Mana kartu yang cocok untuk "kode rak buku cerita": rak perpustakaan, resep jahe, atau siram tomat?
+
+Kalau ditanya harga tiket kereta, kamu mengutip kartu, atau bilang catatannya tidak membahas soal itu?
+
+Jawab dulu. Setelah itu buka `notebook.ipynb` dan jalankan dari sel pertama.
+
+## Kasus nyata
+
+Tiga berkas di `dokumen/`: `dapur.txt`, `kebun.txt`, dan `perpustakaan.txt`. Isinya teks sintetis yang ditulis untuk latihan ini. Bukan data asli perusahaan. Tidak ada unduhan data.
+
+Notebook membaca hanya berkas `.txt` di folder itu, memotong baris isinya, lalu menulis vektor ke `indeks/potongan.json`. Enam potongan tersimpan. Pertanyaan rak mengambil `perpustakaan.txt`. Pertanyaan kereta ditandai jawaban mengarang.
+
+`skor_rak` 0.783885, melewati ambang `0.3`. `selisih_rak` 0.195568, melewati ambang `0.15`. `bagi_rak` 4, melewati ambang `2`.
+
+## Kesalahan yang paling sering terjadi
+
+1. Folder `indeks/` ikut di-commit. Folder itu dibangun saat notebook jalan dan ada di `.gitignore`.
+2. Mengambil teks dari luar folder `dokumen/`. Potongan hanya boleh dari berkas yang ada di repo.
+3. Menjawab soal jebakan dengan potongan yang kebetulan dekat, padahal token bersamanya nol.
+4. Mengunduh model di gerbang PR. Unduhan hanya bila `A2N_UNDUH=1`.
+5. Menulis angka di laporan dari ingatan. Salin dari keluaran notebook.
+
+## Cara menjalankan
+
+Perintah gerbang, dari root repo:
+
+```bash
+uv sync --frozen
+uv run pytest
+```
+
+Unduhan opsional, bukan gerbang:
+
+```bash
+A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
+```
+
+Perintah itu butuh jaringan dan paket `transformers` serta `huggingface_hub`, yang tidak dipasang lingkungan gerbang. `muat_embedding()` memakai kelas bawaan, yaitu `AutoModel`. `muat_jawaban()` mengirim `AutoModelForCausalLM`.
+
+Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertama memuat satu ide.
+
+## Cek pemahaman
+
+1. Potongan mode cepat dipotong per apa?
+2. Mengapa soal tiket kereta tidak mengutip kartu?
+3. Pada keluaran, berkas mana yang menjadi kutipan sumber soal rak, dan berapa skornya?
+
+## Kunci jawaban
+
+1. Per baris isi. Baris yang diawali `Catatan:` tidak ikut.
+2. Token bersamanya `0` dan skornya `0.000000`, di bawah ambang. Statusnya `jawaban_mengarang`.
+3. `perpustakaan.txt`. `skor_rak` 0.783885. Kutipannya `Kode rak buku cerita adalah B-12.`
+
+## Sumber
+
+- Lewis, Patrick, et al. *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*. <https://arxiv.org/abs/2005.11401>
+- Reimers, Nils, and Iryna Gurevych. *Sentence-BERT*. <https://arxiv.org/abs/1908.10084>
+- Hugging Face. *AutoModel*. <https://huggingface.co/docs/transformers/en/model_doc/auto>
+- NumPy developers. `numpy.linalg.norm`. <https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html>
 
 ## Istilah baru yang direncanakan
 
-Paling banyak tiga istilah baru pada tiap sesi. Arti, perumpamaan, dan batas analogi belum ditulis. Baris kamus berstatus PLACEHOLDER. Modul ini tidak dipecah menjadi folder berhuruf.
+Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Nama di bawah tetap paling banyak tiga per sesi. Modul ini tidak dipecah menjadi folder berhuruf.
 
 ### Sesi 1
 
@@ -42,69 +154,90 @@ Paling banyak tiga istilah baru pada tiap sesi. Arti, perumpamaan, dan batas ana
 
 ## Garis besar bagian
 
-Urutan yang akan ditulis, belum diisi:
-
-1. Cerita pembuka sehari-hari, maksimal satu layar.
-2. Teori, dengan istilah sesi yang sedang dibaca.
+1. Cerita pembuka sehari-hari.
+2. Teori enam istilah, dibagi dua sesi.
 3. Coba sendiri dulu, baru kode.
-4. Kasus pada data yang diizinkan di bagian Aturan.
+4. Kasus tiga berkas sintetis, indeks lokal, satu soal bersumber dan satu soal jebakan.
 5. Kesalahan yang paling sering terjadi.
 6. Cek pemahaman dengan kunci jawaban.
-7. Sumber resmi. Kutipan ditambahkan saat materi ditulis, bukan di placeholder ini.
+7. Sumber resmi di bagian Sumber.
 
-Notebook, latihan, dan kunci belum dibuat.
-
-Sesi di dalam modul ini, bukan folder terpisah:
-
-- Sesi 1. Potong dokumen sintetis, buat embedding, simpan vektor secara lokal, lalu ambil potongan yang dekat dengan pertanyaan.
-- Sesi 2. Susun jawaban yang menyebut kutipan sumber.
-- Sesi 2 juga menyiapkan soal yang jawabannya tidak ada di dokumen, lalu menilai jawaban mengarang dengan ambang.
+Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan dan tanpa torch.
 
 ## Rencana latihan
 
-- Satu pertanyaan yang petunjuknya ada di satu potongan. Pengambilan mengembalikan potongan itu.
-- Satu soal jebakan yang sumbernya tidak ada. Jawaban harus menolak atau ditandai sebagai jawaban mengarang.
+- Satu pertanyaan yang petunjuknya ada di satu potongan. Pengambilan mengembalikan `perpustakaan.txt`.
+- Satu soal jebakan yang sumbernya tidak ada. Statusnya `jawaban_mengarang`.
 
 ## Kriteria lulus
 
-Status bagian ini: DRAF. Angka ambang belum dipilih. Pengecekan memakai ambang, bukan angka persis.
+Pengecekan memakai ambang, bukan angka persis.
 
 - Merge diblok bila ada sel siswa 16 baris atau lebih.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
-
-- Minimal N dari K pertanyaan latihan mengambil potongan yang diharapkan. N dan K belum dipilih.
-- Soal jebakan lulus bila ada penolakan atau tanda jawaban mengarang. Bukan dengan kalimat yang persis. Ambang hitungan belum dipilih.
+- Minimal 1 dari 1 pertanyaan latihan mengambil potongan `perpustakaan.txt`.
+- Soal jebakan lulus bila statusnya `jawaban_mengarang`.
+- Skor soal bersumber minimal `0.3`. Selisih dengan peringkat kedua minimal `0.15`. Token bersama minimal `2`.
 - Indeks vektor tidak masuk repo dan tidak di-push ke Hugging Face.
 
 ## Mode cepat dan mode penuh
 
 ### mode cepat
 
-Wajib lulus. Sedikit dokumen sintetis, vektor kecil, jalan di CPU.
+Wajib lulus di CPU, tanpa torch dan tanpa jaringan. Tiga berkas sintetis, vektor numpy dengan `SEED`, indeks di folder `indeks/`. Ini gerbang tiap PR.
 
 ### mode penuh
 
-Opsional. Lebih banyak dokumen dan kandidat embedding, pada GPU di MyLegion7i bila perlu. Hasil dinilai dari log mentah.
+Opsional. Embedding `sentence-transformers/all-MiniLM-L6-v2` lewat `AutoModel`, dan model jawaban `HuggingFaceTB/SmolLM2-135M-Instruct` lewat `AutoModelForCausalLM`, hanya bila `A2N_UNDUH=1`. GPU di MyLegion7i dipakai bila model jawaban memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
 
 ## Model dan dataset kandidat
 
-Semua id di bawah kandidat, bukan pilihan final. Revisi belum dipilih. Lisensi pada tabel register dibaca dari kartu model, sebelum unduhan bobot, dan dicek lagi pada revisi yang dipin sebelum unduh.
-
-- Dataset: dokumen sintetis dari generator di repo.
-- Model embedding: kandidat modul 10, belum dipin. Lisensi kartu model Apache-2.0.
-- Penyimpan vektor lokal di mesin, bukan layanan luar. Pustaka penyimpan dipilih saat materi ditulis.
-- Model jawaban, bila dipakai: kandidat kecil modul 12, belum dipin.
+- Dataset: tiga berkas teks sintetis di `dokumen/`. Bukan data asli perusahaan.
+- Model embedding: `sentence-transformers/all-MiniLM-L6-v2`. Lisensi Apache-2.0. SHA `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`, dicek 2026-11-13. Kelas pemuat: `AutoModel`, karena `muat_embedding()` tidak mengirim kelas.
+- Model jawaban: `HuggingFaceTB/SmolLM2-135M-Instruct`. Lisensi Apache-2.0. SHA `12fd25f77366fa6b3b4b768ec3050bf629380bac`, dicek 2026-11-13. Kelas pemuat: `AutoModelForCausalLM`.
+- Register: [docs/lisensi-model.md](../../docs/lisensi-model.md).
 
 ## Aturan
 
-Bagian ini adalah gate placeholder. Aturan yang sama berlaku saat materi ditulis.
+Aturan ini tetap berlaku pada materi yang sudah ditulis.
 
 - Data hanya sintetis atau dataset publik. Data asli perusahaan dilarang sama sekali, termasuk yang sudah disamarkan.
 - Tidak ada adapter atau indeks yang masuk repo atau di-push ke Hugging Face. Tidak ada file GGUF di repo.
 - Mode cepat wajib lulus di CPU dan menjadi gerbang tiap PR. Mode penuh GPU di MyLegion7i opsional, dan dinilai dari log mentah.
-- Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: belum dipin.
+- Unduhan hanya model kecil berlisensi Apache-2.0 atau MIT. Lisensi dicek sebelum unduh. Revisi Hugging Face di-pin. Hanya format safetensors. `trust_remote_code=False`. Kandidat dan lisensinya ada di [register lisensi model](../../docs/lisensi-model.md). Status pin: revisi yang dipin ada di register.
 - Setiap model Hugging Face dimuat dengan `use_safetensors=True` dan `trust_remote_code=False`.
 - Unduhan dibatasi lewat `allow_patterns` hanya ke `*.safetensors`, `config.json`, `generation_config.json`, dan berkas tokenizer (`tokenizer.json`, `tokenizer_config.json`, `special_tokens_map.json`, `vocab.txt`, `merges.txt`, `vocab.json`). Beberapa repo yang dipakai juga berisi berkas pickle seperti `pytorch_model.bin` atau `training_args.bin`.
 - Pengecekan pakai ambang, misalnya loss turun minimal X, bukan angka persis.
 - Ollama mengikat hanya ke 127.0.0.1. Versi referensi yang diuji: 0.40.14. Modul 13 memakai jalur GGUF: merge LoRA, lalu `convert_hf_to_gguf.py` pada llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor GGUF ke Ollama, dibanding kontrol lewat jalur yang sama.
 - Modul 15: tools hanya allowlist read-only di folder sandbox, tanpa shell bebas, tanpa akses jaringan internal.
+
+## Keluaran mode cepat
+
+Angka di bawah disalin dari keluaran `notebook.ipynb` dan `latihan-kunci.ipynb`.
+
+```
+berkas_dokumen 3
+jumlah_potongan 6
+folder_indeks indeks
+berkas_indeks potongan.json
+vektor_tersimpan 6
+status_rak bersumber
+sumber_rak perpustakaan.txt
+skor_rak 0.783885
+bagi_rak 4
+kutipan_rak Kode rak buku cerita adalah B-12.
+status_jebakan jawaban_mengarang
+skor_jebakan 0.000000
+bagi_jebakan 0
+selisih_rak 0.195568
+model_embedding sentence-transformers/all-MiniLM-L6-v2
+kelas_embedding AutoModel
+revisi_embedding 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
+model_jawaban HuggingFaceTB/SmolLM2-135M-Instruct
+kelas_jawaban AutoModelForCausalLM
+revisi_jawaban 12fd25f77366fa6b3b4b768ec3050bf629380bac
+unduh False
+status_rak_latihan bersumber
+sumber_rak_latihan perpustakaan.txt
+status_jebakan_latihan jawaban_mengarang
+```
