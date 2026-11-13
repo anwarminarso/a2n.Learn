@@ -123,7 +123,7 @@ def jawab(pertanyaan, muatan, ambang_skor=AMBANG_SKOR, ambang_bagi=AMBANG_BAGI):
     terbaik = peringkat(pertanyaan, muatan)[0]
     if terbaik["bagi"] < ambang_bagi or terbaik["skor"] < ambang_skor:
         return {
-            "status": "jawaban_mengarang",
+            "status": "tanpa_sumber",
             "skor": terbaik["skor"],
             "bagi": terbaik["bagi"],
             "sumber": "",

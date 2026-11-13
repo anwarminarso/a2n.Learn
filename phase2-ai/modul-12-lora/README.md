@@ -24,7 +24,7 @@ Mode cepat hanya memakai numpy. Jalur LoRA nyata memakai grup opsional torch, CP
 uv sync --frozen --group torch
 ```
 
-Lalu set `A2N_TORCH=1` sebelum menjalankan notebook. `uv sync` biasa tidak memasang grup itu. Gerbang PR tidak memasangnya.
+Lalu set `A2N_TORCH=1` sebelum menjalankan notebook. `uv sync` biasa tidak memasang grup itu. Mode cepat tidak memasangnya.
 
 Roda CPU Python 3.14 untuk torch ada di Linux, Windows, dan macOS Apple Silicon. macOS Intel tidak didukung, karena tidak ada roda cp314 di indeks CPU.
 
@@ -36,7 +36,7 @@ Catatan itu LoRA. Melatih catatan pada beberapa contoh masakan adalah penyetelan
 
 ## Teori
 
-Data di mode cepat empat angka sintetis per baris, dibuat di notebook dengan `SEED`. Bukan data asli perusahaan. Labelnya 0 atau 1. Fungsi kerugian tetap rata-rata selisih yang dikuadratkan, seperti modul 3.
+Data di mode cepat empat angka sintetis per baris, dibuat di notebook dengan `SEED`. Bukan data asli perusahaan. Labelnya 0 atau 1. Klasifikasi biasanya memakai cross-entropy. Di modul ini dipakai rata-rata selisih yang dikuadratkan supaya hitungannya sederhana, seperti modul 3.
 
 ### penyetelan halus (fine-tune)
 
@@ -48,11 +48,11 @@ Di mode cepat, model yang sudah ada adalah satu vektor bobot yang dibekukan. Yan
 
 ### LoRA
 
-Catatan kecil hanya punya satu arah. Perubahan bobot adalah skalar kali vektor, jadi pangkatnya satu. Nama teknisnya **LoRA**: cara penyetelan halus yang hanya melatih dua kumpulan angka kecil. Perubahan bobot adalah hasil kali keduanya, dan pangkatnya rendah.
+Catatan kecil hanya punya satu arah. Rank (peringkat matriks) adalah banyak arah bebas pada perubahan bobot. Perubahan bobot adalah skalar kali vektor, jadi rank-nya satu. Nama teknisnya **LoRA**: cara penyetelan halus yang hanya melatih dua kumpulan angka kecil. Perubahan bobot adalah hasil kali keduanya, dan rank-nya rendah.
 
 Pada latihan tangan, vektor `[1.0, 0.0]` dikali `0.5` menjadi `[0.5, 0.0]`.
 
-**Batas analogi:** catatan kecil hanya menggeser resep pada arah yang pangkatnya rendah. Perubahan yang butuh banyak arah bebas tidak muat. Di mode cepat catatan itu satu vektor dan satu skalar, bukan model obrolan utuh.
+**Batas analogi:** catatan kecil hanya menggeser resep pada arah yang rank-nya rendah. Perubahan yang butuh banyak arah bebas tidak muat. Di mode cepat catatan itu satu vektor dan satu skalar, bukan model obrolan utuh.
 
 ### adapter
 
@@ -83,7 +83,7 @@ Ambang mode cepat: selisih kerugian pada set uji minimal `0.15`, dan jumlah sala
 1. Seluruh bobot ikut dilatih. Di mode cepat hanya catatan kecil yang digeser.
 2. Skor sebelum dan sesudah diukur pada baris yang berbeda. Notebook memakai set uji yang sama.
 3. Adapter disimpan ke repo atau diunggah. Notebook tidak menulis berkas.
-4. Gerbang diminta mengunduh model. Mode cepat mencetak `unduh False`.
+4. Mode cepat tidak mengunduh model. Mode cepat mencetak `unduh False`.
 5. Angka di laporan ditulis dari ingatan. Salin dari keluaran notebook.
 
 ## Cara menjalankan
@@ -154,7 +154,7 @@ Notebook, latihan, dan kunci ada di folder ini. Mode cepat diuji tanpa jaringan 
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Merge diblok bila ada sel siswa 16 baris atau lebih.
+- Setiap sel siswa 16 baris atau lebih tidak dipakai.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Pada set uji yang sama, kerugian sesudah lebih kecil, selisih minimal `0.15`. Jumlah salah pada set uji juga turun.
 - Bobot dasar tidak berubah. Adapter tidak masuk repo dan tidak di-push ke Hugging Face.
@@ -164,11 +164,11 @@ Pengecekan memakai ambang, bukan angka persis.
 
 ### mode cepat
 
-Wajib lulus. Model sangat kecil, 80 langkah, jalan di CPU, tanpa torch dan tanpa unduhan. Ini gerbang tiap PR. Data angka sintetis dari generator di notebook.
+Wajib lulus. Model sangat kecil, 80 langkah, jalan di CPU, tanpa torch dan tanpa unduhan. Data angka sintetis dari generator di notebook.
 
 ### mode penuh
 
-Opsional. `Qwen/Qwen2.5-0.5B-Instruct` pada revisi yang dipin, di GPU MyLegion7i bila mesin itu memakainya. Hasil dinilai dari log mentah. Bukan gerbang PR. Unduhan hanya lewat `muat.py` bila `A2N_UNDUH=1`.
+Opsional. `Qwen/Qwen2.5-0.5B-Instruct` pada revisi yang dipin, di GPU MyLegion7i bila mesin itu memakainya. Hasil dinilai dari log mentah. Unduhan hanya lewat `muat.py` bila `A2N_UNDUH=1`.
 
 ## Model dan dataset
 
@@ -198,7 +198,7 @@ Angka di bawah disalin dari keluaran `notebook.ipynb` dan `latihan-kunci.ipynb`.
 ```
 baris_latih 30
 baris_uji 10
-pangkat 1
+rank 1
 kerugian_uji_sebelum 0.246913
 salah_sebelum 4
 kerugian_uji_sesudah 0.050404
