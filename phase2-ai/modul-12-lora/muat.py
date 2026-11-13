@@ -15,8 +15,12 @@ ID_PENUH = "Qwen/Qwen2.5-0.5B-Instruct"
 
 
 def muat_smol():
-    return muat_model(ID_CEPAT)
+    from transformers import AutoModelForCausalLM
+
+    return muat_model(ID_CEPAT, AutoModelForCausalLM)
 
 
 def muat_qwen():
-    return muat_model(ID_PENUH)
+    from transformers import AutoModelForCausalLM
+
+    return muat_model(ID_PENUH, AutoModelForCausalLM)

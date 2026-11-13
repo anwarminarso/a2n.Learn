@@ -31,7 +31,7 @@ Cara memperoleh perkakas untuk jalur sungguhan, di luar gerbang:
 
 Dapur rumah hanya membaca kartu dengan format tertentu. Resep yang sudah dicetak, plus stiker di pinggirnya, belum bisa masuk ke jendela dapur.
 
-Kamu menyalin isi stiker ke dalam resep, lalu membuang stikernya. Itu penggabungan adapter. Lalu kamu menyalin lembar itu menjadi kartu yang dipahami dapur. Kartu itu GGUF. Kamu juga menyalin resep tanpa stiker, dengan cara yang sama, supaya rasanya bisa dibanding. Jendela dapur hanya membuka ke dalam rumah, yaitu `127.0.0.1`. Program yang menunggu di jendela itu peladen lokal. Nama alatnya Ollama, dan nama itu belum menjadi entri kamus.
+Kamu menyalin isi stiker ke dalam resep, lalu membuang stikernya. Itu penggabungan adapter. Lalu kamu menyalin lembar itu menjadi kartu yang dipahami dapur. Kartu itu GGUF. Kamu juga menyalin resep tanpa stiker, dengan cara yang sama, supaya rasanya bisa dibanding. Jendela dapur hanya membuka ke dalam rumah, yaitu `127.0.0.1`. Program yang menunggu di jendela itu peladen lokal. Nama alatnya Ollama.
 
 ## Teori
 

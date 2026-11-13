@@ -153,6 +153,90 @@ def test_setiap_muatan_hf_memakai_revisi_yang_dipin():
     assert jumlah == 9
 
 
+def test_kelas_muat_causal_lm_tanpa_jaringan(monkeypatch):
+    import sys
+    import types
+
+    rekam = []
+
+    class AutoModel:
+        @classmethod
+        def from_pretrained(cls, folder, **kwargs):
+            rekam.append((cls, kwargs))
+            return cls
+
+    class AutoModelForCausalLM(AutoModel):
+        pass
+
+    class AutoTokenizer:
+        @classmethod
+        def from_pretrained(cls, folder, **kwargs):
+            return cls
+
+    palsu_tf = types.ModuleType("transformers")
+    palsu_tf.AutoModel = AutoModel
+    palsu_tf.AutoModelForCausalLM = AutoModelForCausalLM
+    palsu_tf.AutoTokenizer = AutoTokenizer
+
+    def snapshot_download(**kwargs):
+        rekam.append(kwargs)
+        return "folder-lokal"
+
+    palsu_hub = types.ModuleType("huggingface_hub")
+    palsu_hub.snapshot_download = snapshot_download
+    monkeypatch.setitem(sys.modules, "transformers", palsu_tf)
+    monkeypatch.setitem(sys.modules, "huggingface_hub", palsu_hub)
+
+    def _panggil(folder, fungsi):
+        spec = importlib.util.spec_from_file_location(
+            "muat_" + folder + "_" + fungsi, FASE2 / folder / "muat.py"
+        )
+        modul = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modul)
+        return getattr(modul, fungsi)()
+
+    def _cek_bendera(kelas):
+        kelas_muat, kwargs = rekam[-1]
+        assert kelas_muat is kelas
+        assert kwargs["use_safetensors"] is True
+        assert kwargs["trust_remote_code"] is False
+        assert kwargs["local_files_only"] is True
+
+    muat = _muat_hf()
+    id_kecil = "HuggingFaceTB/SmolLM2-135M-Instruct"
+    _tokenizer, model = muat.muat_model(id_kecil)
+    assert model is AutoModel
+    assert rekam[0]["allow_patterns"] == muat.POLA_UNDUH
+    assert rekam[0]["revision"] == muat.REVISI[id_kecil]
+    _cek_bendera(AutoModel)
+    rekam.clear()
+    _tokenizer, model = muat.muat_model(
+        "Qwen/Qwen2.5-0.5B-Instruct", AutoModelForCausalLM
+    )
+    assert model is AutoModelForCausalLM
+    _cek_bendera(AutoModelForCausalLM)
+
+    for folder, fungsi in (
+        ("modul-10-tokenisasi-embedding", "muat_embedding"),
+        ("modul-11-attention-transformer", "muat_bert_kecil"),
+    ):
+        rekam.clear()
+        _tokenizer, model = _panggil(folder, fungsi)
+        assert model is AutoModel
+        _cek_bendera(AutoModel)
+
+    for folder, fungsi in (
+        ("modul-12-lora", "muat_smol"),
+        ("modul-12-lora", "muat_qwen"),
+        ("modul-13-model-lokal", "muat_dasar"),
+        ("modul-13-model-lokal", "muat_penuh"),
+    ):
+        rekam.clear()
+        _tokenizer, model = _panggil(folder, fungsi)
+        assert model is AutoModelForCausalLM
+        _cek_bendera(AutoModelForCausalLM)
+
+
 def test_sel_siswa_di_bawah_16_baris():
     for folder in MODUL:
         latihan = FASE2 / folder / "latihan.ipynb"

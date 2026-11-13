@@ -15,8 +15,12 @@ ID_PENUH = "Qwen/Qwen2.5-0.5B-Instruct"
 
 
 def muat_dasar():
-    return muat_model(ID_DASAR)
+    from transformers import AutoModelForCausalLM
+
+    return muat_model(ID_DASAR, AutoModelForCausalLM)
 
 
 def muat_penuh():
-    return muat_model(ID_PENUH)
+    from transformers import AutoModelForCausalLM
+
+    return muat_model(ID_PENUH, AutoModelForCausalLM)

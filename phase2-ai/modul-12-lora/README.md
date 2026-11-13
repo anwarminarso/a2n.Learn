@@ -26,6 +26,8 @@ uv sync --group torch
 
 Lalu set `A2N_TORCH=1` sebelum menjalankan notebook. `uv sync` biasa tidak memasang grup itu. Gerbang PR tidak memasangnya.
 
+Roda CPU Python 3.14 untuk torch ada di Linux, Windows, dan macOS Apple Silicon. macOS Intel tidak didukung, karena tidak ada roda cp314 di indeks CPU.
+
 ## Cerita pembuka
 
 Buku resep sudah dicetak. Kamu tidak mencetak ulang seluruh buku hanya karena supnya kurang garam. Kamu menempel catatan kecil di pinggir halaman: "tambah sedikit garam".
