@@ -212,7 +212,19 @@ using (dokumen)
         }
 
         var teks = JsonSerializer.Serialize(new Keluar(label, probabilitas));
-        File.WriteAllText(args[2], teks);
+        try
+        {
+            File.WriteAllText(args[2], teks);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Gagal($"keluaran tidak bisa ditulis: {args[2]}");
+        }
+        catch (IOException)
+        {
+            return Gagal($"keluaran tidak bisa ditulis: {args[2]}");
+        }
+
         return 0;
     }
     catch (OnnxRuntimeException)
