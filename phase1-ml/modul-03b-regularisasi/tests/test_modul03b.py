@@ -373,7 +373,10 @@ def test_mutasi_hapus_skala_memicu_assert():
     for cell in _baca_notebook("notebook.ipynb")["cells"]:
         if cell["cell_type"] != "code":
             continue
-        src = _sumber(cell).replace('("skala", StandardScaler()),\n', "")
+        src = _sumber(cell).replace("StandardScaler().fit(X_latih)", "None")
+        for nama in ("skala_tanpa", "skala_ridge", "skala_nol", "skala_lasso"):
+            src = src.replace(f"{nama}.transform(X_latih)", "X_latih")
+            src = src.replace(f"{nama}.transform(X_uji)", "X_uji")
         try:
             exec(src, ruang, ruang)
         except AssertionError:
@@ -519,4 +522,4 @@ def test_kamus_tiga_istilah_modul_3b():
         assert batas
         assert f"Artinya: {arti[0].lower()}{arti[1:]}" in readme
     assert _kolom_kamus(kamus, "over" + "fitting")[3] == "3"
-    assert _kolom_kamus(kamus, "data " + "lea" + "kage")[3] == "5"
+    assert _kolom_kamus(kamus, "data " + "lea" + "kage")[3] == "5a"
