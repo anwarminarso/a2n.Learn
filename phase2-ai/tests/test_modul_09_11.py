@@ -1,6 +1,7 @@
-"""Tes materi modul 9 sampai 11.
+"""Tes materi modul 9 sampai 13.
 
-Mode cepat jalan di CPU tanpa jaringan. Uji unduhan dilewati secara bawaan.
+Mode cepat jalan di CPU tanpa jaringan dan tanpa torch. Uji unduhan dilewati
+secara bawaan. Uji torch dilewati kecuali A2N_TORCH=1.
 """
 
 import importlib.util
@@ -19,6 +20,8 @@ MODUL = (
     "modul-09-pytorch",
     "modul-10-tokenisasi-embedding",
     "modul-11-attention-transformer",
+    "modul-12-lora",
+    "modul-13-model-lokal",
 )
 NOTEBOOK = ("notebook.ipynb", "latihan.ipynb", "latihan-kunci.ipynb")
 SHA40 = re.compile(r"[0-9a-f]{40}")
@@ -147,7 +150,91 @@ def test_setiap_muatan_hf_memakai_revisi_yang_dipin():
                 assert "trust_remote_code=False" in panggilan
                 if "AutoModel" in sebelum:
                     assert "use_safetensors=True" in panggilan
-    assert jumlah == 6
+    assert jumlah == 9
+
+
+def test_kelas_muat_causal_lm_tanpa_jaringan(monkeypatch):
+    import sys
+    import types
+
+    rekam = []
+
+    class AutoModel:
+        @classmethod
+        def from_pretrained(cls, folder, **kwargs):
+            rekam.append((cls, kwargs))
+            return cls
+
+    class AutoModelForCausalLM(AutoModel):
+        pass
+
+    class AutoTokenizer:
+        @classmethod
+        def from_pretrained(cls, folder, **kwargs):
+            return cls
+
+    palsu_tf = types.ModuleType("transformers")
+    palsu_tf.AutoModel = AutoModel
+    palsu_tf.AutoModelForCausalLM = AutoModelForCausalLM
+    palsu_tf.AutoTokenizer = AutoTokenizer
+
+    def snapshot_download(**kwargs):
+        rekam.append(kwargs)
+        return "folder-lokal"
+
+    palsu_hub = types.ModuleType("huggingface_hub")
+    palsu_hub.snapshot_download = snapshot_download
+    monkeypatch.setitem(sys.modules, "transformers", palsu_tf)
+    monkeypatch.setitem(sys.modules, "huggingface_hub", palsu_hub)
+
+    def _panggil(folder, fungsi):
+        spec = importlib.util.spec_from_file_location(
+            "muat_" + folder + "_" + fungsi, FASE2 / folder / "muat.py"
+        )
+        modul = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modul)
+        return getattr(modul, fungsi)()
+
+    def _cek_bendera(kelas):
+        kelas_muat, kwargs = rekam[-1]
+        assert kelas_muat is kelas
+        assert kwargs["use_safetensors"] is True
+        assert kwargs["trust_remote_code"] is False
+        assert kwargs["local_files_only"] is True
+
+    muat = _muat_hf()
+    id_kecil = "HuggingFaceTB/SmolLM2-135M-Instruct"
+    _tokenizer, model = muat.muat_model(id_kecil)
+    assert model is AutoModel
+    assert rekam[0]["allow_patterns"] == muat.POLA_UNDUH
+    assert rekam[0]["revision"] == muat.REVISI[id_kecil]
+    _cek_bendera(AutoModel)
+    rekam.clear()
+    _tokenizer, model = muat.muat_model(
+        "Qwen/Qwen2.5-0.5B-Instruct", AutoModelForCausalLM
+    )
+    assert model is AutoModelForCausalLM
+    _cek_bendera(AutoModelForCausalLM)
+
+    for folder, fungsi in (
+        ("modul-10-tokenisasi-embedding", "muat_embedding"),
+        ("modul-11-attention-transformer", "muat_bert_kecil"),
+    ):
+        rekam.clear()
+        _tokenizer, model = _panggil(folder, fungsi)
+        assert model is AutoModel
+        _cek_bendera(AutoModel)
+
+    for folder, fungsi in (
+        ("modul-12-lora", "muat_smol"),
+        ("modul-12-lora", "muat_qwen"),
+        ("modul-13-model-lokal", "muat_dasar"),
+        ("modul-13-model-lokal", "muat_penuh"),
+    ):
+        rekam.clear()
+        _tokenizer, model = _panggil(folder, fungsi)
+        assert model is AutoModelForCausalLM
+        _cek_bendera(AutoModelForCausalLM)
 
 
 def test_sel_siswa_di_bawah_16_baris():
@@ -198,6 +285,82 @@ def test_mode_cepat_cpu_tanpa_jaringan():
                 assert baris.strip() in readme, (folder, nama, baris)
 
 
+def test_mode_cepat_tidak_mengimpor_torch(monkeypatch):
+    import sys
+    from importlib.machinery import ModuleSpec
+
+    monkeypatch.delenv("A2N_TORCH", raising=False)
+
+    class Pemblokir:
+        def find_spec(self, nama, path, target=None):
+            akar = nama.split(".", 1)[0]
+            if akar in {"torch", "peft"}:
+                return ModuleSpec(nama, self)
+            return None
+
+        def create_module(self, spec):
+            raise AssertionError(spec.name)
+
+        def exec_module(self, modul):
+            raise AssertionError(modul.__name__)
+
+    kunci = {
+        nama: sys.modules.pop(nama)
+        for nama in list(sys.modules)
+        if nama == "torch" or nama.startswith("torch.") or nama == "peft" or nama.startswith("peft.")
+    }
+    sys.meta_path.insert(0, Pemblokir())
+    try:
+        for folder in MODUL:
+            for nama in ("notebook.ipynb", "latihan-kunci.ipynb"):
+                _jalankan(FASE2 / folder / nama)
+    finally:
+        sys.meta_path.pop(0)
+        sys.modules.update(kunci)
+
+
+@pytest.mark.skipif(
+    os.environ.get("A2N_TORCH") != "1",
+    reason="Jalur torch dilewati. Set A2N_TORCH=1 bila grup torch terpasang.",
+)
+def test_torch_backward_dan_lora_nyata():
+    import torch
+    from peft import LoraConfig, inject_adapter_in_model
+    from torch import nn
+
+    torch.manual_seed(42)
+    x = torch.tensor(4.0, requires_grad=True)
+    y = x * x
+    y.backward()
+    assert abs(float(x.grad) - 8.0) < 1e-5
+    assert x.device.type == "cpu"
+
+    class Jaring(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.lapisan = nn.Linear(4, 1, bias=False)
+
+        def forward(self, data):
+            return self.lapisan(data)
+
+    jaring = Jaring()
+    for nilai in jaring.parameters():
+        nilai.requires_grad_(False)
+    konfigurasi = LoraConfig(r=1, lora_alpha=1, target_modules=["lapisan"], bias="none")
+    jaring = inject_adapter_in_model(konfigurasi, jaring)
+    data = torch.tensor([[0.2, -0.1, 0.4, 0.3], [0.5, 0.2, -0.3, 0.1]])
+    target = torch.tensor([[1.0], [0.0]])
+    opt = torch.optim.SGD([p for p in jaring.parameters() if p.requires_grad], lr=0.8)
+    opt.zero_grad()
+    awal = float(torch.mean((torch.sigmoid(jaring(data)) - target) ** 2).detach())
+    for _ in range(40):
+        opt.zero_grad()
+        rugi = torch.mean((torch.sigmoid(jaring(data)) - target) ** 2)
+        rugi.backward()
+        opt.step()
+    assert awal - float(rugi.detach()) > 0
+
+
 @pytest.mark.skipif(
     os.environ.get("A2N_UNDUH") != "1",
     reason="Uji jaringan dilewati secara bawaan. Set A2N_UNDUH=1 untuk menjalankannya.",
@@ -213,3 +376,5 @@ def test_unduh_model_opsional():
 
     _panggil("modul-10-tokenisasi-embedding", "muat_embedding")
     _panggil("modul-11-attention-transformer", "muat_bert_kecil")
+    _panggil("modul-12-lora", "muat_smol")
+    _panggil("modul-13-model-lokal", "muat_dasar")
