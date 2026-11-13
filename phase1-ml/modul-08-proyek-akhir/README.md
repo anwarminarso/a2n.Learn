@@ -88,7 +88,7 @@ Hitung dengan tangan dulu. Jangan gulir ke kunci. Setelah itu buka `notebook.ipy
 
 ## Kasus nyata
 
-Generator `tambang_sintetis.py` di folder ini membangun tabel. Tidak ada unduhan. Bukan data asli perusahaan. Modul ini tidak memanggil `make_regression`.
+Generator `tambang_sintetis.py` di folder ini membangun tabel lewat `buat_batch`. Tidak ada unduhan. Bukan data asli perusahaan.
 
 Di `make_regression`, `noise` adalah simpangan baku derau Gauss pada jawaban, dan `bias` adalah geseran tetap pada jawaban. Fungsi `buat_batch` hanya menerima `seed`. `skala` dan `pusat` adalah angka di dalam fungsi, bukan parameter yang dikirim pemanggil. Angka itu dicocokkan ke dokumentasi NumPy:
 
@@ -126,10 +126,10 @@ Buka `notebook.ipynb`, kerjakan `latihan.ipynb`, lalu bandingkan dengan `latihan
 
 .NET di modul ini adalah program di luar Python yang membaca berkas ONNX yang sama. C# adalah bahasa berkas pemanggil itu; kamu tidak perlu menghafalnya. Alat `dotnet` tidak dipasang oleh `uv sync --frozen`. Proyek `PemanggilOnnx` menargetkan `net10.0`, jadi perintah `dotnet` di bawah membutuhkan SDK .NET 10.
 
-Dari root repo, setelah `model.onnx` dan `baris.json` ada (lihat ujian di bawah):
+Dari folder modul ini (`phase1-ml/modul-08-proyek-akhir`), setelah `model.onnx` dan `baris.json` ada di folder itu (lihat ujian di bawah):
 
 ```bash
-dotnet run --project phase1-ml/modul-08-proyek-akhir/dotnet/PemanggilOnnx -- model.onnx baris.json keluar.json
+dotnet run --project dotnet/PemanggilOnnx -- model.onnx baris.json keluar.json
 ```
 
 CPU only. Versi paket terkunci di `uv.lock` di root repo.
@@ -221,10 +221,10 @@ Path("baris.json").write_text(
 )
 ```
 
-Lalu, dari root repo. Perintah `dotnet` ini membutuhkan SDK .NET 10, karena proyek menargetkan `net10.0`:
+Lalu, dari folder modul ini, bukan dari root repo. Perintah `dotnet` ini membutuhkan SDK .NET 10, karena proyek menargetkan `net10.0`:
 
 ```bash
-dotnet run --project phase1-ml/modul-08-proyek-akhir/dotnet/PemanggilOnnx -- model.onnx baris.json keluar.json
+dotnet run --project dotnet/PemanggilOnnx -- model.onnx baris.json keluar.json
 ```
 
 `keluar.json` berisi `label` dan `probabilitas`. Bandingkan dengan Python pada delapan baris yang sama. Jangan menyimpan `model.onnx` ke git.

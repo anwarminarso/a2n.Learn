@@ -16,7 +16,7 @@ labels: ["module", "ml"]
 - [ ] Kasus nyata sesuai aturan data
 - [ ] `latihan.ipynb` + `latihan-kunci.ipynb`
 - [ ] Cek pemahaman dengan jawaban yang bisa diverifikasi
-- [ ] `tests/` di folder modul; `pyproject.toml`, `uv.lock`, dan `requirements.txt` (`uv export`) di root repo, Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), CPU only
+- [ ] `tests/` di folder modul; `pyproject.toml`, `uv.lock`, dan `requirements.txt` (`uv export`) di root repo, Python 3.14, dipin proyek, CPU only
 
 ## Dependensi
 
@@ -24,7 +24,7 @@ labels: ["module", "ml"]
 Pyra (penulis) · Ursa (uji jalan) · Squal (audit dok) · Frieren (review alur) · Iris (merge)
 
 ## Acceptance criteria (Definition of Done)
-- [ ] (a) Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), sesuai `.python-version`; lingkungan baru dari `pyproject.toml` + `uv.lock` di root repo (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit di root); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
+- [ ] (a) Python 3.14, dipin proyek, sesuai `.python-version`; lingkungan baru dari `pyproject.toml` + `uv.lock` di root repo (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit di root); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
 - [ ] (b) seed seragam: konstanta `SEED = 42` di sel pertama setiap notebook dan dipakai di setiap `random_state`/pemanggilan acak; setiap angka yang dikutip di teks berasal dari output notebook, bukan ditulis tangan
 - [ ] (c) data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data asli perusahaan.
 - [ ] (d) latihan punya kunci (`latihan-kunci.ipynb`) yang dijalankan Ursa; cek pemahaman punya jawaban benar yang bisa diverifikasi
@@ -32,13 +32,13 @@ Pyra (penulis) · Ursa (uji jalan) · Squal (audit dok) · Frieren (review alur)
 - [ ] (f) bisa dibaca dan dikerjakan dalam SATU kali duduk: teori maksimal 1 halaman, notebook pendek
 - [ ] (g) Ursa PASS/FAIL hanya dari log mentah sesi yang benar-benar menjalankannya; Squal memberi verdict dokumentasi PASS / PASS BERSYARAT / BLOCK (bukan security); Frieren mereview alur belajar sebelum ke mas
 - [ ] (h) analogi tidak membuat penjelasan salah, dan batas berlakunya disebut
-- [ ] (i) maksimal tiga istilah baru, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
+- [ ] (i) maksimal tiga istilah baru per sesi, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
 - [ ] (j) bila modul menutup satu tingkat: ujian level dijalankan Ursa dan termasuk dalam PASS
 - [ ] (k) gaya bahasa ramah pemula: istilah baru dijelaskan dengan contoh sehari-hari dulu, satu sel kode = satu ide dengan komentar Indonesia, rumus hanya bila perlu dan selalu dengan contoh angka kecil
 
 ## Format wajib modul
 1. Cerita sehari-hari pembuka, maksimal satu layar.
-2. Maksimal **tiga istilah baru** per modul; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](../../docs/kamus-istilah.md).
+2. Maksimal **tiga istilah baru per sesi**; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](../../docs/kamus-istilah.md).
 3. "Coba sendiri dulu, baru kode".
 4. Bagian "Kesalahan yang paling sering terjadi".
 5. Cek pemahaman dengan kunci jawaban.

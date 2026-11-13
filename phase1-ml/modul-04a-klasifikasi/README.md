@@ -4,7 +4,7 @@
 
 **Tingkat:** intermediate
 
-Bagian ini memakai tiga istilah baru. Dua model lain, hutan acak dan gradient boosting, ada di [modul 4b](../modul-04b-pohon-gabungan/) supaya tiap bagian tetap tidak lebih dari tiga istilah.
+Bagian ini memakai tiga istilah baru: klasifikasi, regresi logistik, dan pohon keputusan. Hutan acak dan gradient boosting ada di [modul 4b](../modul-04b-pohon-gabungan/).
 
 ## Cerita pembuka
 
@@ -174,4 +174,4 @@ hukum_alam False
 - scikit-learn developers. *Decision Trees.* <https://scikit-learn.org/stable/modules/tree.html>
 - scikit-learn developers. `DummyClassifier`. <https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html>
 - scikit-learn developers. *Toy datasets* (Iris plants dataset) dan `load_iris`. <https://scikit-learn.org/stable/datasets/toy_dataset.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>
-- Fisher, R.A. "The use of multiple measurements in taxonomic problems" Annals of Eugenics, 7, Part II, 179-188 (1936); juga dalam "Contributions to Mathematical Statistics" (John Wiley, NY, 1950). Nama jurnal mengikuti halaman Wiley dan catatan modul persiapan: halaman toy dataset scikit-learn sempat menulis "Annual Eugenics".
+- Fisher, R.A. "The use of multiple measurements in taxonomic problems" Annals of Eugenics, 7, Part II, 179-188 (1936); juga dalam "Contributions to Mathematical Statistics" (John Wiley, NY, 1950). Nama jurnal mengikuti halaman Wiley dan catatan modul persiapan: halaman toy dataset scikit-learn masih menulis "Annual Eugenics" (dicek 2026-11-13).

@@ -169,6 +169,8 @@ def test_parameter_generator_mengikuti_dokumentasi():
         for frasa in FRASA_SALAH:
             assert frasa not in teks, (path, frasa)
     for nama in DOKUMEN_GENERATOR:
+        if nama == "README.md":
+            continue
         teks = (ROOT / nama).read_text(encoding="utf-8").replace("`", "")
         assert "make_classification" in teks
         for frasa in (
@@ -181,6 +183,22 @@ def test_parameter_generator_mengikuti_dokumentasi():
             "tidak persis sama",
         ):
             assert frasa in teks, (nama, frasa)
+    readme_kasus = (ROOT / "README.md").read_text(encoding="utf-8")
+    for jargon in ("hypercube", "kombinasi linear"):
+        assert jargon not in readme_kasus
+    for parameter in (
+        "n_samples=400",
+        "n_features",
+        "n_informative=3",
+        "n_redundant=0",
+        "n_repeated=0",
+        "n_clusters_per_class=1",
+        "weights=[0.85, 0.15]",
+        "class_sep",
+        "flip_y",
+        "random_state=SEED",
+    ):
+        assert parameter in readme_kasus
 
 
 def test_notebook_cocok_dengan_hitung_ulang():

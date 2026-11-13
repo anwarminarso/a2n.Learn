@@ -8,7 +8,7 @@
 
 Kamu menimbang bahan kue. Kalau timbangannya berganti-ganti, atau catatannya tercampur dengan catatan dapur lain, besok hasilnya beda walaupun resepnya sama.
 
-Modul ini menata meja kerja supaya langkah yang sama bisa diulang. Kita memakai Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), memasang perkakas di satu tempat yang terpisah dari proyek lain, dan menulis catatan yang mencampur penjelasan dengan kode. Setelah meja siap, kita latihan memegang angka dan tabel. Contoh tabelnya sudah ikut terpasang bersama scikit-learn. Tidak ada berkas yang diunduh. Modul ini tidak memakai data asli perusahaan.
+Modul ini menata meja kerja supaya langkah yang sama bisa diulang. Kita memakai Python 3.14, dipin proyek, memasang perkakas di satu tempat yang terpisah dari proyek lain, dan menulis catatan yang mencampur penjelasan dengan kode. Setelah meja siap, kita latihan memegang angka dan tabel. Contoh tabelnya sudah ikut terpasang bersama scikit-learn. Tidak ada berkas yang diunduh. Modul ini tidak memakai data asli perusahaan.
 
 ## Teori
 

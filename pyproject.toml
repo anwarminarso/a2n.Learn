@@ -1,7 +1,7 @@
 [project]
 name = "a2n-learn"
 version = "0.1.0"
-description = "Lingkungan belajar a2n.Learn untuk modul 1 sampai 8, dengan numpy, pandas, dan scikit-learn. Modul 8 juga memakai onnxruntime dan skl2onnx."
+description = "Lingkungan belajar a2n.Learn untuk modul 1 sampai 15, dengan numpy, pandas, dan scikit-learn. Modul 8 juga memakai onnxruntime dan skl2onnx. Grup torch opsional, hanya CPU, untuk jalur PyTorch nyata."
 requires-python = "==3.14.*"
 dependencies = [
   "ipykernel",
@@ -15,8 +15,22 @@ dependencies = [
   "skl2onnx>=1.20.0",
 ]
 
+[dependency-groups]
+torch = [
+  "torch>=2.6",
+  "peft==0.21.2",
+]
+
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [tool.pytest.ini_options]
 testpaths = [
@@ -33,5 +47,7 @@ testpaths = [
   "phase1-ml/modul-06b-pipeline",
   "phase1-ml/modul-07-tanpa-label",
   "phase1-ml/modul-08-proyek-akhir",
+  # Tes Fase 2 ada di phase2-ai/tests. Revisi model ada di phase2-ai/muat_hf.py.
+  "phase2-ai",
 ]
 python_files = ["test_*.py"]

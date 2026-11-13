@@ -91,7 +91,7 @@ Indeks adalah nomor baris, mulai dari 0.
 
 Restart & Run All menjalankan semua sel dari sel pertama, tanpa ada yang dilewati.
 
-Versi Python mengikuti berkas `.python-version`. Catatan versinya ada di [dokumen kontribusi](../../docs/CONTRIBUTING.md), bukan di modul ini. CPU only.
+Versi Python mengikuti berkas `.python-version`. Versi paket ada di `uv.lock` di root repo. CPU only.
 
 Perintah ini dijalankan dari root repo (folder yang berisi `pyproject.toml` dan `uv.lock`), bukan dari folder modul:
 

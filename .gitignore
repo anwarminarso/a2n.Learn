@@ -12,7 +12,7 @@ env/
 # Data mentah (kecuali README)
 data/*
 !data/README.md
-# Salinan kecil data publik (hanya dengan persetujuan Frieren atau mas Anwar)
+# Salinan kecil data publik (hanya dengan persetujuan pengelola materi)
 !data/public/
 # Model artefak & OS/IDE
 *.onnx
@@ -21,3 +21,31 @@ data/*
 .idea/
 bin/
 obj/
+
+# Bobot dan artefak model Fase 2.
+# Data non-publik dilarang sama sekali.
+# Adapter, berkas GGUF, bobot, dan indeks vektor tidak masuk repo sama sekali.
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.faiss
+*.npy
+*.index
+*.ann
+chroma/
+# Indeks vektor modul 14. Dibangun saat notebook jalan, tidak di-commit.
+phase2-ai/modul-14-rag/indeks/
+# Berkas sqlite3 ini untuk indeks vektor.
+*.sqlite3
+adapters/
+outputs/
+checkpoints/
+# Keluaran sketsa GGUF modul 13 yang dijalankan dari root repo.
+folder-gabungan/
+folder-kontrol/
+llama.cpp/
+
+# Keluaran program .NET modul 8. Terbentuk saat notebook dan perintah dijalankan.
+phase1-ml/modul-08-proyek-akhir/baris.json
+phase1-ml/modul-08-proyek-akhir/keluar.json

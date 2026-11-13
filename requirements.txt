@@ -619,7 +619,7 @@ python-json-logger==4.2.0 \
     --hash=sha256:158a52126fcd6869e09574d2b66272666f3dc8f468c62637ef9a1fa883719cb9 \
     --hash=sha256:e371ebe22ec01e289850102091a2b1f6fc9e655c7f1f5f29073936756c290afa
     # via jupyter-events
-pywinpty==3.1.2 ; os_name == 'nt' \
+pywinpty==3.1.2 ; os_name == 'nt' and sys_platform != 'darwin' \
     --hash=sha256:03e2d2abe7c0df64db354233c83479b2b43d9fdd1badceea994259ca3819b203 \
     --hash=sha256:30235f396856fbc03c9bb181b4e27bf50f7b355e432e5731729063d920a09867 \
     --hash=sha256:81d83678211cc6f8cd2954e98a8a18d8e5de1e0666900a1df8da70f33572d34d \

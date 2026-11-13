@@ -1,0 +1,2 @@
+Catatan: teks sintetis untuk latihan. Bukan data asli perusahaan.
+Berkas ini ada di folder, tetapi tidak ada di allowlist.

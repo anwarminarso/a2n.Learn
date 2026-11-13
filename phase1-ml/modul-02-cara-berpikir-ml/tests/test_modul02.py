@@ -387,4 +387,4 @@ def test_kamus_tiga_istilah_modul_2():
     for istilah, modul in (("venv", "1"), ("array", "1"), ("DataFrame", "1")):
         assert _kolom_kamus(kamus, istilah)[3] == modul
     assert _kolom_kamus(kamus, "over" + "fitting")[3] == "3"
-    assert _kolom_kamus(kamus, "data " + "lea" + "kage")[3] == "5"
+    assert _kolom_kamus(kamus, "data " + "lea" + "kage")[3] == "5a"
