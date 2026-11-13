@@ -31,7 +31,7 @@ PyTorch adalah nama alat. Mode cepat memakai numpy, yang sudah ada sejak modul 1
 Jalur PyTorch nyata ada di sel akhir `notebook.ipynb`. Sel itu memakai `torch.tensor`, `backward`, dan jaringan kecil pada data iris yang sama, di CPU. Sel jalan hanya bila lingkungan `A2N_TORCH=1` dan paket torch sudah terpasang. Jika tidak, sel mencetak kalimat lewati. Pasang grup opsional dari root repo:
 
 ```bash
-uv sync --group torch
+uv sync --frozen --group torch
 ```
 
 `uv sync` biasa tidak memasang grup itu. Grup ini CPU saja, dari indeks resmi PyTorch. Gerbang PR tetap tanpa torch.
@@ -121,7 +121,7 @@ uv run pytest
 Jalur torch, bila ingin dicoba di CPU:
 
 ```bash
-uv sync --group torch
+uv sync --frozen --group torch
 ```
 
 Lalu jalankan notebook dengan `A2N_TORCH=1`. Tanpa itu, sel torch mencetak kalimat lewati.
@@ -250,12 +250,12 @@ salah_uji_baseline 13
 salah_uji_logistik 3
 jalur_torch lewati
 jalur_torch nyala
-lewati_tensor Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_mundur Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_jaringan Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_data Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_latih Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_hasil Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
+lewati_tensor Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_mundur Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_jaringan Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_data Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_latih Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_hasil Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
 bentuk_torch (3,)
 jumlah_torch 6.0
 gradien_torch 8.0

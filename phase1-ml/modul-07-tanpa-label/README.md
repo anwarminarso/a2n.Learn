@@ -225,7 +225,7 @@ Mini-proyek lulus bila ketiga hal ini benar, dicek di `ujian-kunci.ipynb`:
 
 Pertanyaan lulus bila kelima jawaban sama dengan kunci di bawah.
 
-Ujian tingkat advanced lulus bila mini-proyek lulus dan semua pertanyaan ujian sesuai kunci. Tiga baris `lulus_*` pada keluaran adalah hasil cek kunci ini, bukan keputusan Ursa atau Squal.
+Ujian tingkat advanced lulus bila mini-proyek lulus dan semua pertanyaan ujian sesuai kunci. Tiga baris `lulus_*` pada keluaran adalah hasil cek kunci ini, bukan keputusan di luar notebook.
 
 ### Kunci jawaban ujian
 
@@ -272,6 +272,4 @@ lulus_ulang True
 - scikit-learn developers. *Toy datasets* (Iris plants dataset) dan `load_iris`. <https://scikit-learn.org/stable/datasets/toy_dataset.html> dan <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>
 - Fisher, R.A. "The use of multiple measurements in taxonomic problems" Annals of Eugenics, 7, Part II, 179-188 (1936); juga dalam "Contributions to Mathematical Statistics" (John Wiley, NY, 1950). Kalimat sumber ini mengikuti halaman toy dataset scikit-learn, dengan nama jurnal yang sudah dikoreksi.
 
-## Catatan istilah
-
-Hanya tiga entri kamus baru. KMeans, StandardScaler, PCA sebagai nama alat, IsolationForest, Pipeline, `n_init`, `contamination`, outlier detection, dan novelty detection dijelaskan satu kalimat dan tidak menjadi entri. Arti Pipeline sama dengan modul 6b: satu rantai langkah berurutan. Langkah di depan mengubah data, langkah terakhir biasanya model. Saat belajar, setiap langkah hanya melihat data latih, lalu langkah itu dipakai apa adanya pada data uji. Modul 6a dan modul 6b ada di pohon ini. Ujian hanya mengingatkan arti itu, tanpa menambah entri kamus. Modul ini tidak dipecah: tiga topik roadmap tepat tiga istilah.
+Nama alat di modul ini, seperti KMeans dan IsolationForest, dijelaskan sekadarnya tanpa entri kamus baru, sedangkan arti Pipeline tetap seperti di modul 6b.

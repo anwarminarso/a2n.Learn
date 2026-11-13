@@ -21,7 +21,7 @@ Modul sebelumnya: [Modul 11: Transformer](../modul-11-attention-transformer/).
 Mode cepat hanya memakai numpy. Jalur LoRA nyata memakai grup opsional torch, CPU saja. Pasang dari root repo, folder yang berisi `pyproject.toml`:
 
 ```bash
-uv sync --group torch
+uv sync --frozen --group torch
 ```
 
 Lalu set `A2N_TORCH=1` sebelum menjalankan notebook. `uv sync` biasa tidak memasang grup itu. Gerbang PR tidak memasangnya.
@@ -98,7 +98,7 @@ uv run pytest
 Jalur LoRA nyata, CPU saja:
 
 ```bash
-uv sync --group torch
+uv sync --frozen --group torch
 ```
 
 Lalu `A2N_TORCH=1`. Tanpa itu, sel peft mencetak kalimat lewati. Unduhan model hanya bila `A2N_UNDUH=1`, lewat `muat_smol()` di `muat.py`. Mode cepat tidak memanggil fungsi itu.
@@ -213,10 +213,10 @@ revisi_penuh 7ae557604adf67be50417f59c2c2f167def9a775
 unduh False
 jalur_lora lewati
 jalur_lora nyala
-lewati_beku Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_peft Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_latih_peft Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
-lewati_hasil_peft Jalur ini dilewati. Pasang grup dengan uv sync --group torch, lalu set A2N_TORCH=1.
+lewati_beku Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_peft Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_latih_peft Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
+lewati_hasil_peft Jalur ini dilewati. Pasang grup dengan uv sync --frozen --group torch, lalu set A2N_TORCH=1.
 beku siap
 adapter_peft ya
 turun_peft ya

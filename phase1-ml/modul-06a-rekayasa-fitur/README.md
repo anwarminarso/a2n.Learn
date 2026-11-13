@@ -4,7 +4,7 @@
 
 **Tingkat:** advanced
 
-Modul 6 butuh lima istilah baru, jadi dipecah dua. Ini bagian pertama. Bagian kedua, [Pipeline](../modul-06b-pipeline/), merangkai langkah-langkah ini. Iris yang memperbarui penomoran di roadmap.
+Modul 6 butuh lima istilah baru, jadi dipecah dua. Ini bagian pertama. Bagian kedua, [Pipeline](../modul-06b-pipeline/), merangkai langkah-langkah ini. Penomoran bagian mengikuti urutan belajar.
 
 ## Cerita pembuka
 

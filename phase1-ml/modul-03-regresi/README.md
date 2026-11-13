@@ -231,7 +231,7 @@ kunci_garis_mengalahkan True
 
 ## Ujian tingkat beginner
 
-Modul 3 menutup tingkat beginner. Ujian ini proyek mini plus pertanyaan. Ursa menjalankannya sebagai bagian dari uji modul. Squal mengaudit tulisannya. Bagian ini tidak menambah istilah baru.
+Modul 3 menutup tingkat beginner. Ujian ini proyek mini plus pertanyaan. Bagian ini tidak menambah istilah baru.
 
 Berkasnya: `ujian.ipynb` untuk dikerjakan, `ujian-kunci.ipynb` untuk kunci yang dijalankan. Keduanya memakai `SEED` di sel pertama.
 
@@ -251,7 +251,7 @@ Angka dibuat dengan `make_regression`: 80 baris, satu petunjuk, `noise` 15 adala
 Lulus bila semua butir ini terpenuhi sekaligus.
 
 - Pemisahan memakai `test_size=0.25` dan `random_state=SEED`. Data uji tidak ikut menyusun garis maupun baseline.
-- Soal 1 lulus bila jawaban memuat kedua gagasan pada kunci, dengan kata apa pun. Tes otomatis tidak menilai kata-kata bebas. Ursa membaca butir ini.
+- Soal 1 lulus bila jawaban memuat kedua gagasan pada kunci, dengan kata apa pun. Tes otomatis tidak menilai kata-kata bebas. Butir ini dibaca dari tulisan jawabannya.
 - `ujian-kunci.ipynb` memeriksa proyek mini, dan tes modul menghitung ulang syarat yang sama.
 
 Tidak lulus bila data uji ikut menyusun garis.

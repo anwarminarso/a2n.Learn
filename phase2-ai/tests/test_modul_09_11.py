@@ -262,6 +262,20 @@ def test_sel_siswa_di_bawah_16_baris():
                 assert len(_sumber(cell).splitlines()) < 16, (folder, nama)
 
 
+def test_sel_kunci_di_bawah_16_baris():
+    ketemu = False
+    for dasar in (REPO / "phase1-ml", FASE2):
+        for path in sorted(dasar.glob("modul-*/*-kunci.ipynb")):
+            ketemu = True
+            nb = _baca(path)
+            for cell in nb["cells"]:
+                if cell["cell_type"] != "code":
+                    continue
+                jumlah = len(_sumber(cell).splitlines())
+                assert jumlah < 16, (path, jumlah)
+    assert ketemu
+
+
 def test_modul_13_menjalankan_entri_state_dan_shape():
     path = FASE2 / "modul-13-model-lokal" / "notebook.ipynb"
     nb = _baca(path)

@@ -23,7 +23,7 @@ Pembaca sasaran: pemula tanpa latar belakang ML.
 Larangan: tidak menghapus `main`/`develop`, tidak force-push. Modul berikutnya dimulai hanya setelah modul sebelumnya lolos Ursa dan Squal.
 
 ## Definition of Done per modul
-- [ ] (a) Python 3.14 (versi stabil terbaru yang masih bugfix; EOL 2030-10), sesuai `.python-version`; lingkungan baru dari `pyproject.toml` + `uv.lock` di root repo (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit di root); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
+- [ ] (a) Python 3.14, dipin proyek, sesuai `.python-version`; lingkungan baru dari `pyproject.toml` + `uv.lock` di root repo (pytest, nbmake, dan ipykernel versinya dikunci di `uv.lock`; `requirements.txt` hasil `uv export` di-commit di root); Restart & Run All tanpa error dan tanpa sel dilewati; tiap notebook < 2 menit; `pytest --nbmake` lulus
 - [ ] (b) seed seragam: konstanta `SEED = 42` di sel pertama setiap notebook dan dipakai di setiap `random_state`/pemanggilan acak; setiap angka yang dikutip di teks berasal dari output notebook, bukan ditulis tangan
 - [ ] (c) data: Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generator di repo, tanpa unduhan. Data publik hanya pengecualian: sumber dan lisensi jelas, salinan kecil di repo, dan harus disetujui Frieren atau mas Anwar dulu. Modul 8 memakai data sintetis ala tambang. Tanpa data asli perusahaan.
 - [ ] (d) latihan punya kunci (`latihan-kunci.ipynb`) yang dijalankan Ursa; cek pemahaman punya jawaban benar yang bisa diverifikasi
@@ -58,7 +58,7 @@ Default semua modul: dataset bawaan scikit-learn atau data sintetis dari generat
 Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
 
 ## Versi Python
-- **Python 3.14** (versi stabil terbaru yang masih bugfix; EOL 2030-10). Wheel dicek Pyra pada 2026-11-04 untuk Linux x86_64 dan Windows (macOS dan ARM belum dicek). Tidak perlu fallback saat ini.
+- **Python 3.14, dipin proyek**. Wheel dicek Pyra pada 2026-11-04 untuk Linux x86_64 dan Windows (macOS dan ARM belum dicek). Tidak perlu fallback saat ini.
 - `.python-version` cukup berisi `3.14`. Nomor patch 3.14.x tidak dikunci di `uv.lock`. Dasar pengujian saat ini adalah Python 3.14.10; patch tercatat di log mentah. Catatan ini diperbarui setiap kali versi di lingkungan agen berubah. Nomor patch itu hanya ditulis di kalimat ini.
 - Pasang lingkungan dari root repo dengan `uv sync --frozen`. Perintah lengkap ada di [Cara menjalankan](../README.md#cara-menjalankan).
 - Versi paket tidak ditulis di dokumen ini; Pyra menguncinya di `uv.lock` di root repo (di-commit).

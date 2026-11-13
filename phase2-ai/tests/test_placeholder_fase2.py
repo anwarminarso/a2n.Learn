@@ -11,7 +11,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 FASE2 = REPO / "phase2-ai"
 ISSUE = "https://github.com/anwarminarso/a2n.Learn/issues/{}"
-ROADMAP_SHA256 = "48d238af463cf95d530e6256751a56171190a4e37c075ad6a86f1644f2bdee15"
+ROADMAP_SHA256 = "a4553c3968c011c2f13a6c3a7c509e65cc4a3ef62573718143a86b0e4f09f4de"
 TERLARANG = re.compile(
     "".join(["s", "m", "p"]) + "|" + "".join(["a", "n", "t", "a", "m"]),
     re.IGNORECASE,
@@ -552,6 +552,36 @@ def test_tanpa_weights_only_false():
             continue
         assert jarum not in teks, path
         assert jarum_spasi not in teks, path
+
+
+def test_teks_pembaca_tanpa_nama_tim():
+    nama = ("Frieren", "Ursa", "Squal", "Pyra", "Nova", "Lyra")
+    pola = re.compile(r"\b(" + "|".join(nama) + r")\b")
+    iris = re.compile(r"\bIris\b")
+    lewati = {
+        "docs/CONTRIBUTING.md",
+        "docs/module-template.md",
+        "docs/ROADMAP.md",
+    }
+    ketemu = False
+    for path in REPO.rglob("*"):
+        if not path.is_file():
+            continue
+        if any(bagian in path.parts for bagian in (".git", ".venv", "__pycache__", "obj", "bin")):
+            continue
+        if path.parts[0] == ".github" or (len(path.parts) > 1 and path.parts[-2] == ".github"):
+            continue
+        rel = path.relative_to(REPO).as_posix()
+        if rel in lewati or rel.startswith(".github/"):
+            continue
+        if path.name != "README.md" and path.suffix != ".ipynb" and rel != "docs/kamus-istilah.md":
+            continue
+        ketemu = True
+        for nomor, baris in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            assert pola.search(baris) is None, (rel, nomor, baris)
+            if iris.search(baris) and "plants" not in baris and "load_iris" not in baris:
+                raise AssertionError((rel, nomor, baris))
+    assert ketemu
 
 
 def test_tanpa_kata_terlarang():

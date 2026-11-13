@@ -107,7 +107,18 @@ Tiga situasi, semuanya sintetis dan tanpa unduhan.
 2. Empat ratus baris dan dua ribu kolom dari `standard_normal`: undian sebaran normal baku, rata-rata 0 dan simpangan baku 1. Jawaban dari `integers(0, 2)`, yaitu bilangan bulat dari 0 sampai sebelum 2, jadi hanya 0 atau 1. `default_rng(SEED)` membuat Generator NumPy. Seed berupa bilangan bulat membuat undian itu berulang. Cara yang salah memilih kolom sebelum data dibagi. Cara yang benar membagi dulu, lalu memilih kolom hanya dari data latih. Kolom dan jawaban diundi terpisah, jadi skor yang jujur berada di sekitar setengah.
 3. Catatan jam. Urutan yang dikocok dibanding TimeSeriesSplit. Lalu pohon yang membaca nomor jam: sekali dengan jam dikocok, sekali dengan data uji yang benar-benar belakangan.
 
-Overfitting dicek pada data dari `make_classification`, sesuai dokumentasinya. `n_samples` adalah banyaknya baris. `n_features` adalah banyaknya kolom semuanya: kolom informatif, kolom redundan, kolom salinan, dan sisanya kolom acak yang tidak berguna. `n_informative` adalah banyaknya kolom informatif. Tiap kelas punya kelompok sebaran normal (simpangan baku 1) di sekitar sudut hypercube berdimensi sebanyak itu. Hypercube adalah kotak bersudut di beberapa dimensi, bukan istilah baru. Di dalam tiap kelompok, kolom informatif diundi dari sebaran normal baku (rata-rata 0, simpangan baku 1), lalu digabung secara linear, sebelum kelompok diletakkan di sudut hypercube. `n_redundant` adalah banyaknya kolom kombinasi linear acak dari kolom informatif. `n_repeated` adalah banyaknya kolom salinan, diambil acak dari kolom informatif dan redundan. `n_clusters_per_class` adalah banyaknya kelompok pada tiap kelas. `class_sep` mengalikan ukuran hypercube; panjang sisinya 2 kali `class_sep`. Makin besar, kelompok makin berjauhan dan soal makin mudah. `flip_y` adalah bagian baris yang kelasnya diundi ulang secara acak. `random_state` membuat undian pembuatan data ini berulang selama angkanya sama. Di notebook, `n_redundant` dan `n_repeated` bernilai nol. Pohon tanpa batas kedalaman dibanding pohon yang hanya bercabang dua kali. Cross-validation pohon tanpa batas dijalankan hanya pada data latih. Data uji yang sudah disisihkan tidak ikut giliran.
+Overfitting dicek pada data dari `make_classification`. Notebook modul ini mengisi parameter berikut:
+
+- `n_samples`: banyak baris. Kasus utama 400, latihan 300.
+- `n_features`: banyak kolom. Kasus utama 30, latihan 25.
+- `n_informative`: banyak kolom yang membedakan kelas. Kasus utama 3, latihan 2.
+- `n_redundant=0` dan `n_repeated=0`: tidak ada kolom salinan.
+- `n_clusters_per_class=1`: satu kelompok untuk tiap kelas.
+- `class_sep`: jarak antar kelompok. Makin besar, soal makin mudah. Kasus utama 0.7, latihan 0.6.
+- `flip_y`: bagian baris yang labelnya ditukar. Kasus utama 0.1, latihan 0.12.
+- `random_state=SEED`: undian yang sama berulang.
+
+Pohon tanpa batas kedalaman dibanding pohon yang hanya bercabang dua kali. Cross-validation pohon tanpa batas dijalankan hanya pada data latih. Data uji yang sudah disisihkan tidak ikut giliran.
 
 ## Kesalahan yang paling sering terjadi
 
