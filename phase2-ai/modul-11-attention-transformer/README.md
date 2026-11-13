@@ -22,7 +22,7 @@ Modul sebelumnya: [Modul 10: Embedding dan tokenisasi](../modul-10-tokenisasi-em
 
 Kamu membaca satu kata di tengah kalimat, lalu menoleh ke kata lain. Perhatianmu terbagi. Seluruh bagian itu, kalau dijumlahkan, habis menjadi satu. Tidak ada sisa perhatian yang mengambang, dan tidak ada bagian yang minus.
 
-Rumus attention melakukan hal yang mirip pada angka, bukan pada niat orang. Modul ini menghitungnya pada matriks mini, lalu melatih model kecil pada delapan kalimat sintetis. Model yang bobotnya sudah dilatih orang lain disiapkan untuk mode penuh, dan gerbang PR tidak mengunduhnya.
+Rumus attention melakukan hal yang mirip pada angka, bukan pada niat orang. Modul ini menghitungnya pada matriks mini, lalu melatih model kecil pada delapan kalimat sintetis. Model yang bobotnya sudah dilatih orang lain disiapkan untuk mode penuh, dan mode cepat tidak mengunduhnya.
 
 ## Teori
 
@@ -44,7 +44,7 @@ Bayangkan perpustakaan: pertanyaanmu dicocokkan dengan label rak, lalu kamu memb
 
 ### Transformer
 
-Susunan kecil di mode cepat adalah satu blok attention, lalu model klasifikasi yang memakai kantung token. Classifier di notebook adalah regresi logistik bag-of-tokens, bukan Transformer, dan tidak memakai keluaran attention. Nama teknisnya **Transformer**: susunan yang memakai attention untuk mencampur token, lalu lapisan kecil menghasilkan tebakan.
+Di mode cepat ada dua bagian terpisah: satu blok attention, dan classifier yang tidak memakai keluaran attention. Classifier di notebook adalah regresi logistik bag-of-tokens, bukan Transformer. Nama teknisnya **Transformer**: susunan yang memakai attention untuk mencampur token, lalu lapisan kecil menghasilkan tebakan.
 
 **Batas analogi:** satu blok pada matriks mini bukan model obrolan besar. Menyusun blok itu tidak otomatis membuat klasifikasi benar. Model pra-latih yang besar juga Transformer, tetapi bobotnya tidak disalin ke repo ini.
 
@@ -56,7 +56,7 @@ Mode penuh memakai `google/bert_uncased_L-2_H-128_A-2` pada revisi `30b0a37ccaaa
 
 `prajjwal1/bert-tiny` tidak dipakai. `siblings` reponya tidak berisi berkas `.safetensors`.
 
-**Batas analogi:** adonan itu dilatih pada teks publik, bukan pada delapan kalimat modul ini. Kepala kelas yang kita latih di mode cepat mulai dari nol. Kita mengunci revisi dan hanya memuat safetensors. Mode cepat tidak mengunduh adonan itu, karena gerbang PR tidak punya jaringan.
+**Batas analogi:** adonan itu dilatih pada teks publik, bukan pada delapan kalimat modul ini. Kepala kelas yang kita latih di mode cepat mulai dari nol. Kita mengunci revisi dan hanya memuat safetensors. Mode cepat tidak mengunduh adonan itu, karena mode cepat tidak punya jaringan.
 
 ## Coba sendiri dulu, baru kode
 
@@ -78,7 +78,7 @@ Pemuat mode penuh ada di `muat.py`. Setiap panggilan mengirim `revision` dari re
 
 1. Jumlah baris bobot yang 0.6 dianggap cukup dekat ke 1. Ambang modul ini `0.000001`. Latihan yang jumlahnya 0.6 ditolak.
 2. Baseline dihitung dari data uji, bukan dari data latih. Notebook memakai kelas yang paling banyak di data latih.
-3. Mode cepat dianggap mengunduh BERT kecil. Gerbang tidak mengunduh. BERT kecil adalah mode penuh.
+3. Mode cepat dianggap mengunduh BERT kecil. Mode cepat tidak mengunduh. BERT kecil adalah mode penuh.
 4. `prajjwal1/bert-tiny` dipakai karena kartunya bertulis MIT. Berkas safetensors-nya tidak ada, jadi id itu ditolak.
 5. Angka di laporan ditulis dari ingatan. Salin dari keluaran notebook.
 
@@ -91,14 +91,14 @@ uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
+Unduhan opsional. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
 uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
 
-Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini.
+Perintah itu butuh jaringan. Lingkungan yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini.
 
 ## Cek pemahaman
 
@@ -151,7 +151,7 @@ Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../do
 
 Pengecekan memakai ambang, bukan angka persis.
 
-- Merge diblok bila ada sel siswa 16 baris atau lebih.
+- Setiap sel siswa 16 baris atau lebih tidak dipakai.
 - Mode cepat wajib lulus di CPU. Mode penuh GPU di MyLegion7i opsional dan dinilai dari log mentah.
 - Selisih jumlah satu baris bobot perhatian dari 1 paling besar `0.000001`.
 - Salah klasifikasi pada data uji lebih kecil daripada baseline, selisih minimal 1.
@@ -161,11 +161,11 @@ Pengecekan memakai ambang, bukan angka persis.
 
 ### mode cepat
 
-Wajib lulus. Matriks mini tanpa unduhan, lalu model sangat kecil untuk 30 langkah, jalan di CPU. Ini gerbang tiap PR.
+Wajib lulus. Matriks mini tanpa unduhan, lalu model sangat kecil untuk 30 langkah, jalan di CPU.
 
 ### mode penuh
 
-Opsional. `google/bert_uncased_L-2_H-128_A-2` pada revisi yang dipin. Model yang lebih besar, `distilbert/distilbert-base-uncased`, juga opsional. GPU di MyLegion7i dipakai bila mesin itu memakainya. Hasil dinilai dari log mentah. Bukan gerbang PR.
+Opsional. `google/bert_uncased_L-2_H-128_A-2` pada revisi yang dipin. Model yang lebih besar, `distilbert/distilbert-base-uncased`, juga opsional. GPU di MyLegion7i dipakai bila mesin itu memakainya. Hasil dinilai dari log mentah.
 
 ## Model dan dataset
 

@@ -4,7 +4,7 @@
 
 **Tingkat:** intermediate
 
-Bagian ini memakai tiga istilah baru. Dua model lain, hutan acak dan gradient boosting, ada di [modul 4b](../modul-04b-pohon-gabungan/) supaya tiap bagian tetap tidak lebih dari tiga istilah.
+Bagian ini memakai tiga istilah baru: klasifikasi, regresi logistik, dan pohon keputusan. Hutan acak dan gradient boosting ada di [modul 4b](../modul-04b-pohon-gabungan/).
 
 ## Cerita pembuka
 

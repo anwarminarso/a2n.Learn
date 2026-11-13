@@ -19,7 +19,7 @@ Python 3.14, dipin proyek, CPU only. Setiap notebook mendefinisikan `SEED = 42` 
 ## Isi `README.md` modul
 1. Judul, tujuan belajar, dan **Tingkat** (`beginner` / `intermediate` / `advanced` / `pro`)
 2. Cerita pembuka sehari-hari (maksimal satu layar)
-3. Teori (maksimal 1 halaman; maksimal tiga istilah baru, masing-masing dengan perumpamaan dan **batas analogi**: di mana perumpamaan berhenti berlaku)
+3. Teori (maksimal 1 halaman; maksimal tiga istilah baru per sesi, masing-masing dengan perumpamaan dan **batas analogi**: di mana perumpamaan berhenti berlaku)
 4. Coba sendiri dulu, baru kode
 5. Kasus nyata: sumber data sesuai aturan data
 6. Kesalahan yang paling sering terjadi
@@ -36,7 +36,7 @@ Python 3.14, dipin proyek, CPU only. Setiap notebook mendefinisikan `SEED = 42` 
 - [ ] (f) bisa dibaca dan dikerjakan dalam SATU kali duduk: teori maksimal 1 halaman, notebook pendek
 - [ ] (g) Ursa PASS/FAIL hanya dari log mentah sesi yang benar-benar menjalankannya; Squal memberi verdict dokumentasi PASS / PASS BERSYARAT / BLOCK (bukan security); Frieren mereview alur belajar sebelum ke mas
 - [ ] (h) analogi tidak membuat penjelasan salah, dan batas berlakunya disebut
-- [ ] (i) maksimal tiga istilah baru, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
+- [ ] (i) maksimal tiga istilah baru per sesi, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
 - [ ] (j) bila modul menutup satu tingkat: ujian level dijalankan Ursa dan termasuk dalam PASS
 - [ ] (k) gaya bahasa ramah pemula: istilah baru dijelaskan dengan contoh sehari-hari dulu, satu sel kode = satu ide dengan komentar Indonesia, rumus hanya bila perlu dan selalu dengan contoh angka kecil
 
@@ -48,7 +48,7 @@ Pembaca sasaran: pemula tanpa latar belakang ML.
 
 ## Format wajib modul
 1. Cerita sehari-hari pembuka, maksimal satu layar.
-2. Maksimal **tiga istilah baru** per modul; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](kamus-istilah.md).
+2. Maksimal **tiga istilah baru per sesi**; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](kamus-istilah.md).
 3. "Coba sendiri dulu, baru kode".
 4. Bagian "Kesalahan yang paling sering terjadi".
 5. Cek pemahaman dengan kunci jawaban.

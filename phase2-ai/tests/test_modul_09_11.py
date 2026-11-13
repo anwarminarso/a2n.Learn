@@ -307,6 +307,10 @@ def test_modul_13_menjalankan_entri_state_dan_shape():
     assert ruang["W_gabung"].shape == ruang["W"].shape
     assert len(ruang["state_kontrol"]) == 1
     assert ruang["W_kontrol"].shape == ruang["W"].shape
+    assert "W_kontrol = W.copy()" in sumber
+    assert ruang["W_kontrol"] is not ruang["W"]
+    assert ruang["np"].allclose(ruang["W_kontrol"], ruang["W"])
+    assert ruang["np"].allclose(ruang["W_gabung"], ruang["W"] + ruang["b"] * ruang["a"])
     assert ruang["cek_shape"](ruang["W_gabung"], ruang["W"]) == "ya"
     assert ruang["cek_shape"](ruang["W_kontrol"], ruang["W"]) == "ya"
     assert keluaran.splitlines() == [

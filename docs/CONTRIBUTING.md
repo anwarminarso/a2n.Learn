@@ -15,7 +15,7 @@ Pembaca sasaran: pemula tanpa latar belakang ML.
 
 ## Alur kerja
 1. Satu modul = satu PR dari Pyra ke `develop` (branch fitur, mis. `modul/01-persiapan`).
-2. Ursa menjalankan dari nol dan melaporkan PASS/FAIL di PR.
+2. Ursa menjalankan dari nol dan melaporkan PASS/FAIL di ruang tim.
 3. Squal mengaudit dokumentasi.
 4. Frieren mereview alur belajar.
 5. Iris merge dengan **merge commit** (bukan squash/rebase), lalu menghapus head branch.
@@ -31,20 +31,20 @@ Larangan: tidak menghapus `main`/`develop`, tidak force-push. Modul berikutnya d
 - [ ] (f) bisa dibaca dan dikerjakan dalam SATU kali duduk: teori maksimal 1 halaman, notebook pendek
 - [ ] (g) Ursa PASS/FAIL hanya dari log mentah sesi yang benar-benar menjalankannya; Squal memberi verdict dokumentasi PASS / PASS BERSYARAT / BLOCK (bukan security); Frieren mereview alur belajar sebelum ke mas
 - [ ] (h) analogi tidak membuat penjelasan salah, dan batas berlakunya disebut
-- [ ] (i) maksimal tiga istilah baru, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
+- [ ] (i) maksimal tiga istilah baru per sesi, masing-masing dengan satu arti konsisten dan tercatat di `docs/kamus-istilah.md`
 - [ ] (j) bila modul menutup satu tingkat: ujian level dijalankan Ursa dan termasuk dalam PASS
 - [ ] (k) gaya bahasa ramah pemula: istilah baru dijelaskan dengan contoh sehari-hari dulu, satu sel kode = satu ide dengan komentar Indonesia, rumus hanya bila perlu dan selalu dengan contoh angka kecil
 
 ## Format wajib modul
 1. Cerita sehari-hari pembuka, maksimal satu layar.
-2. Maksimal **tiga istilah baru** per modul; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](kamus-istilah.md).
+2. Maksimal **tiga istilah baru per sesi**; tiap istilah punya perumpamaan dan masuk [`docs/kamus-istilah.md`](kamus-istilah.md).
 3. "Coba sendiri dulu, baru kode".
 4. Bagian "Kesalahan yang paling sering terjadi".
 5. Cek pemahaman dengan kunci jawaban.
 
 Aturan tulis: cerita dulu baru istilah; gambar dulu baru rumus.
 
-Modul yang butuh lebih dari tiga istilah baru dipecah menjadi dua modul pendek. Pyra menentukan pemecahannya saat menulis, dan Iris memperbarui penomoran, issue, dan tabel roadmap.
+Aturan istilah: maksimal tiga istilah baru per sesi. Modul yang butuh lebih dari itu dipecah menjadi dua modul pendek. Pyra menentukan pemecahannya saat menulis, dan Iris memperbarui penomoran, issue, dan tabel roadmap.
 
 ## Aturan audit dan QA
 - Analogi boleh menyederhanakan, tetapi tidak boleh membuat penjelasan salah; modul menyebut di mana analogi berhenti berlaku.

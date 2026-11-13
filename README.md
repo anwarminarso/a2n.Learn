@@ -3,7 +3,7 @@
 Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk developer (.NET) yang ingin bisa membangun model sesuai kebutuhan.
 
 ## Peta fase
-- **Fase 1 – Machine Learning** (`phase1-ml/`): 8 modul yang dipecah menjadi 12 bagian. Satu modul cukup untuk satu sesi duduk; jadwal mingguan menunggu keputusan mas.
+- **Fase 1 – Machine Learning** (`phase1-ml/`): 8 modul yang dipecah menjadi 12 bagian. Satu modul cukup untuk satu sesi duduk.
 - **Fase 2 – Model AI** (`phase2-ai/`): 7 modul utuh. Modul 9 sampai 15 sudah berisi materi mode cepat. Issue [#26](https://github.com/anwarminarso/a2n.Learn/issues/26) sampai [#32](https://github.com/anwarminarso/a2n.Learn/issues/32), tracking [#33](https://github.com/anwarminarso/a2n.Learn/issues/33). Urutan ada di [docs/ROADMAP.md](docs/ROADMAP.md). Register model ada di [docs/lisensi-model.md](docs/lisensi-model.md).
 
 | # | Modul | Topik | Tingkat | Issue |
@@ -23,7 +23,7 @@ Repo belajar Machine Learning lalu model AI, langkah demi langkah, untuk develop
 
 ### Fase 2
 
-Modul 9 sampai 15 sudah berisi materi mode cepat. Tujuh modul utuh. Issue mengikuti tabel di `docs/ROADMAP.md`. Tabel tingkat di ROADMAP memberi label pro hanya pada modul 8. Modul 9 sampai 15 tidak masuk tabel tingkat itu, jadi kolom tingkat di bawah kosong.
+Modul 9 sampai 15 sudah berisi materi mode cepat. Tujuh modul utuh. Issue mengikuti tabel di `docs/ROADMAP.md`. Kolom tingkat pada tabel di bawah kosong.
 
 | # | Modul | Topik | Tingkat | Issue |
 |---|---|---|---|---|

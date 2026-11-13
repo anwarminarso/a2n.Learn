@@ -143,7 +143,7 @@ Buka `notebook.ipynb` di folder ini, kerjakan `latihan.ipynb`, lalu bandingkan d
 
 Sel pertama setiap notebook berisi `SEED = 42`. Angka tetap itu dipakai pada setiap undian acak, lewat `random_state=SEED`, supaya hasil yang sama muncul setiap kali notebook diulang.
 
-CPU only. Nomor versi Python dan paket tercatat di `docs/CONTRIBUTING.md`.
+CPU only. Versi Python ada di `.python-version`. Versi paket ada di `uv.lock` di root repo.
 
 ## Cek pemahaman
 

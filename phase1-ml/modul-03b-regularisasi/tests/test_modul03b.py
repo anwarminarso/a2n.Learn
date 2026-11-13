@@ -34,7 +34,6 @@ KALIMAT_TEKNIS = {
     ),
     "intercept_": "intercept_ adalah nama tempat scikit-learn menyimpan bilangan geser.",
     "coef_": "coef_ adalah nama tempat scikit-learn menyimpan koefisien.",
-    "named_steps": "named_steps mengambil satu langkah Pipeline lewat namanya.",
     "fungsi kerugian": (
         "Fungsi kerugian adalah angka kesalahan yang diperkecil saat model belajar; "
         "pada regresi linear tanpa penalti, angka itu adalah jumlah kuadrat selisih "
@@ -66,7 +65,6 @@ KALIMAT_TEKNIS = {
         "simpangan bakunya satu, memakai rata-rata dan simpangan baku data yang "
         "dipelajari saat fit; transform memakai angka itu pada data lain."
     ),
-    "pipeline": "Pipeline adalah urutan langkah yang dipelajari bersama dari data yang masuk ke fit.",
     "pustaka": "Pustaka adalah kumpulan fungsi siap pakai yang dipanggil dari kode.",
     "array": "Array adalah kumpulan nilai sejenis dengan bentuk yang tetap, yang dihitung sekaligus.",
     "numpy": "NumPy adalah pustaka untuk hitungan pada array.",

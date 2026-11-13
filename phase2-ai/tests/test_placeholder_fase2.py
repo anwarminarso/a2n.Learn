@@ -405,7 +405,7 @@ def test_pin_llama_cpp_di_modul_13():
     assert "protobuf<5" in teks
     assert "tidak ada di uv.lock" in teks
     assert "membuat ulang adapter LoRA kecil" in teks
-    assert "bukan gerbang PR" in teks
+    assert "tidak dijalankan pada mode cepat" in teks
     assert "b12317" not in teks
     assert "jalur GGUF" in teks
     assert "impor GGUF ke Ollama" in teks
@@ -415,7 +415,8 @@ def test_pin_llama_cpp_di_modul_13():
 def test_perintah_konversi_gguf_tanpa_uv_run_python():
     teks = _readme(MODUL[4])
     assert "python -m venv llama.cpp/.venv" in teks
-    assert "llama.cpp/.venv/bin/pip install -r llama.cpp/requirements.txt" in teks
+    assert "llama.cpp/.venv/bin/pip install -r llama.cpp/requirements/requirements-convert_hf_to_gguf.txt" in teks
+    assert "tetap memasang torch" in teks
     assert "llama.cpp\\.venv\\Scripts\\pip" in teks
     assert "llama.cpp\\.venv\\Scripts\\python" in teks
     assert "A2N_UNDUH=1 uv run python" in teks
@@ -581,6 +582,16 @@ def test_teks_pembaca_tanpa_nama_tim():
             assert pola.search(baris) is None, (rel, nomor, baris)
             if iris.search(baris) and "plants" not in baris and "load_iris" not in baris:
                 raise AssertionError((rel, nomor, baris))
+    assert ketemu
+
+
+def test_notebook_tanpa_repr_html_sklearn():
+    ketemu = False
+    for path in REPO.rglob("*.ipynb"):
+        if any(bagian in path.parts for bagian in (".git", ".venv", ".ipynb_checkpoints")):
+            continue
+        ketemu = True
+        assert "sk-estimator" not in path.read_text(encoding="utf-8"), path
     assert ketemu
 
 

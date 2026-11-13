@@ -88,7 +88,7 @@ Hitung dengan tangan dulu. Jangan gulir ke kunci. Setelah itu buka `notebook.ipy
 
 ## Kasus nyata
 
-Generator `tambang_sintetis.py` di folder ini membangun tabel. Tidak ada unduhan. Bukan data asli perusahaan. Modul ini tidak memanggil `make_regression`.
+Generator `tambang_sintetis.py` di folder ini membangun tabel lewat `buat_batch`. Tidak ada unduhan. Bukan data asli perusahaan.
 
 Di `make_regression`, `noise` adalah simpangan baku derau Gauss pada jawaban, dan `bias` adalah geseran tetap pada jawaban. Fungsi `buat_batch` hanya menerima `seed`. `skala` dan `pusat` adalah angka di dalam fungsi, bukan parameter yang dikirim pemanggil. Angka itu dicocokkan ke dokumentasi NumPy:
 
