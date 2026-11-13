@@ -22,7 +22,7 @@ Adapter dilarang masuk repo. Mode cepat membuat ulang adapter LoRA kecil langsun
 
 Cara memperoleh perkakas untuk jalur sungguhan, di luar gerbang:
 
-- Grup torch, karena `convert_hf_to_gguf.py` pada commit ini mengimpor torch: `uv sync --group torch` dari root repo. Gerbang tidak memasang grup itu.
+- Grup torch, karena `convert_hf_to_gguf.py` pada commit ini mengimpor torch: `uv sync --frozen --group torch` dari root repo. Paket `transformers` hanya masuk lewat grup itu. Gerbang tidak memasang grup itu.
 - llama.cpp commit `ca89968a23a13e571a6b802a9891d22763153b61`: `git clone https://github.com/ggml-org/llama.cpp` lalu `git checkout ca89968a23a13e571a6b802a9891d22763153b61`. Commit ini dicek 2026-11-12: ada `convert_hf_to_gguf.py` di akar dan paket gguf-py di folder `gguf-py`. Tidak disalin ke repo ini.
 - gguf-py dipakai dari checkout itu untuk membaca metadata dan jumlah tensor berkas GGUF.
 - Ollama 0.40.14 adalah versi referensi yang diuji untuk mode penuh. Berkas rilis ada di https://github.com/ollama/ollama/releases/tag/v0.40.14. Mesin gerbang PR tidak diasumsikan memasang Ollama.
@@ -55,7 +55,7 @@ Kontrol tanpa LoRA adalah resep yang tidak menerima isi stiker. Bentuknya tetap 
 
 ### peladen lokal
 
-Jendela dapur yang hanya membuka ke dalam rumah. Nama teknisnya **peladen lokal**: program di komputer sendiri yang menjawab permintaan model, dan di modul ini hanya menerima sambungan dari `127.0.0.1`.
+Jendela dapur yang hanya membuka ke dalam rumah. Nama teknisnya **peladen lokal**: program di komputer sendiri yang melayani permintaan, baik model maupun RAG, dan hanya menerima sambungan dari `127.0.0.1`.
 
 Di Linux dan macOS:
 
@@ -111,19 +111,40 @@ uv sync --frozen
 uv run pytest
 ```
 
-Jalur sungguhan, setelah gerbang lulus, dan hanya bila kamu memang ingin mengonversi:
+Jalur GGUF sungguhan adalah sketsa opsional, belum diuji gerbang. Setelah gerbang lulus, dan hanya bila kamu memang ingin mencoba sketsa itu:
 
-1. `uv sync --group torch`
-2. Set `A2N_UNDUH=1`, lalu panggil `muat_dasar()` di `muat.py`. Revisi diambil dari register. Jangan unduh lewat pilihan jarak jauh pada skrip konversi.
-3. Di checkout llama.cpp yang sudah di `ca89968a23a13e571a6b802a9891d22763153b61`:
+1. Dari root repo: `uv sync --frozen --group torch`. Paket `transformers` hanya masuk lewat grup torch.
+2. Contoh singkat di bawah menggabungkan LoRA lalu memanggil `save_pretrained`, sehingga ada `folder-gabungan` dan `folder-kontrol`. Ini bukan latihan LoRA sungguhan: tidak ada putaran latih. Sketsa ini belum diuji gerbang. Dari root repo, dengan interpreter venv proyek:
 
 ```bash
-python convert_hf_to_gguf.py folder-gabungan --outfile gabungan.gguf --outtype f16
-python convert_hf_to_gguf.py folder-kontrol --outfile kontrol.gguf --outtype f16
-PYTHONPATH=gguf-py python -c "from gguf import GGUFReader; r=GGUFReader('gabungan.gguf'); print(len(r.tensors))"
+A2N_UNDUH=1 uv run python - << 'PY'
+import sys
+
+sys.path.insert(0, "phase2-ai")
+sys.path.insert(0, "phase2-ai/modul-13-model-lokal")
+from muat import muat_dasar
+from peft import LoraConfig, get_peft_model
+
+tokenizer, dasar = muat_dasar()
+dasar.save_pretrained("folder-kontrol")
+tokenizer.save_pretrained("folder-kontrol")
+konfig = LoraConfig(r=8, lora_alpha=16, target_modules=["q_proj", "v_proj"], bias="none")
+beradapter = get_peft_model(dasar, konfig)
+gabungan = beradapter.merge_and_unload()
+gabungan.save_pretrained("folder-gabungan")
+tokenizer.save_pretrained("folder-gabungan")
+PY
 ```
 
-4. Bandingkan jumlah tensor gabungan dan kontrol. Lalu impor ke Ollama yang hanya mengikat `127.0.0.1`, dengan satu kalimat yang sama. Ini bukan gerbang PR.
+3. Checkout llama.cpp pada commit `ca89968a23a13e571a6b802a9891d22763153b61` ada di folder `llama.cpp/`. Jangan unduh model lewat pilihan jarak jauh pada skrip konversi. Perintah berikut dijalankan dari root repo dengan `uv run python`, bukan `python` polos:
+
+```bash
+uv run python llama.cpp/convert_hf_to_gguf.py folder-gabungan --outfile gabungan.gguf --outtype f16
+uv run python llama.cpp/convert_hf_to_gguf.py folder-kontrol --outfile kontrol.gguf --outtype f16
+PYTHONPATH=llama.cpp/gguf-py uv run python -c "from gguf import GGUFReader; r=GGUFReader('gabungan.gguf'); print(len(r.tensors))"
+```
+
+4. Bandingkan jumlah tensor gabungan dan kontrol. Lalu impor ke Ollama yang hanya mengikat `127.0.0.1`, dengan satu kalimat yang sama. Ini bukan gerbang PR. Seluruh jalur GGUF sungguhan ini sketsa opsional, belum diuji gerbang.
 
 Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertama memuat satu ide.
 
@@ -145,9 +166,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertam
 - ggml. *GGUF*. <https://github.com/ggml-org/ggml/blob/master/docs/gguf.md>
 - Ollama. Rilis `v0.40.14`. <https://github.com/ollama/ollama/releases/tag/v0.40.14>
 
-## Istilah baru yang direncanakan
-
-Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Nama di bawah tetap paling banyak tiga per sesi. Modul ini tidak dipecah menjadi folder berhuruf.
+## Istilah baru
 
 ### Sesi 1
 
@@ -190,9 +209,9 @@ Wajib lulus di CPU, tanpa torch dan tanpa jaringan. Buat ulang adapter LoRA keci
 
 ### mode penuh
 
-Opsional. Konversi sungguhan ke GGUF pada commit llama.cpp `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor ke Ollama 0.40.14 yang hanya mengikat `127.0.0.1`, untuk model dengan LoRA dan untuk kontrol tanpa LoRA. GPU di MyLegion7i dipakai bila penggabungan model besar memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
+Sketsa opsional, belum diuji gerbang. Konversi sungguhan ke GGUF pada commit llama.cpp `ca89968a23a13e571a6b802a9891d22763153b61`, lalu impor ke Ollama 0.40.14 yang hanya mengikat `127.0.0.1`, untuk model dengan LoRA dan untuk kontrol tanpa LoRA. GPU di MyLegion7i dipakai bila penggabungan model besar memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
 
-## Model dan dataset kandidat
+## Model dan dataset
 
 - Dataset: angka sintetis yang dibuat ulang di notebook. Bukan data asli perusahaan.
 - Model dasar: `HuggingFaceTB/SmolLM2-135M-Instruct`. Lisensi Apache-2.0. SHA `12fd25f77366fa6b3b4b768ec3050bf629380bac`, dicek 2026-11-13. Berkas `model.safetensors` ada. Repo ini juga berisi pickle `training_args.bin`.

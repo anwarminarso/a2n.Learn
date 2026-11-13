@@ -5,8 +5,11 @@ docs/lisensi-model.md. Modul 12, 13, 14, dan 15 memakai muat_model.
 Embedding modul 14 (MiniLM) membiarkan kelas kosong, jadi yang terpakai
 AutoModel. Model jawaban modul 14 serta modul 12, 13, dan 15
 (SmolLM2 atau Qwen, model bahasa kausal) mengirim AutoModelForCausalLM.
-Modul 10 dan 11 memuat AutoModel sendiri.
+Modul 10 dan 11 memuat AutoModel sendiri. Setiap pemuat memanggil
+pastikan_boleh_unduh sebelum impor yang berat.
 """
+
+import os
 
 POLA_UNDUH = (
     "*.safetensors",
@@ -29,6 +32,15 @@ REVISI = {
 }
 
 
+def pastikan_boleh_unduh():
+    """Tolak unduhan bila A2N_UNDUH bukan "1".
+
+    Dipanggil sebelum impor huggingface_hub, transformers, atau torch.
+    """
+    if os.environ.get("A2N_UNDUH") != "1":
+        raise RuntimeError("Unduhan hanya bila A2N_UNDUH=1")
+
+
 def muat_model(model_id, kelas=None):
     """Muat tokenizer dan model dari salinan lokal.
 
@@ -37,6 +49,7 @@ def muat_model(model_id, kelas=None):
     13, dan 15 (SmolLM2 atau Qwen, model bahasa kausal) mengirim
     AutoModelForCausalLM supaya kepala bahasa ikut termuat.
     """
+    pastikan_boleh_unduh()
     from huggingface_hub import snapshot_download
     from transformers import AutoModel, AutoTokenizer
 

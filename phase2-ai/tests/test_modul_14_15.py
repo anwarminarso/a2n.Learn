@@ -216,7 +216,27 @@ def test_berkas_di_luar_allowlist_ditolak(tmp_path):
 
 
 def test_unduh_modul_baru_butuh_bendera(monkeypatch):
+    import socket
+    import sys
+    import types
+
     monkeypatch.delenv("A2N_UNDUH", raising=False)
+
+    def gagal(*_args, **_kwargs):
+        raise AssertionError("jaringan disentuh")
+
+    class SocketGagal:
+        def __init__(self, *_args, **_kwargs):
+            gagal()
+
+    monkeypatch.setattr(socket, "socket", SocketGagal)
+    monkeypatch.setattr(socket, "create_connection", gagal)
+    if "huggingface_hub" in sys.modules:
+        monkeypatch.setattr(sys.modules["huggingface_hub"], "snapshot_download", gagal)
+    else:
+        palsu = types.ModuleType("huggingface_hub")
+        palsu.snapshot_download = gagal
+        monkeypatch.setitem(sys.modules, "huggingface_hub", palsu)
     for folder, fungsi in (
         ("modul-14-rag", "muat_embedding"),
         ("modul-14-rag", "muat_jawaban"),

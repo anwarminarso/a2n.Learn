@@ -123,7 +123,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertam
 - Hugging Face. *PEFT*. <https://huggingface.co/docs/peft>
 - PyTorch contributors. `torch.nn.Linear`. <https://docs.pytorch.org/docs/stable/generated/torch.nn.Linear.html>
 
-## Istilah baru yang direncanakan
+## Istilah baru
 
 Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Nama di bawah tetap paling banyak tiga per sesi. Modul ini tidak dipecah menjadi folder berhuruf.
 
@@ -170,7 +170,7 @@ Wajib lulus. Model sangat kecil, 80 langkah, jalan di CPU, tanpa torch dan tanpa
 
 Opsional. `Qwen/Qwen2.5-0.5B-Instruct` pada revisi yang dipin, di GPU MyLegion7i bila mesin itu memakainya. Hasil dinilai dari log mentah. Bukan gerbang PR. Unduhan hanya lewat `muat.py` bila `A2N_UNDUH=1`.
 
-## Model dan dataset kandidat
+## Model dan dataset
 
 - Dataset mode cepat: empat puluh baris angka sintetis di notebook. Bukan data asli perusahaan.
 - Model mode cepat untuk unduhan opsional: `HuggingFaceTB/SmolLM2-135M-Instruct`. Lisensi Apache-2.0. SHA `12fd25f77366fa6b3b4b768ec3050bf629380bac`, dicek 2026-11-13. Berkas `model.safetensors` ada. Repo ini juga berisi pickle `training_args.bin`. Pola unduh tidak memuatnya.

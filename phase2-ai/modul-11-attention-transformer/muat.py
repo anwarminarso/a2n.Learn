@@ -8,13 +8,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from muat_hf import POLA_UNDUH, REVISI
+from muat_hf import POLA_UNDUH, REVISI, pastikan_boleh_unduh
 
 ID_PENUH = "google/bert_uncased_L-2_H-128_A-2"
 ID_OPSIONAL = "distilbert/distilbert-base-uncased"
 
 
 def _muat(model_id):
+    pastikan_boleh_unduh()
     from huggingface_hub import snapshot_download
     from transformers import AutoModel, AutoTokenizer
 

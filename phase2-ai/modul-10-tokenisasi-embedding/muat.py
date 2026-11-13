@@ -8,12 +8,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from muat_hf import POLA_UNDUH, REVISI
+from muat_hf import POLA_UNDUH, REVISI, pastikan_boleh_unduh
 
 ID_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 
 def muat_embedding():
+    pastikan_boleh_unduh()
     from huggingface_hub import snapshot_download
     from transformers import AutoModel, AutoTokenizer
 

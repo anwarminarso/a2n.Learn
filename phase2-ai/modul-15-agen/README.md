@@ -16,7 +16,7 @@ Tracking Fase 2: [#33](https://github.com/anwarminarso/a2n.Learn/issues/33).
 
 ## Prasyarat
 
-Modul sebelumnya: [Modul 14: RAG (Retrieval-Augmented Generation)](../modul-14-rag/). Di roadmap, modul ini bergantung pada modul 14. Peladen lokal dari [Modul 13: Menjalankan model lokal dengan Ollama](../modul-13-model-lokal/) dan model dari [Modul 12: Fine-tune dengan LoRA](../modul-12-lora/) dipakai lagi dengan arti yang sudah ada.
+Modul sebelumnya: [Modul 14: RAG (Retrieval-Augmented Generation)](../modul-14-rag/). Di roadmap, modul ini bergantung pada modul 14. Peladen di modul ini memakai `jawab()` dari modul 14.
 
 ## Cerita pembuka
 
@@ -68,7 +68,7 @@ Berkas di `sandbox/` sintetis. `catatan.txt` menyebut kunci biru. `jadwal.txt` b
 
 Proyek akhir: loop agen membaca `jadwal.txt`, lalu RAG dari modul 14 menjawab pertanyaan itu. Kutipan sumbernya `perpustakaan.txt`, kalimat `Kode rak buku cerita adalah B-12.` Skornya melewati ambang `0.3` dari modul 14.
 
-Bagian .NET mengikuti pola modul 8: program kecil, satu panggilan, dan satu batas yang tertulis. Panggilan itu HTTP ke `http://127.0.0.1:8765/jawab`. Batas skornya `0.3`. Ini inferensi dalam arti modul 8: aturan yang sudah ada dipakai untuk satu pertanyaan, tanpa melatih ulang. Urutannya: nyalakan `peladen.py` lebih dulu (ia hanya mengikat `127.0.0.1`; jawaban sungguhan butuh model modul 14 yang diunduh dengan `A2N_UNDUH=1`), lalu jalankan program .NET. Mode cepat tidak menyalakan peladen. Ollama, bila dipakai di luar gerbang, tetap hanya di `127.0.0.1`.
+Bagian .NET mengikuti pola modul 8: program kecil, satu panggilan, dan satu batas yang tertulis. Panggilan itu HTTP ke `http://127.0.0.1:8765/jawab`. Batas skornya `0.3`. Ini inferensi dalam arti modul 8: aturan yang sudah ada dipakai untuk satu pertanyaan, tanpa melatih ulang. Urutannya: nyalakan `peladen.py` lebih dulu (ia hanya mengikat `127.0.0.1`; peladen memakai `jawab()` dari mode cepat modul 14, yaitu numpy, tanpa model dan tanpa transformers), lalu jalankan program .NET. Mode cepat tidak menyalakan peladen. Ollama, bila dipakai di luar gerbang, tetap hanya di `127.0.0.1`.
 
 ## Kesalahan yang paling sering terjadi
 
@@ -87,17 +87,18 @@ uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional, bukan gerbang:
+Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
+uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
 
-Perintah itu butuh jaringan dan paket `transformers` serta `huggingface_hub`, yang tidak dipasang lingkungan gerbang. `muat_agen()` mengirim `AutoModelForCausalLM`.
+Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini. `muat_agen()` mengirim `AutoModelForCausalLM`.
 
 Program .NET, juga bukan gerbang, membutuhkan SDK .NET 10. Jalankan peladen lebih dulu, baru program .NET.
 
-Peladennya `phase2-ai/modul-15-agen/peladen.py`. Ia hanya mengikat `127.0.0.1` dan tidak membaca alamat dari argumen atau variabel lingkungan. Peladen memanggil `jawab()` dari modul 14, lalu mengembalikan JSON dengan `status`, `sumber`, dan `skor`. Jawaban sungguhan butuh model modul 14 yang sudah diunduh dengan `A2N_UNDUH=1`. Mode cepat tidak menyalakan peladen ini.
+Peladennya `phase2-ai/modul-15-agen/peladen.py`. Ia hanya mengikat `127.0.0.1` dan tidak membaca alamat dari argumen atau variabel lingkungan. Peladen memakai `jawab()` dari mode cepat modul 14 (numpy, tanpa model dan tanpa transformers). JSON yang dikirim peladen untuk jawaban berisi `status`, `skor`, `bagi`, `sumber`, dan `teks`. Mode cepat tidak menyalakan peladen ini.
 
 ```bash
 uv run python phase2-ai/modul-15-agen/peladen.py
@@ -132,7 +133,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertam
 - Microsoft. `HttpClient`. <https://learn.microsoft.com/dotnet/api/system.net.http.httpclient>
 - Lewis, Patrick, et al. *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*. <https://arxiv.org/abs/2005.11401>
 
-## Istilah baru yang direncanakan
+## Istilah baru
 
 Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Nama di bawah tetap paling banyak tiga per sesi. Modul ini tidak dipecah menjadi folder berhuruf.
 
@@ -186,7 +187,7 @@ Wajib lulus di CPU, tanpa torch, tanpa jaringan, dan tanpa peladen. Loop beberap
 
 Opsional. Bila loop memakai model untuk memilih alat, pakai `HuggingFaceTB/SmolLM2-135M-Instruct` lewat `AutoModelForCausalLM`, hanya bila `A2N_UNDUH=1`. GPU di MyLegion7i dipakai bila model itu memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
 
-## Model dan dataset kandidat
+## Model dan dataset
 
 - Dataset proyek: berkas teks sintetis di `sandbox/`, plus dokumen sintetis modul 14. Bukan data asli perusahaan.
 - Model: `HuggingFaceTB/SmolLM2-135M-Instruct`. Lisensi Apache-2.0. SHA `12fd25f77366fa6b3b4b768ec3050bf629380bac`, dicek 2026-11-13. Kelas pemuat: `AutoModelForCausalLM`.

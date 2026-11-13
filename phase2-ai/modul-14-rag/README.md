@@ -107,13 +107,14 @@ uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional, bukan gerbang:
+Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
+uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
 
-Perintah itu butuh jaringan dan paket `transformers` serta `huggingface_hub`, yang tidak dipasang lingkungan gerbang. `muat_embedding()` memakai kelas bawaan, yaitu `AutoModel`. `muat_jawaban()` mengirim `AutoModelForCausalLM`.
+Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini. `muat_embedding()` memakai kelas bawaan, yaitu `AutoModel`. `muat_jawaban()` mengirim `AutoModelForCausalLM`.
 
 Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertama memuat satu ide.
 
@@ -136,7 +137,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Tiap sel kode setelah sel pertam
 - Hugging Face. *AutoModel*. <https://huggingface.co/docs/transformers/en/model_doc/auto>
 - NumPy developers. `numpy.linalg.norm`. <https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html>
 
-## Istilah baru yang direncanakan
+## Istilah baru
 
 Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Nama di bawah tetap paling banyak tiga per sesi. Modul ini tidak dipecah menjadi folder berhuruf.
 
@@ -190,7 +191,7 @@ Wajib lulus di CPU, tanpa torch dan tanpa jaringan. Tiga berkas sintetis, vektor
 
 Opsional. Embedding `sentence-transformers/all-MiniLM-L6-v2` lewat `AutoModel`, dan model jawaban `HuggingFaceTB/SmolLM2-135M-Instruct` lewat `AutoModelForCausalLM`, hanya bila `A2N_UNDUH=1`. GPU di MyLegion7i dipakai bila model jawaban memerlukannya. Hasil dinilai dari log mentah. Bukan gerbang PR.
 
-## Model dan dataset kandidat
+## Model dan dataset
 
 - Dataset: tiga berkas teks sintetis di `dokumen/`. Bukan data asli perusahaan.
 - Model embedding: `sentence-transformers/all-MiniLM-L6-v2`. Lisensi Apache-2.0. SHA `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`, dicek 2026-11-13. Kelas pemuat: `AutoModel`, karena `muat_embedding()` tidak mengirim kelas.

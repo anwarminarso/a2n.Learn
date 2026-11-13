@@ -44,7 +44,7 @@ Bayangkan perpustakaan: pertanyaanmu dicocokkan dengan label rak, lalu kamu memb
 
 ### Transformer
 
-Susunan kecil di mode cepat adalah satu blok attention, lalu model klasifikasi yang memakai kantung token. Nama teknisnya **Transformer**: susunan yang memakai attention untuk mencampur token, lalu lapisan kecil menghasilkan tebakan.
+Susunan kecil di mode cepat adalah satu blok attention, lalu model klasifikasi yang memakai kantung token. Classifier di notebook adalah regresi logistik bag-of-tokens, bukan Transformer, dan tidak memakai keluaran attention. Nama teknisnya **Transformer**: susunan yang memakai attention untuk mencampur token, lalu lapisan kecil menghasilkan tebakan.
 
 **Batas analogi:** satu blok pada matriks mini bukan model obrolan besar. Menyusun blok itu tidak otomatis membuat klasifikasi benar. Model pra-latih yang besar juga Transformer, tetapi bobotnya tidak disalin ke repo ini.
 
@@ -52,7 +52,7 @@ Susunan kecil di mode cepat adalah satu blok attention, lalu model klasifikasi y
 
 Adonan roti yang sudah diulen orang lain bisa dipanggang untuk hidangan hari ini. Nama teknisnya **model pra-latih**: model yang bobotnya sudah dilatih pada data lain, lalu kita pakai atau latih lagi.
 
-Mode penuh memakai `google/bert_uncased_L-2_H-128_A-2` pada revisi `30b0a37ccaaa32f332884b96992754e246e48c5f`. Mode opsional yang lebih besar memakai `distilbert/distilbert-base-uncased` pada revisi `12040accade4e8a0f71eabdb258fecc2e7e948be`. Keduanya model dasar. Kepala klasifikasi di mode cepat dilatih di notebook, dari bobot nol, bukan dari kartu model. Placeholder lama tidak mengklaim model itu sudah bisa mengelompokkan teks, dan materi ini juga tidak mengklaimnya untuk mode cepat.
+Mode penuh memakai `google/bert_uncased_L-2_H-128_A-2` pada revisi `30b0a37ccaaa32f332884b96992754e246e48c5f`. Mode opsional yang lebih besar memakai `distilbert/distilbert-base-uncased` pada revisi `12040accade4e8a0f71eabdb258fecc2e7e948be`. Keduanya model dasar. Kepala klasifikasi di mode cepat dilatih di notebook, dari bobot nol, bukan dari kartu model.
 
 `prajjwal1/bert-tiny` tidak dipakai. `siblings` reponya tidak berisi berkas `.safetensors`.
 
@@ -91,11 +91,14 @@ uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional bukan gerbang, dan butuh paket yang tidak dipasang lingkungan gerbang:
+Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
+uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
+
+Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini.
 
 ## Cek pemahaman
 
@@ -115,7 +118,7 @@ A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 - Hugging Face. `from_pretrained`. <https://huggingface.co/docs/transformers/main/en/main_classes/model#transformers.PreTrainedModel.from_pretrained>
 - Hugging Face. *BERT*. <https://huggingface.co/docs/transformers/model_doc/bert>
 
-## Istilah baru yang direncanakan
+## Istilah baru
 
 Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Sesi kedua hanya satu istilah. Sisa kuota tidak diisi.
 
@@ -164,7 +167,7 @@ Wajib lulus. Matriks mini tanpa unduhan, lalu model sangat kecil untuk 30 langka
 
 Opsional. `google/bert_uncased_L-2_H-128_A-2` pada revisi yang dipin. Model yang lebih besar, `distilbert/distilbert-base-uncased`, juga opsional. GPU di MyLegion7i dipakai bila mesin itu memakainya. Hasil dinilai dari log mentah. Bukan gerbang PR.
 
-## Model dan dataset kandidat
+## Model dan dataset
 
 - Mode penuh: `google/bert_uncased_L-2_H-128_A-2`. Lisensi Apache-2.0. SHA `30b0a37ccaaa32f332884b96992754e246e48c5f`, dicek 2026-11-13. Berkas `model.safetensors` ada. Repo ini juga berisi pickle `pytorch_model.bin`. Muat dengan `use_safetensors=True` agar pemuat tidak jatuh ke format pickle.
 - Opsional yang lebih besar: `distilbert/distilbert-base-uncased`. Lisensi Apache-2.0. SHA `12040accade4e8a0f71eabdb258fecc2e7e948be`. Berkas `model.safetensors` ada. Repo ini juga berisi `pytorch_model.bin`.

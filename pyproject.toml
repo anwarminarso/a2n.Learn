@@ -1,7 +1,7 @@
 [project]
 name = "a2n-learn"
 version = "0.1.0"
-description = "Lingkungan belajar a2n.Learn untuk modul 1 sampai 8, dengan numpy, pandas, dan scikit-learn. Modul 8 juga memakai onnxruntime dan skl2onnx. Grup torch opsional, hanya CPU, untuk jalur PyTorch nyata."
+description = "Lingkungan belajar a2n.Learn untuk modul 1 sampai 15, dengan numpy, pandas, dan scikit-learn. Modul 8 juga memakai onnxruntime dan skl2onnx. Grup torch opsional, hanya CPU, untuk jalur PyTorch nyata."
 requires-python = "==3.14.*"
 dependencies = [
   "ipykernel",
