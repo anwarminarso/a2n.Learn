@@ -158,6 +158,53 @@ def test_symlink_keluar_sandbox_ditolak(tmp_path):
     assert "rahasia-symlink" not in hasil["teks"]
 
 
+def test_baca_memakai_path_yang_sudah_diresolve(tmp_path, monkeypatch):
+    sandbox = tmp_path / "sandbox"
+    sandbox.mkdir()
+    berkas = sandbox / "catatan.txt"
+    berkas.write_text("aman", encoding="utf-8")
+    rahasia = tmp_path / "rahasia.txt"
+    rahasia.write_text("bocor", encoding="utf-8")
+    agen = _agen()
+    asli = Path.resolve
+    hitung = {"n": 0}
+
+    def resolve_terbatas(self, *args, **kwargs):
+        hitung["n"] += 1
+        if hitung["n"] > 2:
+            return rahasia
+        return asli(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "resolve", resolve_terbatas)
+    hasil = agen.baca_berkas(sandbox, "catatan.txt", ("catatan.txt",))
+    assert hasil["status"] == "baca"
+    assert hasil["teks"] == "aman"
+    assert "bocor" not in hasil["teks"]
+    assert hitung["n"] == 2
+
+
+def test_garis_miring_balik_ditolak(tmp_path):
+    sandbox = tmp_path / "sandbox"
+    sandbox.mkdir()
+    (tmp_path / "rahasia.txt").write_text("rahasia-garis", encoding="utf-8")
+    (sandbox / "catatan.txt").write_text("boleh", encoding="utf-8")
+    hasil = _agen().baca_berkas(sandbox, "..\\rahasia.txt", ("catatan.txt",))
+    assert hasil["status"] == "tolak"
+    assert hasil["alasan"] == "path traversal"
+    assert hasil["teks"] == ""
+    assert "rahasia-garis" not in hasil["teks"]
+
+
+def test_drive_windows_ditolak(tmp_path):
+    sandbox = tmp_path / "sandbox"
+    sandbox.mkdir()
+    (sandbox / "catatan.txt").write_text("boleh", encoding="utf-8")
+    hasil = _agen().baca_berkas(sandbox, "C:\\catatan.txt", ("catatan.txt",))
+    assert hasil["status"] == "tolak"
+    assert hasil["alasan"] == "path absolut"
+    assert hasil["teks"] == ""
+
+
 def test_berkas_di_luar_allowlist_ditolak(tmp_path):
     sandbox = tmp_path / "sandbox"
     sandbox.mkdir()

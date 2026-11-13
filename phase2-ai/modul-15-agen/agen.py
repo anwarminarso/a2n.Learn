@@ -35,32 +35,32 @@ def _di_dalam(tujuan, dasar):
 
 def _alasan(sandbox, nama, allow):
     if not isinstance(nama, str) or nama.strip() == "":
-        return "nama kosong"
+        return "nama kosong", None
     huruf_drive = len(nama) >= 2 and nama[1] == ":"
     if huruf_drive or Path(nama).is_absolute():
-        return "path absolut"
+        return "path absolut", None
     bagian = nama.replace("\\", "/").split("/")
     if any(potong == ".." for potong in bagian):
-        return "path traversal"
+        return "path traversal", None
     if nama not in allow:
-        return "di luar allowlist"
+        return "di luar allowlist", None
     calon = Path(sandbox) / nama
     if not calon.exists() and not calon.is_symlink():
-        return "tidak ada"
+        return "tidak ada", None
     dasar = Path(sandbox).resolve()
     tujuan = calon.resolve()
     if not _di_dalam(tujuan, dasar):
-        return "symlink"
+        return "symlink", None
     if not tujuan.is_file():
-        return "bukan berkas"
-    return ""
+        return "bukan berkas", None
+    return "", tujuan
 
 
 def baca_berkas(sandbox, nama, allow):
-    alasan = _alasan(sandbox, nama, allow)
+    alasan, tujuan = _alasan(sandbox, nama, allow)
     if alasan:
         return {"status": "tolak", "alasan": alasan, "teks": ""}
-    teks = (Path(sandbox) / nama).resolve().read_text(encoding="utf-8")
+    teks = tujuan.read_text(encoding="utf-8")
     return {"status": "baca", "alasan": "", "teks": teks}
 
 
