@@ -2,9 +2,10 @@
 
 Mode cepat tidak memanggil muat_model. SHA di sini sama dengan
 docs/lisensi-model.md. Modul 12, 13, 14, dan 15 memakai muat_model.
-Modul 14 membiarkan kelas kosong untuk embedding, jadi yang terpakai
-AutoModel. Modul 12, 13, 14, dan 15 mengirim AutoModelForCausalLM
-untuk model bahasa. Modul 10 dan 11 memuat AutoModel sendiri.
+Embedding modul 14 (MiniLM) membiarkan kelas kosong, jadi yang terpakai
+AutoModel. Model jawaban modul 14 serta modul 12, 13, dan 15
+(SmolLM2 atau Qwen, model bahasa kausal) mengirim AutoModelForCausalLM.
+Modul 10 dan 11 memuat AutoModel sendiri.
 """
 
 POLA_UNDUH = (
@@ -31,9 +32,10 @@ REVISI = {
 def muat_model(model_id, kelas=None):
     """Muat tokenizer dan model dari salinan lokal.
 
-    Bila kelas tidak diisi, yang dipakai AutoModel. Modul 12, 13, 14,
-    dan 15 mengirim AutoModelForCausalLM supaya kepala bahasa ikut
-    termuat. Modul 14 membiarkan kelas kosong untuk model embedding.
+    Bila kelas tidak diisi, yang dipakai AutoModel. Embedding modul 14
+    (MiniLM) memakai bawaan itu. Model jawaban modul 14 serta modul 12,
+    13, dan 15 (SmolLM2 atau Qwen, model bahasa kausal) mengirim
+    AutoModelForCausalLM supaya kepala bahasa ikut termuat.
     """
     from huggingface_hub import snapshot_download
     from transformers import AutoModel, AutoTokenizer
