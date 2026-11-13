@@ -148,7 +148,7 @@ Sel pertama setiap notebook berisi `SEED = 42`. Mode cepat tidak mengunduh dan t
 - scikit-learn developers. `load_iris`. <https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>
 - scikit-learn developers. `LogisticRegression`. <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html>
 
-## Istilah baru yang direncanakan
+## Istilah baru
 
 Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Nama di bawah tetap paling banyak tiga per sesi. Modul ini tidak dipecah menjadi folder berhuruf.
 
@@ -202,7 +202,7 @@ Wajib lulus. Tensor dan jaringan sangat kecil, 80 putaran latihan, jalan di CPU,
 
 Opsional. Notebook bisa menjalankan sel torch di CPU bila `A2N_TORCH=1`. Lebih banyak putaran pada GPU di MyLegion7i dinilai dari log mentah. Modul ini tidak mengunduh model Hugging Face.
 
-## Model dan dataset kandidat
+## Model dan dataset
 
 - Model Hugging Face: tidak ada. Jaringan ditulis di materi.
 - Dataset: iris bawaan scikit-learn, supaya sama dengan kasus Fase 1. Bukan unduhan. Bukan data asli perusahaan.

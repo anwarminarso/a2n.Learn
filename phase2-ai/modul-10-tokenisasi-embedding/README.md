@@ -36,7 +36,7 @@ Gunting kalimat pada spasi, lalu tulis huruf kecil. "Kucing Duduk" menjadi `kuci
 
 ### embedding
 
-Setiap token yang belum pernah dilihat mendapat satu vektor acak berukuran 8. Undiannya memakai `SEED`, jadi peta yang sama muncul lagi. Vektor kalimat adalah rata-rata vektor tokennya. Nama teknisnya **embedding**: vektor angka yang mewakili satu token.
+Setiap token yang belum pernah dilihat mendapat satu vektor acak berukuran 8. Undiannya memakai `SEED`, jadi peta yang sama muncul lagi. Vektor kalimat adalah rata-rata vektor tokennya. Nama teknisnya **embedding**: vektor angka yang mewakili satu token atau satu potongan teks. Di mode cepat modul ini, vektornya untuk token.
 
 **Batas analogi:** jarak di peta bukan arti kamus. Peta acak ini tidak mengetahui makna. Dua kata bisa dekat di peta hanya karena undian. Merata-ratakan vektor token menjadi vektor kalimat tidak menjamin dua kalimat yang mirip katanya mirip maknanya.
 
@@ -79,13 +79,14 @@ uv sync --frozen
 uv run pytest
 ```
 
-Unduhan opsional, bukan gerbang:
+Unduhan opsional, bukan gerbang. Pasang grup torch dulu, karena `transformers` hanya masuk lewat grup itu:
 
 ```bash
+uv sync --frozen --group torch
 A2N_UNDUH=1 uv run pytest phase2-ai/tests/test_modul_09_11.py -k unduh
 ```
 
-Perintah itu butuh jaringan dan paket `transformers` serta `huggingface_hub`, yang tidak dipasang lingkungan gerbang.
+Perintah itu butuh jaringan. Lingkungan gerbang yang hanya memakai `uv sync --frozen` tidak memasang `transformers` maupun `huggingface_hub`. Uji `-k unduh` mengunduh model untuk semua modul 10 sampai 15, bukan hanya modul ini.
 
 ## Cek pemahaman
 
@@ -105,7 +106,7 @@ Perintah itu butuh jaringan dan paket `transformers` serta `huggingface_hub`, ya
 - NumPy developers. `numpy.linalg.norm`. <https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html>
 - Reimers, Nils, and Iryna Gurevych. *Sentence-BERT*. <https://arxiv.org/abs/1908.10084>
 
-## Istilah baru yang direncanakan
+## Istilah baru
 
 Arti, perumpamaan, dan batas analogi ada di bagian Teori dan di [kamus](../../docs/kamus-istilah.md). Tiga istilah mengisi satu sesi.
 
@@ -152,7 +153,7 @@ Wajib lulus. Beberapa kalimat sintetis, vektor kecil dari generator di notebook,
 
 Opsional. `sentence-transformers/all-MiniLM-L6-v2` pada revisi yang dipin, di GPU MyLegion7i bila mesin itu memakainya. Hasil dinilai dari log mentah. Bukan gerbang PR.
 
-## Model dan dataset kandidat
+## Model dan dataset
 
 - Dataset: kalimat sintetis yang ditulis di notebook.
 - Mode penuh: `sentence-transformers/all-MiniLM-L6-v2`. Lisensi Apache-2.0. SHA `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`, dicek 2026-11-13. Berkas `model.safetensors` ada. Repo itu juga memuat pickle `pytorch_model.bin`, dan pola unduh tidak memuatnya.

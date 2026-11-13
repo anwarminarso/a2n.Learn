@@ -45,7 +45,7 @@ _Kriteria dari Frieren._
 Modul 8: Toleransi ditulis di dokumen, bukan "sama persis": probabilitas `atol=1e-5` (dibuktikan lewat uji), label kelas harus identik; versi skl2onnx dan onnxruntime dikunci di `uv.lock`, opset ditulis. Menurut cek cepat Pyra (Python 3.14, Linux, opset 22): label kelas identik dan selisih probabilitas maksimum sekitar 6.8e-08. Ini belum diverifikasi tim; `target_opset` dipin secara eksplisit, dan Ursa tetap memverifikasi dari `uv sync` pada lock yang di-commit.
 
 ## Fase 2 – Model AI
-Tracking: #33. Isi materi diserahkan mas Anwar ke tim. Alur kerja: semua placeholder modul 9–15 dulu dalam satu PR ke `develop`, lalu audit dan revisi untuk semua modul sekaligus (detail 10 langkah di #33).
+Tracking: #33. Materi mode cepat modul 9 sampai 15 sudah tertulis di `develop`. Audit dan revisi modul mengikuti issue #33.
 
 | # | Modul | Bergantung pada | Penulis | Uji jalan | Audit dok | Review alur | Issue |
 |---|---|---|---|---|---|---|---|

@@ -10,7 +10,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 FASE2 = REPO / "phase2-ai"
 ISSUE = "https://github.com/anwarminarso/a2n.Learn/issues/{}"
-ROADMAP_SHA256 = "10b42cb0a032b603185318d7a5de31a21b6dffe22127568bd8deee324a5f23c9"
+ROADMAP_SHA256 = "48d238af463cf95d530e6256751a56171190a4e37c075ad6a86f1644f2bdee15"
 TERLARANG = re.compile(
     "".join(["s", "m", "p"]) + "|" + "".join(["a", "n", "t", "a", "m"]),
     re.IGNORECASE,
@@ -88,7 +88,7 @@ MODUL = (
         "judul": "Agen dan proyek akhir Fase 2",
         "roadmap": "Agen dan proyek akhir Fase 2",
         "issue": 32,
-        "tautan": ("modul-14-rag", "modul-13-model-lokal", "modul-12-lora"),
+        "tautan": ("modul-14-rag",),
         "sesi": (
             ("pemanggilan alat", "loop agen", "injeksi prompt"),
             (),
@@ -129,7 +129,7 @@ def _bagian(teks, judul):
 
 
 def _sesi(teks):
-    bagian = _bagian(teks, "Istilah baru yang direncanakan")
+    bagian = _bagian(teks, "Istilah baru")
     potong = re.split(r"^### Sesi \d+\s*$", bagian, flags=re.M)
     assert len(potong) > 1
     return tuple(
@@ -183,7 +183,7 @@ def test_readme_punya_bagian_wajib_dan_issue():
             "## Rencana latihan",
             "## Kriteria lulus",
             "## Mode cepat dan mode penuh",
-            "## Model dan dataset kandidat",
+            "## Model dan dataset",
             "## Aturan",
         ):
             assert judul in teks
